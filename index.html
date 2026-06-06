@@ -1340,7 +1340,7 @@
                         tableHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="bg-yellow-50" ${ptsStyle}>${pts}</td>`;
                     });
                     
-                    tableHTML += `<td class="sticky-col-right bg-yellow-100 font-black text-lg">${p.total}</td></tr>`;
+                    tableHTML += `<td class="sticky-col-right bg-yellow-200 font-black text-lg border-l-2 border-gray-400">${p.total}</td></tr>`;
                 });
                 
                 tableHTML += `</tbody></table>`;
@@ -1357,8 +1357,8 @@
                             body { font-family: 'Inter', sans-serif; background: white; padding: 10px; }
                             table { border-collapse: collapse; width: 100%; font-size: 8pt; }
                             th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; }
-                            .sticky-col { position: sticky; left: 0; background: #f8fafc; z-index: 10; border-right: 2px solid #000; }
-                            .sticky-col-right { position: sticky; right: 0; background: #fef08a; z-index: 10; border-left: 2px solid #000; }
+                            .sticky-col { position: sticky; left: 0; background: #e0e7ff; z-index: 10; border-right: 2px solid #4f46e5; color: #1e293b; }
+							.sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; }
                             .rank-1 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
 							.rank-2 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
 							.rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
