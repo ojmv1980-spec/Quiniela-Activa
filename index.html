@@ -27,6 +27,7 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .tabular-nums { font-variant-numeric: tabular-nums; }
         
+        /* 🎯 Contador flotante sticky */
         #sticky-progress {
             position: sticky;
             top: 80px;
@@ -34,6 +35,7 @@
             transition: all 0.3s ease;
         }
         
+        /* Tabla de planilla */
         #planilla-table th, #planilla-table td {
             padding: 8px 4px;
             border: 1px solid rgba(255,255,255,0.1);
@@ -70,6 +72,7 @@
         .btn-result-X.selected { background: #eab308 !important; color: white !important; }
         .btn-result-2.selected { background: #dc2626 !important; color: white !important; }
         
+        /* 🎯 Estilos para gestión de participantes */
         .player-card { transition: all 0.2s ease; }
         .player-card:hover { background: rgba(37, 99, 235, 0.1); }
         .player-card.deleted { opacity: 0.5; border: 1px dashed #dc2626 !important; }
@@ -209,6 +212,7 @@
 
         <!-- VISTA 2: PREDICCIONES -->
         <div id="view-predictions" class="hidden space-y-12">
+            <!-- 🎯 Contador flotante sticky -->
             <div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
                 <div class="space-y-1">
                     <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
@@ -302,6 +306,7 @@
                 <p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p>
             </div>
             
+            <!-- 🎯 Tabs de Admin -->
             <div class="flex justify-center gap-3 flex-wrap">
                 <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">
                     📊 Cargar Resultados
@@ -311,10 +316,12 @@
                 </button>
             </div>
             
+            <!-- Tab: Resultados -->
             <div id="admin-tab-results">
                 <div id="admin-matches-container" class="space-y-6"></div>
             </div>
             
+            <!-- 🎯 Tab: Gestión de Participantes -->
             <div id="admin-tab-players" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
                     <h4 class="font-bold text-blue-400 mb-2">👥 Lista de Participantes</h4>
@@ -405,6 +412,7 @@
             L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
         };
 
+        // ⏳ TEMPORIZADOR
         function startCountdown() {
             const display = document.getElementById('countdown-display');
             clearInterval(countdownInterval);
@@ -437,6 +445,7 @@
             });
         }
 
+        // 🎨 RENDERIZAR PARTIDOS
         function renderMatches() {
             const container = document.getElementById('matches-container');
             container.innerHTML = '';
@@ -557,6 +566,7 @@
             } catch (err) { showToast(" Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
         }
 
+        // 🏆 LEADERBOARD
         let unsubscribeLB = null;
         function startLeaderboardListener() {
             if (unsubscribeLB) unsubscribeLB();
@@ -566,6 +576,7 @@
                     const players = [];
                     pSnap.forEach(doc => {
                         const data = doc.data();
+                        // 🎯 FILTRO: Excluir eliminados
                         if (data.deleted) return;
                         if (!data.submitted && !isDeadlinePassed) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
@@ -601,7 +612,7 @@
             
             tbody.innerHTML = players.map((p, idx) => {
                 const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
                 
                 return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
                     <td class="p-6 text-center font-black text-lg">${medal}</td>
@@ -611,12 +622,14 @@
             }).join('');
         }
 
+        // ⚙️ PANEL ADMIN
         function promptAdmin() {
             const pin = prompt(" Ingresa el PIN de administrador:");
             if (pin === ADMIN_PIN) { showView('view-admin'); renderAdminMatches(); }
             else if (pin !== null) showToast("PIN incorrecto", "error");
         }
 
+        // 🎯 Tabs de Admin
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
             document.getElementById('admin-tab-players').classList.add('hidden');
@@ -681,6 +694,7 @@
             }
         }
 
+        // 🎯 Cargar lista de participantes en Admin
         async function loadAdminPlayers() {
             const container = document.getElementById('admin-players-list');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
@@ -695,6 +709,7 @@
                     return;
                 }
                 
+                // Ordenar: activos primero, eliminados al final
                 players.sort((a, b) => (a.deleted ? 1 : 0) - (b.deleted ? 1 : 0));
                 
                 let html = '';
@@ -705,6 +720,7 @@
                     p.predictions = preds;
                     p.predCount = Object.keys(preds).length;
                     
+                    // 🎯 Badge con 3 estados
                     let statusBadge;
                     if (p.deleted) {
                         statusBadge = '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>';
@@ -716,6 +732,7 @@
                     
                     const cardClass = p.deleted ? 'player-card deleted' : 'player-card';
                     
+                    // 🎯 Botones dinámicos según estado
                     let actionButtons;
                     if (p.deleted) {
                         actionButtons = `
@@ -808,11 +825,13 @@
             }
         }
 
+        // 🎯 Mostrar/ocultar predicciones de un jugador
         function togglePlayerPreds(playerId) {
             const el = document.getElementById(`preds-${playerId}`);
             el.classList.toggle('hidden');
         }
 
+        // 🎯 Admin modifica predicción de un jugador
         async function adminSetPred(playerId, matchId, value, clickedBtn) {
             try {
                 await db.collection('participants').doc(playerId).collection('predictions').doc(matchId)
@@ -834,6 +853,7 @@
             }
         }
 
+        // 🎯 Soft Delete - Marcar participante como eliminado
         async function deletePlayer(playerId, playerName) {
             if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?\n\nEsta acción ocultará al participante del ranking y las planillas, pero sus datos quedarán guardados.`)) return;
             if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
@@ -859,6 +879,7 @@
             }
         }
 
+        // 🎯 Restaurar participante eliminado
         async function restorePlayer(playerId, playerName) {
             if (!confirm(`♻️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
             
@@ -883,7 +904,7 @@
             }
         }
 
-        // 📊 PLANILLA WEB - CON RESULTADOS DINÁMICOS EN ENCABEZADO
+        // 📊 PLANILLA WEB
         async function generarPlanillaWeb() {
             showView('view-planilla');
             const loadingDiv = document.getElementById('planilla-loading');
@@ -897,6 +918,7 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
+                    // 🎯 FILTRO: Excluir eliminados
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
                 
@@ -985,7 +1007,7 @@
                 });
                 theadHTML += '</tr>';
                 
-                // 🎯 FILA 4: RESULTADO dinámico con LOCAL/EMPATE/VISITANTE
+                // 🎯 NUEVO: Fila 4 con resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
                 theadHTML += '<tr>';
                 matchIds.forEach(mId => {
                     const result = results[mId];
@@ -1046,6 +1068,7 @@
             }
         }
 
+        // 📥 EXCEL
         async function generarPlanillaExcel() {
             showToast(" Generando Excel...", "success");
             
@@ -1053,6 +1076,7 @@
             const players = [];
             pSnap.forEach(doc => { 
                 const d = doc.data(); 
+                // 🎯 FILTRO: Excluir eliminados
                 if (d.submitted && !d.deleted) players.push({ id: doc.id, ...d }); 
             });
             
@@ -1161,6 +1185,7 @@
             showToast("✅ Excel descargado", "success");
         }
 
+        // 📱 PLANILLA DIGITAL
         async function generarPlanillaDigital() {
             showToast("⏳ Generando planilla digital...", "success");
             
@@ -1169,6 +1194,7 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
+                    // 🎯 FILTRO: Excluir eliminados
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
 
