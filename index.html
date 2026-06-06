@@ -27,6 +27,14 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .tabular-nums { font-variant-numeric: tabular-nums; }
         
+        /* 🎯 Contador flotante sticky */
+        #sticky-progress {
+            position: sticky;
+            top: 80px;
+            z-index: 30;
+            transition: all 0.3s ease;
+        }
+        
         /* Tabla de planilla */
         #planilla-table th, #planilla-table td {
             padding: 8px 4px;
@@ -44,29 +52,34 @@
             position: sticky; right: 0; background: #0a0f1e; z-index: 10;
             font-weight: 900; border-left: 2px solid #2563eb;
         }
-        /* Los 3 primeros lugares con el mismo tono (el más claro) */
         .rank-1 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-2 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-3 { background: rgba(51, 153, 204, 0.2) !important; }
         
-        /* Columnas PTOS como separadores visuales (Fórmula 4n+6) */
         #planilla-table td:nth-child(4n+6),
         #planilla-table th:nth-child(4n+6) {
             background: rgba(255, 255, 255, 0.08);
             font-weight: 900;
         }
         
-        /* Encabezado PTOS en amarillo más visible */
         #planilla-table th.text-yellow-400 {
             background: rgba(234, 179, 8, 0.25) !important;
             color: #fbbf24;
             font-weight: 900;
         }
         
-        /* 🎨 NUEVO: Botones de resultado seleccionados en Admin */
         .btn-result-1.selected { background: #2563eb !important; color: white !important; }
         .btn-result-X.selected { background: #eab308 !important; color: white !important; }
         .btn-result-2.selected { background: #dc2626 !important; color: white !important; }
+        
+        /* 🎯 Estilos para gestión de participantes */
+        .player-card { transition: all 0.2s ease; }
+        .player-card:hover { background: rgba(37, 99, 235, 0.1); }
+        .player-card.deleted { opacity: 0.5; border: 1px dashed #dc2626 !important; }
+        .pred-btn { transition: all 0.2s ease; }
+        .pred-btn.active-1 { background: #2563eb !important; color: white !important; }
+        .pred-btn.active-X { background: #eab308 !important; color: white !important; }
+        .pred-btn.active-2 { background: #dc2626 !important; color: white !important; }
         
         @media (max-width: 768px) {
             #planilla-table { font-size: 0.65rem; }
@@ -93,7 +106,6 @@
                 </div>
             </div>
             
-            <!-- 🎨 NUEVO: Botón Admin en el header -->
             <button onclick="promptAdmin()" class="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
                 <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-5 h-5"></i>
             </button>
@@ -124,7 +136,6 @@
                 </h3>
             </div>
 
-            <!-- TEMPORIZADOR -->
             <div id="countdown-container" class="glass p-4 rounded-2xl border-l-4 border-blue-500 text-center max-w-md w-full shadow-lg shadow-blue-500/10">
                 <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">⏳ Cierre de predicciones</p>
                 <div id="countdown-display" class="text-2xl md:text-3xl font-black italic-black tracking-tighter text-white tabular-nums">
@@ -150,7 +161,6 @@
                 <p class="text-[10px] text-slate-500">* Tus predicciones se guardarán automáticamente</p>
             </div>
 
-            <!-- REGLAMENTO (UBICACIÓN 1) -->
             <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
                 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide"> Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
@@ -174,7 +184,6 @@
                 </div>
             </div>
             
-            <!-- 💳 PAGO MÓVIL - RECUADRO ESPECIAL -->
             <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/30 shadow-lg shadow-yellow-500/20">
                 <h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">
                     💳 PAGO MÓVIL
@@ -203,23 +212,25 @@
 
         <!-- VISTA 2: PREDICCIONES -->
         <div id="view-predictions" class="hidden space-y-12">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-                <h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2>
-                <div class="glass p-4 rounded-2xl flex items-center gap-6">
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
-                            <span>Progreso</span>
-                            <span id="progress-text">0%</span>
-                        </div>
-                        <div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
-                            <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div>
-                        </div>
+            <!-- 🎯 Contador flotante sticky -->
+            <div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
+                        <span>Progreso</span>
+                        <span id="progress-text">0%</span>
                     </div>
-                    <div class="text-center">
-                        <span id="completed-count" class="block text-2xl font-black leading-none">0</span>
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span>
+                    <div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div>
                     </div>
                 </div>
+                <div class="text-center">
+                    <span id="completed-count" class="block text-2xl font-black leading-none">0</span>
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+                <h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2>
             </div>
 
             <div id="matches-container" class="space-y-16"></div>
@@ -253,7 +264,7 @@
 							<th class="p-6">Jugador</th>
 							<th class="p-6 text-center">Puntos</th>
 						</tr>
-</thead>
+                    </thead>
                     <tbody id="leaderboard-body"></tbody>
                 </table>
             </div>
@@ -264,7 +275,6 @@
                 </button>
             </div>
 
-            <!-- REGLAMENTO (UBICACIÓN 2) -->
             <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
                 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">📜 Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
@@ -295,7 +305,33 @@
                 <h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2>
                 <p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p>
             </div>
-            <div id="admin-matches-container" class="space-y-6"></div>
+            
+            <!-- 🎯 Tabs de Admin -->
+            <div class="flex justify-center gap-3 flex-wrap">
+                <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">
+                    📊 Cargar Resultados
+                </button>
+                <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
+                    👥 Gestión de Participantes
+                </button>
+            </div>
+            
+            <!-- Tab: Resultados -->
+            <div id="admin-tab-results">
+                <div id="admin-matches-container" class="space-y-6"></div>
+            </div>
+            
+            <!-- 🎯 Tab: Gestión de Participantes -->
+            <div id="admin-tab-players" class="hidden">
+                <div class="glass p-4 rounded-xl mb-4">
+                    <h4 class="font-bold text-blue-400 mb-2">👥 Lista de Participantes</h4>
+                    <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
+                    <div id="admin-players-list" class="space-y-3">
+                        <div class="text-center text-slate-400 py-4">Cargando participantes...</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="text-center">
                 <button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button>
             </div>
@@ -340,7 +376,6 @@
     <div id="toast-container"></div>
 
     <script>
-        // 🔥 CONFIGURACIÓN FIREBASE - TUS CREDENCIALES NUEVAS
         const firebaseConfig = {
             apiKey: "AIzaSyDeAbrwz31kQ4ODablfJK0SBzwuZ_jw_6s",
             authDomain: "quiniela-activa-mundial-782bc.firebaseapp.com",
@@ -354,7 +389,6 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // ⚙️ CONFIGURACIÓN
         const ADMIN_PIN = "111180";
         const DEADLINE = new Date('2026-06-11T07:00:00Z'); 
         let isDeadlinePassed = Date.now() >= DEADLINE.getTime();
@@ -387,7 +421,7 @@
                 const distance = DEADLINE.getTime() - now;
                 if (distance <= 0) {
                     clearInterval(countdownInterval);
-                    display.innerHTML = "🔒 CERRADO";
+                    display.innerHTML = " CERRADO";
                     display.classList.remove('text-white');
                     display.classList.add('text-red-400');
                     isDeadlinePassed = true;
@@ -503,7 +537,7 @@
                 if (isSubmitted || isDeadlinePassed) showView('view-leaderboard');
                 else showView('view-predictions');
                 renderMatches(); startLeaderboardListener();
-                showToast(`¡Bienvenido, ${name}! (${userCode}) ⚽`, "success");
+                showToast(`¡Bienvenido, ${name}! (${userCode}) `, "success");
             } catch (err) { showToast("Error: " + err.message, "error"); }
         }
 
@@ -541,7 +575,10 @@
                     const results = {}; mSnap.forEach(doc => results[doc.id] = doc.data().result);
                     const players = [];
                     pSnap.forEach(doc => {
-                        const data = doc.data(); if (!data.submitted && !isDeadlinePassed) return;
+                        const data = doc.data();
+                        // 🎯 FILTRO: Excluir eliminados
+                        if (data.deleted) return;
+                        if (!data.submitted && !isDeadlinePassed) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
                     });
                     
@@ -569,13 +606,13 @@
             });
         }
 
-                function renderLeaderboard(players) {
+        function renderLeaderboard(players) {
             const tbody = document.getElementById('leaderboard-body');
             if (players.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay predicciones enviadas.</td></tr>`; return; }
             
             tbody.innerHTML = players.map((p, idx) => {
                 const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
                 
                 return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
                     <td class="p-6 text-center font-black text-lg">${medal}</td>
@@ -587,17 +624,31 @@
 
         // ⚙️ PANEL ADMIN
         function promptAdmin() {
-            const pin = prompt("🔐 Ingresa el PIN de administrador:");
+            const pin = prompt(" Ingresa el PIN de administrador:");
             if (pin === ADMIN_PIN) { showView('view-admin'); renderAdminMatches(); }
             else if (pin !== null) showToast("PIN incorrecto", "error");
         }
 
-        // 🎨 NUEVA FUNCIÓN: Renderiza partidos del admin consultando resultados existentes
+        // 🎯 Tabs de Admin
+        function showAdminTab(tab) {
+            document.getElementById('admin-tab-results').classList.add('hidden');
+            document.getElementById('admin-tab-players').classList.add('hidden');
+            document.getElementById('tab-results').classList.remove('bg-blue-600');
+            document.getElementById('tab-results').classList.add('bg-white/10');
+            document.getElementById('tab-players').classList.remove('bg-blue-600');
+            document.getElementById('tab-players').classList.add('bg-white/10');
+            
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
+            document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
+            
+            if (tab === 'players') loadAdminPlayers();
+        }
+
         async function renderAdminMatches() {
             const container = document.getElementById('admin-matches-container');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
             
-            // Obtener resultados existentes de Firebase
             const rSnap = await db.collection('matches').get();
             const existingResults = {};
             rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
@@ -610,7 +661,6 @@
                     const id = `g${group.toLowerCase()}m${i+1}`;
                     const currentResult = existingResults[id] || '';
                     
-                    // Clases según resultado actual
                     const btn1Class = currentResult === 'Local' ? 'btn-result-1 selected' : 'btn-result-1';
                     const btnXClass = currentResult === 'Empate' ? 'btn-result-X selected' : 'btn-result-X';
                     const btn2Class = currentResult === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2';
@@ -628,14 +678,12 @@
             });
         }
 
-        // 🎨 NUEVA FUNCIÓN: Guarda resultado y aplica clase visual al botón
         async function setResult(matchId, result, clickedBtn) {
             if (!confirm(`¿Confirmar resultado: ${result} para ${matchId}?`)) return;
             try {
                 await db.collection('matches').doc(matchId).set({ result, updatedAt: new Date() }, { merge: true });
                 showToast(`✅ Resultado guardado: ${matchId} → ${result}`, "success");
                 
-                // Aplicar clase visual al botón seleccionado
                 const parentDiv = clickedBtn.parentElement;
                 const buttons = parentDiv.querySelectorAll('button');
                 buttons.forEach(btn => btn.classList.remove('selected'));
@@ -646,7 +694,221 @@
             }
         }
 
-        // 📊 PLANILLA WEB - ESTRUCTURA EXACTA TIPO EXCEL
+        // 🎯 Cargar lista de participantes en Admin
+        async function loadAdminPlayers() {
+            const container = document.getElementById('admin-players-list');
+            container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
+            
+            try {
+                const pSnap = await db.collection('participants').get();
+                const players = [];
+                pSnap.forEach(doc => players.push({ id: doc.id, ...doc.data() }));
+                
+                if (players.length === 0) {
+                    container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>';
+                    return;
+                }
+                
+                // Ordenar: activos primero, eliminados al final
+                players.sort((a, b) => (a.deleted ? 1 : 0) - (b.deleted ? 1 : 0));
+                
+                let html = '';
+                for (const p of players) {
+                    const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
+                    const preds = {};
+                    predSnap.forEach(doc => preds[doc.id] = doc.data().value);
+                    p.predictions = preds;
+                    p.predCount = Object.keys(preds).length;
+                    
+                    // 🎯 NUEVO: Badge con 3 estados
+                    let statusBadge;
+                    if (p.deleted) {
+                        statusBadge = '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>';
+                    } else if (p.submitted) {
+                        statusBadge = '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>';
+                    } else {
+                        statusBadge = '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>';
+                    }
+                    
+                    const cardClass = p.deleted ? 'player-card deleted' : 'player-card';
+                    
+                    // 🎯 Botones dinámicos según estado
+                    let actionButtons;
+                    if (p.deleted) {
+                        actionButtons = `
+                            <button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">
+                                ♻️ Restaurar
+                            </button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">
+                                ✏️ Editar
+                            </button>
+                            <button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">
+                                🗑️ Eliminar
+                            </button>
+                        `;
+                    }
+                    
+                    html += `
+                        <div class="${cardClass} glass p-4 rounded-xl">
+                            <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+                                <div>
+                                    <span class="font-bold text-white">${p.displayName || 'Anónimo'}</span>
+                                    <span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>
+                                    ${statusBadge}
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>
+                                    ${actionButtons}
+                                </div>
+                            </div>
+                            <div id="preds-${p.id}" class="hidden">
+                                <div class="border-t border-white/10 pt-3 mt-3">
+                                    <p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción. Los cambios se guardan automáticamente.</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">
+                    `;
+                    
+                    const matchIds = [];
+                    'ABCDEFGHIJKL'.split('').forEach(g => { 
+                        for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
+                    });
+                    
+                    matchIds.forEach((mId, idx) => {
+                        const match = mId.match(/^g([a-l])m(\d+)$/);
+                        let matchLabel = mId;
+                        if (match) {
+                            const g = match[1].toUpperCase();
+                            const num = parseInt(match[2]);
+                            const teams = groupsData[g];
+                            if (teams && num >= 1 && num <= 6) {
+                                const matchPairs = [
+                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
+                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
+                                ];
+                                const [local, visitante] = matchPairs[num-1];
+                                matchLabel = `${local.substring(0,3)} vs ${visitante.substring(0,3)}`;
+                            }
+                        }
+                        
+                        const currentPred = preds[mId] || '';
+                        const btn1Active = currentPred === 'Local' ? 'active-1' : '';
+                        const btnXActive = currentPred === 'Empate' ? 'active-X' : '';
+                        const btn2Active = currentPred === 'Visitante' ? 'active-2' : '';
+                        
+                        html += `
+                            <div class="bg-[#161b2c] p-2 rounded-lg flex items-center justify-between gap-2">
+                                <span class="text-[10px] text-slate-300 truncate flex-1">${idx+1}. ${matchLabel}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Local', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-blue-600 rounded text-[10px] font-bold ${btn1Active}">1</button>
+                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Empate', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-yellow-600 rounded text-[10px] font-bold ${btnXActive}">X</button>
+                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Visitante', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-red-600 rounded text-[10px] font-bold ${btn2Active}">2</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
+            }
+        }
+
+        // 🎯 Mostrar/ocultar predicciones de un jugador
+        function togglePlayerPreds(playerId) {
+            const el = document.getElementById(`preds-${playerId}`);
+            el.classList.toggle('hidden');
+        }
+
+        // 🎯 Admin modifica predicción de un jugador
+        async function adminSetPred(playerId, matchId, value, clickedBtn) {
+            try {
+                await db.collection('participants').doc(playerId).collection('predictions').doc(matchId)
+                    .set({ value, updatedAt: new Date(), adminModified: true }, { merge: true });
+                showToast(`✅ Predicción actualizada`, "success");
+                
+                const parentDiv = clickedBtn.parentElement;
+                const buttons = parentDiv.querySelectorAll('.pred-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active-1', 'active-X', 'active-2');
+                });
+                
+                if (value === 'Local') clickedBtn.classList.add('active-1');
+                else if (value === 'Empate') clickedBtn.classList.add('active-X');
+                else if (value === 'Visitante') clickedBtn.classList.add('active-2');
+                
+            } catch (e) {
+                showToast("Error: " + e.message, "error");
+            }
+        }
+
+        // 🎯 NUEVO: Soft Delete - Marcar participante como eliminado
+        async function deletePlayer(playerId, playerName) {
+            if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?\n\nEsta acción ocultará al participante del ranking y las planillas, pero sus datos quedarán guardados.`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
+            
+            try {
+                // Marcar participante como eliminado
+                await db.collection('participants').doc(playerId).update({ 
+                    deleted: true, 
+                    deletedAt: new Date() 
+                });
+                
+                // Marcar todas sus predicciones como eliminadas
+                const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
+                const batch = db.batch();
+                predSnap.forEach(doc => {
+                    batch.update(doc.ref, { deleted: true });
+                });
+                await batch.commit();
+                
+                showToast(`🗑️ ${playerName} eliminado correctamente`, "success");
+                loadAdminPlayers();
+                
+            } catch (e) {
+                showToast("Error: " + e.message, "error");
+            }
+        }
+
+        // 🎯 NUEVO: Restaurar participante eliminado
+        async function restorePlayer(playerId, playerName) {
+            if (!confirm(`♻️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
+            
+            try {
+                // Quitar marca de eliminado del participante
+                await db.collection('participants').doc(playerId).update({ 
+                    deleted: false, 
+                    deletedAt: firebase.firestore.FieldValue.delete()
+                });
+                
+                // Quitar marca de eliminado de sus predicciones
+                const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
+                const batch = db.batch();
+                predSnap.forEach(doc => {
+                    batch.update(doc.ref, { deleted: false });
+                });
+                await batch.commit();
+                
+                showToast(`♻️ ${playerName} restaurado correctamente`, "success");
+                loadAdminPlayers();
+                
+            } catch (e) {
+                showToast("Error: " + e.message, "error");
+            }
+        }
+
+        // 📊 PLANILLA WEB
         async function generarPlanillaWeb() {
             showView('view-planilla');
             const loadingDiv = document.getElementById('planilla-loading');
@@ -660,7 +922,8 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
-                    if (data.submitted === true) players.push({ id: doc.id, ...data });
+                    // 🎯 FILTRO: Excluir eliminados
+                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
                 
                 if (players.length === 0) {
@@ -707,10 +970,7 @@
                 const totalUsersSpan = document.getElementById('total-users');
                 if (totalUsersSpan) totalUsersSpan.innerText = players.length;
                 
-                // ✅ THEAD CON 4 FILAS - ESTRUCTURA EXACTA DEL EXCEL
                 let theadHTML = '';
-                
-                // FILA 1: #, PARTICIPANTE, Partido N (colspan=3), (vacío para PTOS), TOTAL
                 theadHTML += '<tr>';
                 theadHTML += '<th rowspan="4" class="col-fixed-left">#</th>';
                 theadHTML += '<th rowspan="4" class="col-fixed-left">PARTICIPANTE</th>';
@@ -721,7 +981,6 @@
                 theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th>';
                 theadHTML += '</tr>';
                 
-                // FILA 2: Nombres de equipos (colspan=3) y celda vacía para PTOS
                 theadHTML += '<tr>';
                 matchIds.forEach(m => {
                     const match = m.match(/^g([a-l])m(\d+)$/);
@@ -745,7 +1004,6 @@
                 });
                 theadHTML += '</tr>';
                 
-                // FILA 3: 1, X, 2 para cada partido y celda vacía para PTOS
                 theadHTML += '<tr>';
                 matchIds.forEach(() => {
                     theadHTML += '<th>1</th><th>X</th><th>2</th>';
@@ -753,7 +1011,6 @@
                 });
                 theadHTML += '</tr>';
                 
-                // FILA 4: RESULTADO (colspan=3) y PTOS
                 theadHTML += '<tr>';
                 matchIds.forEach(() => {
                     theadHTML += '<th colspan="3" class="text-[10px] text-center">RESULTADO</th>';
@@ -763,8 +1020,6 @@
                 
                 document.querySelector('#planilla-table thead').innerHTML = theadHTML;
                 
-                // ✅ TBODY: 3 celdas (1,X,2) + 1 celda PTOS por partido
-                // CAMBIO: Selecciones en BLANCO y NEGRITAS
                 let tbodyHTML = '';
                 players.forEach((p, idx) => {
                     const rankClass = idx < 3 ? `rank-${idx+1}` : '';
@@ -781,7 +1036,6 @@
                             else pts = (pred === res) ? 3 : 0;
                         }
                         
-                        // CAMBIO: Todo en blanco y negrita
                         const val1 = pred === 'Local' ? '<span class="text-white font-bold">1</span>' : '';
                         const valX = pred === 'Empate' ? '<span class="text-white font-bold">X</span>' : '';
                         const val2 = pred === 'Visitante' ? '<span class="text-white font-bold">2</span>' : '';
@@ -804,11 +1058,15 @@
 
         // 📥 EXCEL
         async function generarPlanillaExcel() {
-            showToast("📊 Generando Excel...", "success");
+            showToast(" Generando Excel...", "success");
             
             const pSnap = await db.collection('participants').get();
             const players = [];
-            pSnap.forEach(doc => { const d = doc.data(); if (d.submitted) players.push({ id: doc.id, ...d }); });
+            pSnap.forEach(doc => { 
+                const d = doc.data(); 
+                // 🎯 FILTRO: Excluir eliminados
+                if (d.submitted && !d.deleted) players.push({ id: doc.id, ...d }); 
+            });
             
             const rSnap = await db.collection('matches').get();
             const results = {};
@@ -915,7 +1173,7 @@
             showToast("✅ Excel descargado", "success");
         }
 
-        // 📱 PLANILLA DIGITAL EN VENTANA NUEVA (ESTILO EXCEL)
+        // 📱 PLANILLA DIGITAL
         async function generarPlanillaDigital() {
             showToast("⏳ Generando planilla digital...", "success");
             
@@ -924,7 +1182,8 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
-                    if (data.submitted === true) players.push({ id: doc.id, ...data });
+                    // 🎯 FILTRO: Excluir eliminados
+                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
 
                 const rSnap = await db.collection('matches').get();
@@ -1015,7 +1274,6 @@
                             else pts = (pred === res) ? 3 : 0;
                         }
                         
-                        // CAMBIO: Todo en NEGRO y NEGRITA
                         const val1 = pred === 'Local' ? '<span style="color:#000;font-weight:bold">1</span>' : '';
                         const valX = pred === 'Empate' ? '<span style="color:#000;font-weight:bold">X</span>' : '';
                         const val2 = pred === 'Visitante' ? '<span style="color:#000;font-weight:bold">2</span>' : '';
@@ -1056,7 +1314,7 @@
                     </head>
                     <body>
                         <h1>Quiniela Activa Mundialista - Planilla Digital</h1>
-                        <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+                        <button class="btn-print" onclick="window.print()">️ Imprimir / Guardar como PDF</button>
                         ${tableHTML}
                     </body>
                     </html>
@@ -1076,7 +1334,6 @@
             }
         }
 
-        // 🚪 CERRAR SESIÓN Y PERMITIR NUEVA PARTICIPACIÓN
         function logout() {
             if (!confirm("¿Seguro que quieres salir? Podrás crear una nueva participación con otro nombre.")) return;
             auth.signOut().then(() => {
