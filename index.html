@@ -94,7 +94,6 @@
 <body class="min-h-screen pb-20">
 
     <!-- HEADER -->
-    <!-- HEADER -->
 <header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
     <div class="max-w-5xl mx-auto px-4 py-3">
         <!-- PRIMERA LÍNEA -->
@@ -408,6 +407,99 @@
         let predictions = {};
         let isSubmitted = false;
 
+        // 🗓️ CALENDARIO OFICIAL MUNDIAL 2026 - FASE DE GRUPOS
+        const matchSchedule = {
+            // Jueves 11 junio 2026
+            'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
+            'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
+            // Viernes 12 junio 2026
+            'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia' },
+            'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
+            // Sábado 13 junio 2026
+            'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
+            'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
+            'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
+            'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
+            // Domingo 14 junio 2026
+            'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
+            'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
+            'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
+            'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
+            // Lunes 15 junio 2026
+            'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
+            'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
+            'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
+            'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
+            // Martes 16 junio 2026
+            'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
+            'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
+            'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
+            'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
+            // Miércoles 17 junio 2026
+            'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
+            'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
+            'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
+            'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
+            // Jueves 18 junio 2026
+            'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'Chequia', visitante: 'Sudáfrica' },
+            'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Suiza', visitante: 'Bosnia' },
+            'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Canadá', visitante: 'Qatar' },
+            'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'México', visitante: 'Corea del Sur' },
+            // Viernes 19 junio 2026
+            'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
+            'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Escocia', visitante: 'Marruecos' },
+            'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Brasil', visitante: 'Haití' },
+            'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
+            // Sábado 20 junio 2026
+            'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
+            'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
+            'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
+            'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
+            // Domingo 21 junio 2026
+            'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
+            'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
+            'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
+            'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
+            // Lunes 22 junio 2026
+            'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
+            'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
+            'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
+            'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
+            // Martes 23 junio 2026
+            'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
+            'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
+            'glm4': { fecha: '2026-06-23', hora: '19:00', local: 'Panamá', visitante: 'Croacia' },
+            'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
+            // Miércoles 24 junio 2026
+            'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
+            'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia', visitante: 'Qatar' },
+            'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
+            'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
+            'gam5': { fecha: '2026-06-24', hora: '21:00', local: 'Chequia', visitante: 'México' },
+            'gam6': { fecha: '2026-06-24', hora: '21:00', local: 'Sudáfrica', visitante: 'Corea del Sur' },
+            // Jueves 25 junio 2026
+            'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
+            'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
+            'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
+            'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
+            'gdm5': { fecha: '2026-06-25', hora: '22:00', local: 'Turquía', visitante: 'Estados Unidos' },
+            'gdm6': { fecha: '2026-06-25', hora: '22:00', local: 'Paraguay', visitante: 'Australia' },
+            // Viernes 26 junio 2026
+            'gim5': { fecha: '2026-06-26', hora: '15:00', local: 'Noruega', visitante: 'Francia' },
+            'gim6': { fecha: '2026-06-26', hora: '15:00', local: 'Senegal', visitante: 'Irak' },
+            'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
+            'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
+            'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
+            'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
+            // Sábado 27 junio 2026
+            'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
+            'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' },
+            'gkm5': { fecha: '2026-06-27', hora: '19:30', local: 'Colombia', visitante: 'Portugal' },
+            'gkm6': { fecha: '2026-06-27', hora: '19:30', local: 'RD Congo', visitante: 'Uzbekistán' },
+            'gjm5': { fecha: '2026-06-27', hora: '22:00', local: 'Argelia', visitante: 'Austria' },
+            'gjm6': { fecha: '2026-06-27', hora: '22:00', local: 'Jordania', visitante: 'Argentina' }
+        };
+
         const groupsData = {
             A: ['México', 'Sudáfrica', 'Corea del Sur', 'Chequia'],
             B: ['Canadá', 'Bosnia y Herzegovina', 'Qatar', 'Suiza'],
@@ -587,7 +679,6 @@
                     const players = [];
                     pSnap.forEach(doc => {
                         const data = doc.data();
-                        // 🎯 FILTRO: Excluir eliminados
                         if (data.deleted) return;
                         if (!data.submitted && !isDeadlinePassed) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
@@ -640,7 +731,6 @@
             else if (pin !== null) showToast("PIN incorrecto", "error");
         }
 
-        // 🎯 Tabs de Admin
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
             document.getElementById('admin-tab-players').classList.add('hidden');
@@ -705,7 +795,6 @@
             }
         }
 
-        // 🎯 Cargar lista de participantes en Admin
         async function loadAdminPlayers() {
             const container = document.getElementById('admin-players-list');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
@@ -720,7 +809,6 @@
                     return;
                 }
                 
-                // Ordenar: activos primero, eliminados al final
                 players.sort((a, b) => (a.deleted ? 1 : 0) - (b.deleted ? 1 : 0));
                 
                 let html = '';
@@ -731,7 +819,6 @@
                     p.predictions = preds;
                     p.predCount = Object.keys(preds).length;
                     
-                    // 🎯 Badge con 3 estados
                     let statusBadge;
                     if (p.deleted) {
                         statusBadge = '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>';
@@ -743,7 +830,6 @@
                     
                     const cardClass = p.deleted ? 'player-card deleted' : 'player-card';
                     
-                    // 🎯 Botones dinámicos según estado
                     let actionButtons;
                     if (p.deleted) {
                         actionButtons = `
@@ -836,13 +922,11 @@
             }
         }
 
-        // 🎯 Mostrar/ocultar predicciones de un jugador
         function togglePlayerPreds(playerId) {
             const el = document.getElementById(`preds-${playerId}`);
             el.classList.toggle('hidden');
         }
 
-        // 🎯 Admin modifica predicción de un jugador
         async function adminSetPred(playerId, matchId, value, clickedBtn) {
             try {
                 await db.collection('participants').doc(playerId).collection('predictions').doc(matchId)
@@ -864,7 +948,6 @@
             }
         }
 
-        // 🎯 Soft Delete - Marcar participante como eliminado
         async function deletePlayer(playerId, playerName) {
             if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?\n\nEsta acción ocultará al participante del ranking y las planillas, pero sus datos quedarán guardados.`)) return;
             if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
@@ -890,7 +973,6 @@
             }
         }
 
-        // 🎯 Restaurar participante eliminado
         async function restorePlayer(playerId, playerName) {
             if (!confirm(`♻️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
             
@@ -915,7 +997,7 @@
             }
         }
 
-        // 📊 PLANILLA WEB
+        // 📊 PLANILLA WEB - ORDEN CRONOLÓGICO
         async function generarPlanillaWeb() {
             showView('view-planilla');
             const loadingDiv = document.getElementById('planilla-loading');
@@ -929,7 +1011,6 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
-                    // 🎯 FILTRO: Excluir eliminados
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
                 
@@ -942,9 +1023,19 @@
                 const results = {};
                 rSnap.forEach(d => results[d.id] = d.data().result);
                 
-                const matchIds = [];
+                // 🎯 Crear array de partidos y ordenar cronológicamente
+                let matchIds = [];
                 'ABCDEFGHIJKL'.split('').forEach(g => { 
                     for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
+                });
+                
+                matchIds.sort((a, b) => {
+                    const schedA = matchSchedule[a];
+                    const schedB = matchSchedule[b];
+                    if (!schedA || !schedB) return 0;
+                    const dtA = schedA.fecha + ' ' + schedA.hora;
+                    const dtB = schedB.fecha + ' ' + schedB.hora;
+                    return dtA.localeCompare(dtB);
                 });
                 
                 for (const p of players) {
@@ -988,26 +1079,40 @@
                 theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th>';
                 theadHTML += '</tr>';
                 
+                // 🎯 FILA 2: Mostrar fecha/hora y equipos
                 theadHTML += '<tr>';
-                matchIds.forEach(m => {
-                    const match = m.match(/^g([a-l])m(\d+)$/);
-                    if (match) {
-                        const g = match[1].toUpperCase();
-                        const num = parseInt(match[2]);
-                        const teams = groupsData[g];
-                        if (teams && num >= 1 && num <= 6) {
-                            const matchPairs = [
-                                [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
-                                [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
-                            ];
-                            const [local, visitante] = matchPairs[num-1];
-                            theadHTML += `<th colspan="3" class="text-[10px]">${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}</th>`;
-                            theadHTML += '<th></th>';
-                        } else {
-                            theadHTML += `<th colspan="3">P${num}</th>`;
-                            theadHTML += '<th></th>';
+                matchIds.forEach((m, idx) => {
+                    const sched = matchSchedule[m];
+                    let fechaHora = '';
+                    let equipos = '';
+                    
+                    if (sched) {
+                        const dia = sched.fecha.substring(8, 10);
+                        const mes = sched.fecha.substring(5, 7);
+                        fechaHora = `${dia}/${mes} ${sched.hora}`;
+                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                    } else {
+                        const match = m.match(/^g([a-l])m(\d+)$/);
+                        if (match) {
+                            const g = match[1].toUpperCase();
+                            const num = parseInt(match[2]);
+                            const teams = groupsData[g];
+                            if (teams && num >= 1 && num <= 6) {
+                                const matchPairs = [
+                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
+                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
+                                ];
+                                const [local, visitante] = matchPairs[num-1];
+                                equipos = `${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}`;
+                            }
                         }
                     }
+                    
+                    theadHTML += `<th colspan="3" class="text-[10px]">
+                        <div class="text-green-400 text-[8px] font-bold">${fechaHora}</div>
+                        <div>${equipos}</div>
+                    </th>`;
+                    theadHTML += '<th></th>';
                 });
                 theadHTML += '</tr>';
                 
@@ -1018,32 +1123,32 @@
                 });
                 theadHTML += '</tr>';
                 
-                // 🎯 Fila 4 con resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
-theadHTML += '<tr>';
-matchIds.forEach(mId => {
-    const result = results[mId];
-    let resultText = 'RESULTADO';
-    let resultClass = 'text-[10px] text-center text-slate-400';
-    let resultStyle = '';
-    
-    if (result === 'Local') {
-        resultText = 'LOCAL';
-        resultClass = 'text-[10px] text-center font-bold';
-        resultStyle = 'color: #3b82f6 !important;';
-    } else if (result === 'Empate') {
-        resultText = 'EMPATE';
-        resultClass = 'text-[10px] text-center font-bold';
-        resultStyle = 'color: #7c3aed !important;';
-    } else if (result === 'Visitante') {
-        resultText = 'VISITANTE';
-        resultClass = 'text-[10px] text-center font-bold';
-        resultStyle = 'color: #dc2626 !important;';
-    }
-    
-    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th>`;
-    theadHTML += '<th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>';
-});
-theadHTML += '</tr>';
+                // 🎯 Fila 4 con resultados dinámicos
+                theadHTML += '<tr>';
+                matchIds.forEach(mId => {
+                    const result = results[mId];
+                    let resultText = 'RESULTADO';
+                    let resultClass = 'text-[10px] text-center text-slate-400';
+                    let resultStyle = '';
+                    
+                    if (result === 'Local') {
+                        resultText = 'LOCAL';
+                        resultClass = 'text-[10px] text-center font-bold';
+                        resultStyle = 'color: #3b82f6 !important;';
+                    } else if (result === 'Empate') {
+                        resultText = 'EMPATE';
+                        resultClass = 'text-[10px] text-center font-bold';
+                        resultStyle = 'color: #7c3aed !important;';
+                    } else if (result === 'Visitante') {
+                        resultText = 'VISITANTE';
+                        resultClass = 'text-[10px] text-center font-bold';
+                        resultStyle = 'color: #dc2626 !important;';
+                    }
+                    
+                    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th>`;
+                    theadHTML += '<th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>';
+                });
+                theadHTML += '</tr>';
                 
                 document.querySelector('#planilla-table thead').innerHTML = theadHTML;
                 
@@ -1083,124 +1188,7 @@ theadHTML += '</tr>';
             }
         }
 
-        // 📥 EXCEL
-        async function generarPlanillaExcel() {
-            showToast(" Generando Excel...", "success");
-            
-            const pSnap = await db.collection('participants').get();
-            const players = [];
-            pSnap.forEach(doc => { 
-                const d = doc.data(); 
-                // 🎯 FILTRO: Excluir eliminados
-                if (d.submitted && !d.deleted) players.push({ id: doc.id, ...d }); 
-            });
-            
-            const rSnap = await db.collection('matches').get();
-            const results = {};
-            rSnap.forEach(d => results[d.id] = d.data().result);
-            
-            const matchIds = [];
-            'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-            
-            for (const p of players) {
-                const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value);
-                p.predictions = preds;
-                let total = 0;
-                matchIds.forEach(mId => {
-                    const pred = preds[mId]; const res = results[mId];
-                    if (res) {
-                        if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
-                        else total += (pred === res) ? 3 : 0;
-                    }
-                });
-                p.total = total;
-            }
-            
-            players.sort((a, b) => b.total - a.total);
-            
-            const wb = XLSX.utils.book_new();
-            const wsData = [];
-            wsData.push(['QUINIELA ACTIVA MUNDIALISTA']);
-            wsData.push([]);
-            
-            const headerRow3 = ['', ''];
-            matchIds.forEach((m, i) => { headerRow3.push(`Partido ${i+1}`, '', ''); headerRow3.push(''); });
-            headerRow3.push('TOTAL');
-            wsData.push(headerRow3);
-            
-            const headerRow4 = ['', ''];
-            matchIds.forEach(m => {
-                const [g, num] = [m.charAt(1), parseInt(m.charAt(3))];
-                const teams = groupsData[g];
-                const matchPairs = [[teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]];
-                const [local, visitante] = matchPairs[num-1];
-                headerRow4.push(`${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}`, '', '');
-                headerRow4.push('');
-            });
-            headerRow4.push('');
-            wsData.push(headerRow4);
-            
-            const headerRow5 = ['#', 'PARTICIPANTE'];
-            matchIds.forEach(() => headerRow5.push('1', 'X', '2', ''));
-            headerRow5.push('TOTAL');
-            wsData.push(headerRow5);
-
-            const headerRow6 = ['', ''];
-            matchIds.forEach(() => {
-                headerRow6.push('RESULTADO');
-                headerRow6.push('');
-                headerRow6.push('');
-                headerRow6.push('PTOS');
-            });
-            headerRow6.push('');
-            wsData.push(headerRow6);
-            
-            players.forEach((p, idx) => {
-                const row = [idx + 1, p.displayName];
-                matchIds.forEach(mId => {
-                    const pred = p.predictions[mId] || '';
-                    const res = results[mId] || '';
-                    let pts = 0;
-                    if (res) {
-                        if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-                        else pts = (pred === res) ? 3 : 0;
-                    }
-                    row.push(pred === 'Local' ? '1' : '', pred === 'Empate' ? 'X' : '', pred === 'Visitante' ? '2' : '', pts);
-                });
-                row.push(p.total);
-                wsData.push(row);
-            });
-            
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws['!cols'] = [{ wch: 5 }, { wch: 20 }];
-            matchIds.forEach(() => ws['!cols'].push({ wch: 4 }, { wch: 4 }, { wch: 4 }, { wch: 6 }));
-            ws['!cols'].push({ wch: 10 });
-            
-            ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: (matchIds.length * 4) + 2 } }];
-            matchIds.forEach((m, i) => {
-                const colStart = 2 + (i * 4);
-                ws['!merges'].push({ s: { r: 2, c: colStart }, e: { r: 2, c: colStart + 2 } });
-                ws['!merges'].push({ s: { r: 5, c: colStart }, e: { r: 5, c: colStart + 2 } });
-            });
-            
-            const top3Colors = ['003366', '006699', '3399CC'];
-            for (let i = 0; i < Math.min(3, players.length); i++) {
-                const rowIdx = 6 + i;
-                for (let col = 0; col <= (matchIds.length * 4) + 2; col++) {
-                    const cellAddr = XLSX.utils.encode_cell({ r: rowIdx, c: col });
-                    if (ws[cellAddr]) {
-                        ws[cellAddr].s = { fill: { fgColor: { rgb: top3Colors[i] } }, font: { color: { rgb: 'FFFFFF' }, bold: true } };
-                    }
-                }
-            }
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'Planilla');
-            XLSX.writeFile(wb, 'Quiniela_Activa_Mundial_2026.xlsx');
-            showToast("✅ Excel descargado", "success");
-        }
-
-        // 📱 PLANILLA DIGITAL
+        // 📱 PLANILLA DIGITAL - ORDEN CRONOLÓGICO
         async function generarPlanillaDigital() {
             showToast("⏳ Generando planilla digital...", "success");
             
@@ -1209,7 +1197,6 @@ theadHTML += '</tr>';
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
-                    // 🎯 FILTRO: Excluir eliminados
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
 
@@ -1217,9 +1204,19 @@ theadHTML += '</tr>';
                 const results = {};
                 rSnap.forEach(d => results[d.id] = d.data().result);
 
-                const matchIds = [];
+                // 🎯 Crear array de partidos y ordenar cronológicamente
+                let matchIds = [];
                 'ABCDEFGHIJKL'.split('').forEach(g => { 
                     for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
+                });
+                
+                matchIds.sort((a, b) => {
+                    const schedA = matchSchedule[a];
+                    const schedB = matchSchedule[b];
+                    if (!schedA || !schedB) return 0;
+                    const dtA = schedA.fecha + ' ' + schedA.hora;
+                    const dtB = schedB.fecha + ' ' + schedB.hora;
+                    return dtA.localeCompare(dtB);
                 });
 
                 for (const p of players) {
@@ -1254,21 +1251,38 @@ theadHTML += '</tr>';
                 tableHTML += `<th rowspan="4" class="sticky-col-right bg-yellow-400 text-black">TOTAL</th></tr>
                             <tr>`;
                 
-                matchIds.forEach(m => {
-                    const match = m.match(/^g([a-l])m(\d+)$/);
-                    if (match) {
-                        const g = match[1].toUpperCase();
-                        const num = parseInt(match[2]);
-                        const teams = groupsData[g];
-                        if (teams && num >= 1 && num <= 6) {
-                            const matchPairs = [
-                                [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
-                                [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
-                            ];
-                            const [local, visitante] = matchPairs[num-1];
-                            tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]">${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}</th><th class="bg-gray-200"></th>`;
+                // 🎯 FILA 2: Mostrar fecha/hora y equipos
+                matchIds.forEach((m, idx) => {
+                    const sched = matchSchedule[m];
+                    let fechaHora = '';
+                    let equipos = '';
+                    
+                    if (sched) {
+                        const dia = sched.fecha.substring(8, 10);
+                        const mes = sched.fecha.substring(5, 7);
+                        fechaHora = `${dia}/${mes} ${sched.hora}`;
+                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                    } else {
+                        const match = m.match(/^g([a-l])m(\d+)$/);
+                        if (match) {
+                            const g = match[1].toUpperCase();
+                            const num = parseInt(match[2]);
+                            const teams = groupsData[g];
+                            if (teams && num >= 1 && num <= 6) {
+                                const matchPairs = [
+                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
+                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
+                                ];
+                                const [local, visitante] = matchPairs[num-1];
+                                equipos = `${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}`;
+                            }
                         }
                     }
+                    
+                    tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]">
+                        <div style="color: #90EE90; font-size: 7pt;">${fechaHora}</div>
+                        <div>${equipos}</div>
+                    </th><th class="bg-gray-200"></th>`;
                 });
                 tableHTML += `</tr>
                             <tr>`;
@@ -1279,27 +1293,27 @@ theadHTML += '</tr>';
                 tableHTML += `</tr>
                             <tr>`;
                 
-                // 🎯 Fila 4: Resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
-matchIds.forEach(mId => {
-    const result = results[mId];
-    let resultText = 'RESULTADO';
-    let resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
-    
-    if (result === 'Local') {
-        resultText = 'LOCAL';
-        resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;';
-    } else if (result === 'Empate') {
-        resultText = 'EMPATE';
-        resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;';
-    } else if (result === 'Visitante') {
-        resultText = 'VISITANTE';
-        resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;';
-    }
-    
-    tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th>`;
-    tableHTML += `<th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
-});
-tableHTML += `</tr>
+                // 🎯 Fila 4: Resultados dinámicos
+                matchIds.forEach(mId => {
+                    const result = results[mId];
+                    let resultText = 'RESULTADO';
+                    let resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
+                    
+                    if (result === 'Local') {
+                        resultText = 'LOCAL';
+                        resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;';
+                    } else if (result === 'Empate') {
+                        resultText = 'EMPATE';
+                        resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;';
+                    } else if (result === 'Visitante') {
+                        resultText = 'VISITANTE';
+                        resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;';
+                    }
+                    
+                    tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th>`;
+                    tableHTML += `<th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
+                });
+                tableHTML += `</tr>
         </thead>
         <tbody>`;
                 
