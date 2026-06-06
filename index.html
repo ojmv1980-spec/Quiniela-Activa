@@ -1007,28 +1007,29 @@
                 });
                 theadHTML += '</tr>';
                 
-                // 🎯 NUEVO: Fila 4 con resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
-                theadHTML += '<tr>';
-                matchIds.forEach(mId => {
-                    const result = results[mId];
-                    let resultText = 'RESULTADO';
-                    let resultClass = 'text-[10px] text-center text-slate-400';
-                    
-                    if (result === 'Local') {
-                        resultText = 'LOCAL';
-                        resultClass = 'text-[10px] text-center font-bold text-blue-400';
-                    } else if (result === 'Empate') {
-                        resultText = 'EMPATE';
-                        resultClass = 'text-[10px] text-center font-bold text-yellow-400';
-                    } else if (result === 'Visitante') {
-                        resultText = 'VISITANTE';
-                        resultClass = 'text-[10px] text-center font-bold text-red-400';
-                    }
-                    
-                    theadHTML += `<th colspan="3" class="${resultClass}">${resultText}</th>`;
-                    theadHTML += '<th class="text-yellow-400">PTOS</th>';
-                });
-                theadHTML += '</tr>';
+                // 🎯 Fila 4 con resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
+			theadHTML += '<tr>';
+				matchIds.forEach(mId => {
+				const result = results[mId];
+				let resultText = 'RESULTADO';
+				let resultClass = 'text-[10px] text-center text-slate-400';
+    
+			if (result === 'Local') {
+			resultText = 'LOCAL';
+			resultClass = 'text-[10px] text-center font-bold text-blue-400';
+			} else if (result === 'Empate') {
+			resultText = 'EMPATE';
+			resultClass = 'text-[10px] text-center font-bold text-yellow-400';
+			} else if (result === 'Visitante') {
+			resultText = 'VISITANTE';
+			resultClass = 'text-[10px] text-center font-bold text-red-400';
+    }
+    
+    // 🎯 Forzar fondo normal (sin sombreado amarillo)
+    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c;">${resultText}</th>`;
+    theadHTML += '<th class="text-yellow-400">PTOS</th>';
+});
+theadHTML += '</tr>';
                 
                 document.querySelector('#planilla-table thead').innerHTML = theadHTML;
                 
