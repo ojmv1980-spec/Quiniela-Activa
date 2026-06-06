@@ -94,31 +94,45 @@
 <body class="min-h-screen pb-20">
 
     <!-- HEADER -->
-    <header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- HEADER -->
+<header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-5xl mx-auto px-4 py-3">
+        <!-- PRIMERA LÍNEA -->
+        <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-lg shadow-lg shadow-blue-500/20">
-                    <i data-lucide="trophy" class="text-white w-6 h-6"></i>
+                    <i data-lucide="trophy" class="text-white w-5 h-5"></i>
                 </div>
                 <div>
-                    <h1 class="text-lg italic-black uppercase leading-none">Trivia 2026</h1>
-                    <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Fase de Grupos</span>
+                    <h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1>
                 </div>
             </div>
             
-            <button onclick="promptAdmin()" class="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
-                <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-5 h-5"></i>
-            </button>
-            
-            <div id="user-badge" class="hidden flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span id="display-username" class="text-xs font-bold text-white"></span>
-                <button onclick="logout()" class="ml-2 text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-2 py-1 rounded font-bold transition" title="Salir y crear otra participación">
-                    ✕ Salir
+            <div class="flex items-center gap-3">
+                <button onclick="showView('view-home')" class="text-[10px] md:text-xs font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">
+                    Inicio
+                </button>
+                
+                <button onclick="promptAdmin()" class="p-1.5 md:p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
+                    <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-4 h-4 md:w-5 md:h-5"></i>
                 </button>
             </div>
         </div>
-    </header>
+        
+        <!-- SEGUNDA LÍNEA -->
+        <div class="flex justify-between items-center mt-1 pt-1 border-t border-white/5">
+            <span class="text-[10px] md:text-xs text-blue-400 font-bold uppercase tracking-widest">Fase de Grupos</span>
+            
+            <div id="user-badge" class="hidden flex items-center gap-2 px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span id="display-username" class="text-[10px] md:text-xs font-bold text-white"></span>
+                <button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir">
+                    ✕
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
 
     <main class="max-w-5xl mx-auto px-4 py-8">
         
@@ -253,7 +267,7 @@
         <div id="view-leaderboard" class="hidden space-y-12 py-8">
             <div class="text-center space-y-4">
                 <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">
-					Ranking de <span class="text-blue-600 underline underline-offset-8"> Participantes</span>
+					Ranking  de  <span class="text-blue-600 underline underline-offset-8">  Participantes</span>
 				</h2>
             </div>
             <div class="glass rounded-3xl overflow-hidden">
@@ -1334,9 +1348,9 @@ tableHTML += `</tr>
                             th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; }
                             .sticky-col { position: sticky; left: 0; background: #f8fafc; z-index: 10; border-right: 2px solid #000; }
                             .sticky-col-right { position: sticky; right: 0; background: #fef08a; z-index: 10; border-left: 2px solid #000; }
-                            .rank-1 { background-color: #3399CC !important; color: white !important; }
-                            .rank-2 { background-color: #3399CC !important; color: white !important; }
-                            .rank-3 { background-color: #3399CC !important; color: white !important; }
+                            .rank-1 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
+							.rank-2 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
+							.rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
                             .rank-1 td, .rank-2 td, .rank-3 td { color: white; border-color: #fff; }
                             .rank-1 .sticky-col, .rank-2 .sticky-col, .rank-3 .sticky-col { background: inherit; }
                             .rank-1 .sticky-col-right, .rank-2 .sticky-col-right, .rank-3 .sticky-col-right { background: inherit; }
