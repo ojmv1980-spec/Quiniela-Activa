@@ -1008,26 +1008,26 @@
                 theadHTML += '</tr>';
                 
                 // 🎯 Fila 4 con resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
-			theadHTML += '<tr>';
-				matchIds.forEach(mId => {
-				const result = results[mId];
-				let resultText = 'RESULTADO';
-				let resultClass = 'text-[10px] text-center text-slate-400';
+theadHTML += '<tr>';
+matchIds.forEach(mId => {
+    const result = results[mId];
+    let resultText = 'RESULTADO';
+    let resultClass = 'text-[10px] text-center text-slate-400';
     
-			if (result === 'Local') {
-			resultText = 'LOCAL';
-			resultClass = 'text-[10px] text-center font-bold text-blue-400';
-			} else if (result === 'Empate') {
-			resultText = 'EMPATE';
-			resultClass = 'text-[10px] text-center font-bold text-yellow-400';
-			} else if (result === 'Visitante') {
-			resultText = 'VISITANTE';
-			resultClass = 'text-[10px] text-center font-bold text-red-400';
+    if (result === 'Local') {
+        resultText = 'LOCAL';
+        resultClass = 'text-[10px] text-center font-bold text-blue-400';
+    } else if (result === 'Empate') {
+        resultText = 'EMPATE';
+        resultClass = 'text-[10px] text-center font-bold text-yellow-400';
+    } else if (result === 'Visitante') {
+        resultText = 'VISITANTE';
+        resultClass = 'text-[10px] text-center font-bold text-red-400';
     }
     
-    // 🎯 Forzar fondo normal (sin sombreado amarillo)
-    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c;">${resultText}</th>`;
-    theadHTML += '<th class="text-yellow-400">PTOS</th>';
+    // 🎯 Forzar fondo oscuro con !important
+    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important;">${resultText}</th>`;
+    theadHTML += '<th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>';
 });
 theadHTML += '</tr>';
                 
@@ -1265,12 +1265,29 @@ theadHTML += '</tr>';
                 tableHTML += `</tr>
                             <tr>`;
                 
-                matchIds.forEach(() => {
-                    tableHTML += `<th colspan="3" class="bg-blue-200 text-black">RESULTADO</th><th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
-                });
-                tableHTML += `</tr>
-                        </thead>
-                        <tbody>`;
+                // 🎯 Fila 4: Resultados dinámicos (LOCAL/EMPATE/VISITANTE con colores)
+matchIds.forEach(mId => {
+    const result = results[mId];
+    let resultText = 'RESULTADO';
+    let resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
+    
+    if (result === 'Local') {
+        resultText = 'LOCAL';
+        resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;';
+    } else if (result === 'Empate') {
+        resultText = 'EMPATE';
+        resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;';
+    } else if (result === 'Visitante') {
+        resultText = 'VISITANTE';
+        resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;';
+    }
+    
+    tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th>`;
+    tableHTML += `<th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
+});
+tableHTML += `</tr>
+        </thead>
+        <tbody>`;
                 
                 players.forEach((p, idx) => {
                     const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
