@@ -1013,20 +1013,23 @@ matchIds.forEach(mId => {
     const result = results[mId];
     let resultText = 'RESULTADO';
     let resultClass = 'text-[10px] text-center text-slate-400';
+    let resultStyle = '';
     
     if (result === 'Local') {
         resultText = 'LOCAL';
-        resultClass = 'text-[10px] text-center font-bold text-blue-400';
+        resultClass = 'text-[10px] text-center font-bold';
+        resultStyle = 'color: #3b82f6 !important;';
     } else if (result === 'Empate') {
         resultText = 'EMPATE';
-        resultClass = 'text-[10px] text-center font-bold text-yellow-400';
+        resultClass = 'text-[10px] text-center font-bold';
+        resultStyle = 'color: #7c3aed !important;';
     } else if (result === 'Visitante') {
         resultText = 'VISITANTE';
-        resultClass = 'text-[10px] text-center font-bold text-red-400';
+        resultClass = 'text-[10px] text-center font-bold';
+        resultStyle = 'color: #dc2626 !important;';
     }
     
-    // 🎯 Forzar fondo oscuro con !important
-    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important;">${resultText}</th>`;
+    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th>`;
     theadHTML += '<th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>';
 });
 theadHTML += '</tr>';
