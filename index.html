@@ -161,6 +161,35 @@
                 🚫 Las predicciones están cerradas. Solo puedes ver el ranking.
             </div>
             
+            <!-- 🎯 NUEVO: Resumen Rápido de Cómo Jugar -->
+            <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-2 border-blue-500/30 shadow-lg shadow-blue-500/20">
+                <h3 class="text-center text-lg font-black text-blue-400 uppercase tracking-wider mb-4 italic">
+                    📋 RESUMEN RÁPIDO
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
+                        <span class="text-2xl">1️⃣</span>
+                        <p class="text-white font-bold text-sm">Regístrate con un apodo único</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
+                        <span class="text-2xl">2️⃣</span>
+                        <p class="text-white font-bold text-sm">Completa los 72 partidos</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
+                        <span class="text-2xl">3️⃣</span>
+                        <p class="text-white font-bold text-sm">Envía tus predicciones antes del <span class="text-yellow-400">10 de junio 10:00 PM</span></p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
+                        <span class="text-2xl">4️⃣</span>
+                        <p class="text-white font-bold text-sm">Espera los resultados oficiales</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
+                        <span class="text-2xl">5️⃣</span>
+                        <p class="text-white font-bold text-sm">Consulta el ranking y planillas</p>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-blue-300 font-bold mt-4 italic">¡Buena suerte y que gane el mejor! ⚽🏆</p>
+            </div>
 
             <div class="w-full max-w-md glass p-8 rounded-3xl space-y-6">
                 <div class="text-left space-y-2">
@@ -173,7 +202,7 @@
                 </button>
                 <p class="text-[10px] text-slate-500">* Tus predicciones se guardarán automáticamente</p>
             </div>
-			            <!-- 🎯 NUEVO: Botón Ver Resultados Partido a Partido -->
+			            <!-- 🎯 NUEVO: Botón Ver Ranking de Participantes -->
             <div class="w-full max-w-md">
                 <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
                      VER RANKING DE PARTICIPANTES
@@ -730,7 +759,7 @@
             }).join('');
         }
 
-        // ⚙️ PANEL ADMIN
+        // ️ PANEL ADMIN
         function promptAdmin() {
             const pin = prompt(" Ingresa el PIN de administrador:");
             if (pin === ADMIN_PIN) { showView('view-admin'); renderAdminMatches(); }
@@ -1029,7 +1058,6 @@
                 const results = {};
                 rSnap.forEach(d => results[d.id] = d.data().result);
                 
-                // 🎯 Crear array de partidos y ordenar cronológicamente
                 let matchIds = [];
                 'ABCDEFGHIJKL'.split('').forEach(g => { 
                     for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
@@ -1085,7 +1113,6 @@
                 theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th>';
                 theadHTML += '</tr>';
                 
-                // 🎯 FILA 2: Mostrar fecha/hora y equipos
                 theadHTML += '<tr>';
                 matchIds.forEach((m, idx) => {
                     const sched = matchSchedule[m];
@@ -1129,7 +1156,6 @@
                 });
                 theadHTML += '</tr>';
                 
-                // 🎯 Fila 4 con resultados dinámicos
                 theadHTML += '<tr>';
                 matchIds.forEach(mId => {
                     const result = results[mId];
@@ -1210,7 +1236,6 @@
                 const results = {};
                 rSnap.forEach(d => results[d.id] = d.data().result);
 
-                // 🎯 Crear array de partidos y ordenar cronológicamente
                 let matchIds = [];
                 'ABCDEFGHIJKL'.split('').forEach(g => { 
                     for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
@@ -1257,7 +1282,6 @@
                 tableHTML += `<th rowspan="4" class="sticky-col-right bg-yellow-400 text-black">TOTAL</th></tr>
                             <tr>`;
                 
-                // 🎯 FILA 2: Mostrar fecha/hora y equipos
                 matchIds.forEach((m, idx) => {
                     const sched = matchSchedule[m];
                     let fechaHora = '';
@@ -1299,7 +1323,6 @@
                 tableHTML += `</tr>
                             <tr>`;
                 
-                // 🎯 Fila 4: Resultados dinámicos
                 matchIds.forEach(mId => {
                     const result = results[mId];
                     let resultText = 'RESULTADO';
