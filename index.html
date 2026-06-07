@@ -27,7 +27,6 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .tabular-nums { font-variant-numeric: tabular-nums; }
         
-        /* 🎯 Contador flotante sticky */
         #sticky-progress {
             position: sticky;
             top: 80px;
@@ -35,7 +34,6 @@
             transition: all 0.3s ease;
         }
         
-        /* Tabla de planilla */
         #planilla-table th, #planilla-table td {
             padding: 8px 4px;
             border: 1px solid rgba(255,255,255,0.1);
@@ -72,7 +70,6 @@
         .btn-result-X.selected { background: #eab308 !important; color: white !important; }
         .btn-result-2.selected { background: #dc2626 !important; color: white !important; }
         
-        /* 🎯 Estilos para gestión de participantes */
         .player-card { transition: all 0.2s ease; }
         .player-card:hover { background: rgba(37, 99, 235, 0.1); }
         .player-card.deleted { opacity: 0.5; border: 1px dashed #dc2626 !important; }
@@ -93,10 +90,8 @@
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- HEADER -->
-<header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
+    <header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
     <div class="max-w-5xl mx-auto px-4 py-3">
-        <!-- PRIMERA LÍNEA -->
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-lg shadow-lg shadow-blue-500/20">
@@ -118,7 +113,6 @@
             </div>
         </div>
         
-        <!-- SEGUNDA LÍNEA -->
         <div class="flex justify-between items-center mt-1 pt-1 border-t border-white/5">
             <span class="text-[10px] md:text-xs text-blue-400 font-bold uppercase tracking-widest">Fase de Grupos</span>
             
@@ -135,7 +129,6 @@
 
     <main class="max-w-5xl mx-auto px-4 py-8">
         
-        <!-- VISTA 1: LOGIN + TEMPORIZADOR -->
         <div id="view-home" class="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6">
             <div class="text-center space-y-1">
                 <h2 class="text-2xl md:text-4xl italic-black tracking-tighter leading-none uppercase">
@@ -161,7 +154,6 @@
                 🚫 Las predicciones están cerradas. Solo puedes ver el ranking.
             </div>
             
-            <!-- 🎯 NUEVO: Resumen Rápido de Cómo Jugar -->
             <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-2 border-blue-500/30 shadow-lg shadow-blue-500/20">
                 <h3 class="text-center text-lg font-black text-blue-400 uppercase tracking-wider mb-4 italic">
                     📋 RESUMEN RÁPIDO
@@ -204,8 +196,7 @@
                     INGRESE SOLO PARA AGREGAR UNA NUEVA PARTICIPACIÓN
                 </h3>
             </div>
-			            <!-- 🎯 NUEVO: Botón Ver Ranking de Participantes -->
-            <div class="w-full max-w-md">
+			            <div class="w-full max-w-md">
                 <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
                      VER RANKING DE PARTICIPANTES
                 </button>
@@ -260,9 +251,7 @@
         </div>
         
 
-        <!-- VISTA 2: PREDICCIONES -->
         <div id="view-predictions" class="hidden space-y-12">
-            <!-- 🎯 Contador flotante sticky -->
             <div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
                 <div class="space-y-1">
                     <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
@@ -299,7 +288,6 @@
             </div>
         </div>
 
-        <!-- VISTA 3: RANKING -->
         <div id="view-leaderboard" class="hidden space-y-12 py-8">
             <div class="text-center space-y-4">
                 <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">
@@ -349,14 +337,12 @@
             </div>
         </div>
 
-        <!-- VISTA 4: ADMIN -->
         <div id="view-admin" class="hidden space-y-8 py-8">
             <div class="text-center">
                 <h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2>
                 <p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p>
             </div>
             
-            <!-- 🎯 Tabs de Admin -->
             <div class="flex justify-center gap-3 flex-wrap">
                 <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">
                     📊 Cargar Resultados
@@ -366,12 +352,10 @@
                 </button>
             </div>
             
-            <!-- Tab: Resultados -->
             <div id="admin-tab-results">
                 <div id="admin-matches-container" class="space-y-6"></div>
             </div>
             
-            <!-- 🎯 Tab: Gestión de Participantes -->
             <div id="admin-tab-players" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
                     <h4 class="font-bold text-blue-400 mb-2">👥 Lista de Participantes</h4>
@@ -387,7 +371,6 @@
             </div>
         </div>
 
-        <!-- VISTA 5: PLANILLA -->
         <div id="view-planilla" class="hidden space-y-6 py-8">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl md:text-3xl italic-black uppercase text-blue-400">Resultados Partido a Partido</h2>
@@ -444,91 +427,73 @@
         let predictions = {};
         let isSubmitted = false;
 
-        // 🗓️ CALENDARIO OFICIAL MUNDIAL 2026 - FASE DE GRUPOS
         const matchSchedule = {
-            // Jueves 11 junio 2026
             'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
             'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
-            // Viernes 12 junio 2026
             'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia' },
             'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
-            // Sábado 13 junio 2026
             'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
             'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
             'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
             'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
-            // Domingo 14 junio 2026
             'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
             'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
             'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
             'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
-            // Lunes 15 junio 2026
             'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
             'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
             'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
             'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
-            // Martes 16 junio 2026
             'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
             'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
             'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
             'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
-            // Miércoles 17 junio 2026
             'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
             'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
             'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
             'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
-            // Jueves 18 junio 2026
             'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'Chequia', visitante: 'Sudáfrica' },
             'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Suiza', visitante: 'Bosnia' },
             'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Canadá', visitante: 'Qatar' },
             'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'México', visitante: 'Corea del Sur' },
-            // Viernes 19 junio 2026
             'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
             'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Escocia', visitante: 'Marruecos' },
             'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Brasil', visitante: 'Haití' },
             'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
-            // Sábado 20 junio 2026
             'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
             'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
             'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
             'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
-            // Domingo 21 junio 2026
             'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
             'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
             'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
             'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
-            // Lunes 22 junio 2026
             'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
             'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
             'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
             'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
-            // Martes 23 junio 2026
             'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
             'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
             'glm4': { fecha: '2026-06-23', hora: '19:00', local: 'Panamá', visitante: 'Croacia' },
             'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
-            // Miércoles 24 junio 2026
             'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
             'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia', visitante: 'Qatar' },
             'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
             'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
             'gam5': { fecha: '2026-06-24', hora: '21:00', local: 'Chequia', visitante: 'México' },
             'gam6': { fecha: '2026-06-24', hora: '21:00', local: 'Sudáfrica', visitante: 'Corea del Sur' },
-            // Jueves 25 junio 2026
             'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
             'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
             'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
             'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
             'gdm5': { fecha: '2026-06-25', hora: '22:00', local: 'Turquía', visitante: 'Estados Unidos' },
             'gdm6': { fecha: '2026-06-25', hora: '22:00', local: 'Paraguay', visitante: 'Australia' },
-            // Viernes 26 junio 2026
             'gim5': { fecha: '2026-06-26', hora: '15:00', local: 'Noruega', visitante: 'Francia' },
             'gim6': { fecha: '2026-06-26', hora: '15:00', local: 'Senegal', visitante: 'Irak' },
             'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
             'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
             'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
             'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
-            // Sábado 27 junio 2026
             'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
             'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' },
             'gkm5': { fecha: '2026-06-27', hora: '19:30', local: 'Colombia', visitante: 'Portugal' },
@@ -552,7 +517,6 @@
             L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
         };
 
-        // ⏳ TEMPORIZADOR
         function startCountdown() {
             const display = document.getElementById('countdown-display');
             clearInterval(countdownInterval);
@@ -585,7 +549,6 @@
             });
         }
 
-        // 🎨 RENDERIZAR PARTIDOS
         function renderMatches() {
             const container = document.getElementById('matches-container');
             container.innerHTML = '';
@@ -649,12 +612,34 @@
             } catch (e) { console.error('Auto-save error:', e); }
         }
 
+        // 🎯 FUNCIÓN ACTUALIZADA: Valida apodos únicos
         async function handleLogin() {
             const name = document.getElementById('username-input').value.trim();
             if (!name || name.length < 3) return showToast("Ingresa un apodo de al menos 3 caracteres", "error");
+
             try {
                 const cred = await auth.signInAnonymously();
                 const uid = cred.user.uid;
+
+                // 🎯 Verificar si el apodo ya existe en la base de datos
+                const nicknameQuery = db.collection('participants').where('displayName', '==', name);
+                const nicknameSnapshot = await nicknameQuery.get();
+
+                if (!nicknameSnapshot.empty) {
+                    // Si existe, verificar si es el mismo usuario (mismo UID)
+                    let isSameUser = false;
+                    nicknameSnapshot.forEach(doc => {
+                        if (doc.id === uid) isSameUser = true;
+                    });
+
+                    if (!isSameUser) {
+                        // Es otro usuario, bloquear registro y cerrar sesión anónima
+                        await auth.signOut();
+                        showToast("❌ Ese apodo ya está registrado. Elige otro.", "error");
+                        return;
+                    }
+                }
+
                 const userDoc = await db.collection('participants').doc(uid).get();
                 let userCode = userDoc.data()?.userCode;
                 if (!userCode) {
@@ -706,7 +691,6 @@
             } catch (err) { showToast(" Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
         }
 
-        // 🏆 LEADERBOARD
         let unsubscribeLB = null;
         function startLeaderboardListener() {
             if (unsubscribeLB) unsubscribeLB();
@@ -761,7 +745,6 @@
             }).join('');
         }
 
-        // ️ PANEL ADMIN
         function promptAdmin() {
             const pin = prompt(" Ingresa el PIN de administrador:");
             if (pin === ADMIN_PIN) { showView('view-admin'); renderAdminMatches(); }
@@ -783,6 +766,7 @@
             if (tab === 'players') loadAdminPlayers();
         }
 
+        // 🎯 NUEVA FUNCIÓN: Renderiza partidos agrupados por DÍA en orden cronológico
         async function renderAdminMatches() {
             const container = document.getElementById('admin-matches-container');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
@@ -791,29 +775,102 @@
             const existingResults = {};
             rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
             
-            container.innerHTML = '';
-            Object.entries(groupsData).forEach(([group, teams], gIdx) => {
-                let html = `<div class="glass p-4 rounded-xl mb-4"><h4 class="font-bold text-blue-400 mb-3">Grupo ${group}</h4><div class="space-y-2">`;
-                const matches = [[teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]];
-                matches.forEach((m, i) => {
-                    const id = `g${group.toLowerCase()}m${i+1}`;
-                    const currentResult = existingResults[id] || '';
-                    
-                    const btn1Class = currentResult === 'Local' ? 'btn-result-1 selected' : 'btn-result-1';
-                    const btnXClass = currentResult === 'Empate' ? 'btn-result-X selected' : 'btn-result-X';
-                    const btn2Class = currentResult === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2';
-                    
-                    html += `<div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg">
-                        <span class="font-bold text-sm">${m[0]} vs ${m[1]}</span>
-                        <div class="flex gap-2">
-                            <button onclick="setResult('${id}', 'Local', this)" class="px-3 py-1 bg-white/10 hover:bg-blue-600 rounded text-xs font-bold transition ${btn1Class}">1</button>
-                            <button onclick="setResult('${id}', 'Empate', this)" class="px-3 py-1 bg-white/10 hover:bg-yellow-600 rounded text-xs font-bold transition ${btnXClass}">X</button>
-                            <button onclick="setResult('${id}', 'Visitante', this)" class="px-3 py-1 bg-white/10 hover:bg-red-600 rounded text-xs font-bold transition ${btn2Class}">2</button>
-                        </div></div>`;
-                });
-                html += `</div></div>`;
-                container.innerHTML += html;
+            // 🎯 Crear array de partidos con su info completa
+            const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({
+                id,
+                fecha: sched.fecha,
+                hora: sched.hora,
+                local: sched.local,
+                visitante: sched.visitante,
+                resultado: existingResults[id] || ''
+            }));
+            
+            // 🎯 Ordenar por fecha y hora
+            allMatches.sort((a, b) => {
+                const dtA = a.fecha + ' ' + a.hora;
+                const dtB = b.fecha + ' ' + b.hora;
+                return dtA.localeCompare(dtB);
             });
+            
+            // 🎯 Agrupar por día
+            const matchesByDay = {};
+            allMatches.forEach(m => {
+                if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = [];
+                matchesByDay[m.fecha].push(m);
+            });
+            
+            // 🎯 Nombres de días y meses en español
+            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            
+            container.innerHTML = '';
+            
+            // 🎯 Contador de progreso general
+            const totalCargados = allMatches.filter(m => m.resultado !== '').length;
+            const progreso = Math.round((totalCargados / 72) * 100);
+            
+            let html = `
+                <div class="glass p-4 rounded-xl mb-4 border-l-4 border-green-500">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-bold text-green-400">📊 Progreso de carga</span>
+                        <span class="text-sm font-bold text-white">${totalCargados} / 72 partidos (${progreso}%)</span>
+                    </div>
+                    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-green-500 transition-all" style="width: ${progreso}%"></div>
+                    </div>
+                </div>
+            `;
+            
+            // 🎯 Renderizar cada día
+            Object.keys(matchesByDay).sort().forEach(fecha => {
+                const matchesOfDay = matchesByDay[fecha];
+                const dateObj = new Date(fecha + 'T12:00:00');
+                const diaNombre = diasSemana[dateObj.getDay()];
+                const diaNum = dateObj.getDate();
+                const mesNombre = meses[dateObj.getMonth()];
+                
+                const cargadosEnDia = matchesOfDay.filter(m => m.resultado !== '').length;
+                
+                html += `
+                    <div class="glass p-4 rounded-xl mb-4">
+                        <div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
+                            <h4 class="font-bold text-blue-400 text-sm md:text-base">
+                                📅 ${diaNombre}, ${diaNum} de ${mesNombre} ${dateObj.getFullYear()}
+                            </h4>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded ${cargadosEnDia === matchesOfDay.length ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
+                                ${cargadosEnDia}/${matchesOfDay.length}
+                            </span>
+                        </div>
+                        <div class="space-y-2">
+                `;
+                
+                matchesOfDay.forEach(m => {
+                    const btn1Class = m.resultado === 'Local' ? 'btn-result-1 selected' : 'btn-result-1';
+                    const btnXClass = m.resultado === 'Empate' ? 'btn-result-X selected' : 'btn-result-X';
+                    const btn2Class = m.resultado === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2';
+                    
+                    const estadoIcono = m.resultado ? '✅' : '⏳';
+                    
+                    html += `
+                        <div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg gap-2">
+                            <div class="flex items-center gap-2 flex-1 min-w-0">
+                                <span class="text-[10px] font-bold text-green-400 whitespace-nowrap">${m.hora}</span>
+                                <span class="text-xs md:text-sm font-bold truncate">${m.local} vs ${m.visitante}</span>
+                                <span class="text-xs">${estadoIcono}</span>
+                            </div>
+                            <div class="flex gap-1 md:gap-2 flex-shrink-0">
+                                <button onclick="setResult('${m.id}', 'Local', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-blue-600 rounded text-xs font-bold transition ${btn1Class}">1</button>
+                                <button onclick="setResult('${m.id}', 'Empate', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-yellow-600 rounded text-xs font-bold transition ${btnXClass}">X</button>
+                                <button onclick="setResult('${m.id}', 'Visitante', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-red-600 rounded text-xs font-bold transition ${btn2Class}">2</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            container.innerHTML = html;
         }
 
         async function setResult(matchId, result, clickedBtn) {
@@ -826,6 +883,9 @@
                 const buttons = parentDiv.querySelectorAll('button');
                 buttons.forEach(btn => btn.classList.remove('selected'));
                 clickedBtn.classList.add('selected');
+                
+                // 🎯 Recargar la vista para actualizar contadores de progreso
+                setTimeout(() => renderAdminMatches(), 500);
                 
             } catch (e) {
                 showToast("Error: " + e.message, "error");
@@ -1034,7 +1094,6 @@
             }
         }
 
-        // 📊 PLANILLA WEB - ORDEN CRONOLÓGICO
         async function generarPlanillaWeb() {
             showView('view-planilla');
             const loadingDiv = document.getElementById('planilla-loading');
@@ -1222,7 +1281,6 @@
             }
         }
 
-        // 📱 PLANILLA DIGITAL - ORDEN CRONOLÓGICO
         async function generarPlanillaDigital() {
             showToast("⏳ Generando planilla digital...", "success");
             
