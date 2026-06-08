@@ -769,11 +769,24 @@
             }).join('');
         }
 
-        function promptAdmin() {
-            const pin = prompt(" Ingresa el PIN de administrador:");
-            if (pin === ADMIN_PIN) { showView('view-admin'); renderAdminMatches(); }
-            else if (pin !== null) showToast("PIN incorrecto", "error");
+        async function promptAdmin() {
+    const pin = prompt("🔐 Ingresa el PIN de administrador:");
+    if (pin === ADMIN_PIN) {
+        try {
+            // 🎯 Autenticar al admin en Firebase si no está logueado
+            if (!auth.currentUser) {
+                await auth.signInAnonymously();
+            }
+            showView('view-admin');
+            renderAdminMatches();
+            showToast("✅ Acceso de administrador concedido", "success");
+        } catch (error) {
+            showToast("Error al autenticar: " + error.message, "error");
         }
+    } else if (pin !== null) {
+        showToast("PIN incorrecto", "error");
+    }
+}
 
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
