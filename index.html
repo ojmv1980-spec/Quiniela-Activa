@@ -169,7 +169,7 @@
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
                         <span class="text-2xl">3️⃣</span>
-                        <p class="text-white font-bold text-sm">Envía tus predicciones antes del <span class="text-yellow-400">10 de junio 10:00 PM</span></p>
+                        <p class="text-white font-bold text-sm">Envía tus predicciones antes del <span class="text-yellow-400">10 de Jun a las 10:00 PM</span></p>
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
                         <span class="text-2xl">4️⃣</span>
@@ -735,7 +735,7 @@
             
             tbody.innerHTML = players.map((p, idx) => {
                 const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
                 
                 return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
                     <td class="p-6 text-center font-black text-lg">${medal}</td>
