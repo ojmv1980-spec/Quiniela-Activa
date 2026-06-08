@@ -630,7 +630,6 @@
             } catch (e) { console.error('Auto-save error:', e); }
         }
 
-        // 🎯 FUNCIÓN ACTUALIZADA: Valida apodos únicos
         async function handleLogin() {
             const name = document.getElementById('username-input').value.trim();
             if (!name || name.length < 3) return showToast("Ingresa un apodo de al menos 3 caracteres", "error");
@@ -639,19 +638,16 @@
                 const cred = await auth.signInAnonymously();
                 const uid = cred.user.uid;
 
-                // 🎯 Verificar si el apodo ya existe en la base de datos
                 const nicknameQuery = db.collection('participants').where('displayName', '==', name);
                 const nicknameSnapshot = await nicknameQuery.get();
 
                 if (!nicknameSnapshot.empty) {
-                    // Si existe, verificar si es el mismo usuario (mismo UID)
                     let isSameUser = false;
                     nicknameSnapshot.forEach(doc => {
                         if (doc.id === uid) isSameUser = true;
                     });
 
                     if (!isSameUser) {
-                        // Es otro usuario, bloquear registro y cerrar sesión anónima
                         await auth.signOut();
                         showToast("❌ Ese apodo ya está registrado. Elige otro.", "error");
                         return;
@@ -661,13 +657,13 @@
                 const userDoc = await db.collection('participants').doc(uid).get();
                 let userCode = userDoc.data()?.userCode;
                 if (!userCode) {
-    await db.collection('participants').doc(uid).set({ 
-        displayName: name, 
-        createdAt: new Date(), 
-        submitted: false, 
-        paid: false
-    }, { merge: true });
-} else {
+                    await db.collection('participants').doc(uid).set({ 
+                        displayName: name, 
+                        createdAt: new Date(), 
+                        submitted: false, 
+                        paid: false
+                    }, { merge: true });
+                } else {
                     await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true });
                 }
                 currentUser = { uid, displayName: name, userCode };
@@ -678,7 +674,10 @@
                 if (isSubmitted || isDeadlinePassed) showView('view-leaderboard');
                 else showView('view-predictions');
                 renderMatches(); startLeaderboardListener();
-                showToast(`¡Bienvenido, ${name}! (${userCode}) `, "success");
+                
+                // 🎯 CORRECCIÓN 3: Mensaje de bienvenida sin "(undefined)"
+                const codigoMsg = userCode ? ` (${userCode})` : '';
+                showToast(`¡Bienvenido, ${name}!${codigoMsg}`, "success");
             } catch (err) { showToast("Error: " + err.message, "error"); }
         }
 
@@ -691,51 +690,52 @@
             } catch (e) { console.error(e); }
         }
 
+        // 🎯 CORRECCIÓN 1: handleSubmit sin el catch duplicado
         async function handleSubmit() {
-    if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
-    if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
-    const btn = document.getElementById('btn-submit'); btn.disabled = true; btn.innerHTML = 'Enviando...';
-    try {
-        const userDoc = await db.collection('participants').doc(currentUser.uid).get();
-        let userCode = userDoc.data()?.userCode;
-        
-        if (!userCode) {
-            const counterRef = db.collection('config').doc('userCounter');
-            await db.runTransaction(async (transaction) => {
-                const counterDoc = await transaction.get(counterRef);
-                const newCount = (counterDoc.data()?.count || 0) + 1;
-                transaction.set(counterRef, { count: newCount }, { merge: true });
-                userCode = `QA${String(newCount).padStart(4, '0')}`;
-            });
-        }
-        
-        const batch = db.batch(); 
-        const userRef = db.collection('participants').doc(currentUser.uid);
-        
-        batch.update(userRef, { 
-            submitted: true, 
-            submittedAt: new Date(), 
-            totalPredictions: 72,
-            userCode: userCode
-        });
-        
-        Object.entries(predictions).forEach(([matchId, value]) => {
-            batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
-        });
-        
-        await batch.commit(); 
-        isSubmitted = true;
-        currentUser.userCode = userCode;
-        
-        showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
-        setTimeout(() => showView('view-leaderboard'), 1500);
-    } catch (err) { 
-        showToast("Error: " + err.message, "error"); 
-        btn.disabled = false; 
-        btn.innerText = 'ENVIAR PREDICCIONES'; 
-    }
-}
- catch (err) { showToast(" Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
+            if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
+            if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
+            const btn = document.getElementById('btn-submit'); 
+            btn.disabled = true; 
+            btn.innerHTML = 'Enviando...';
+            try {
+                const userDoc = await db.collection('participants').doc(currentUser.uid).get();
+                let userCode = userDoc.data()?.userCode;
+                
+                if (!userCode) {
+                    const counterRef = db.collection('config').doc('userCounter');
+                    await db.runTransaction(async (transaction) => {
+                        const counterDoc = await transaction.get(counterRef);
+                        const newCount = (counterDoc.data()?.count || 0) + 1;
+                        transaction.set(counterRef, { count: newCount }, { merge: true });
+                        userCode = `QA${String(newCount).padStart(4, '0')}`;
+                    });
+                }
+                
+                const batch = db.batch(); 
+                const userRef = db.collection('participants').doc(currentUser.uid);
+                
+                batch.update(userRef, { 
+                    submitted: true, 
+                    submittedAt: new Date(), 
+                    totalPredictions: 72,
+                    userCode: userCode
+                });
+                
+                Object.entries(predictions).forEach(([matchId, value]) => {
+                    batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
+                });
+                
+                await batch.commit(); 
+                isSubmitted = true;
+                currentUser.userCode = userCode;
+                
+                showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
+                setTimeout(() => showView('view-leaderboard'), 1500);
+            } catch (err) { 
+                showToast("Error: " + err.message, "error"); 
+                btn.disabled = false; 
+                btn.innerText = 'ENVIAR PREDICCIONES'; 
+            }
         }
 
         let unsubscribeLB = null;
@@ -793,23 +793,22 @@
         }
 
         async function promptAdmin() {
-    const pin = prompt("🔐 Ingresa el PIN de administrador:");
-    if (pin === ADMIN_PIN) {
-        try {
-            // 🎯 Autenticar al admin en Firebase si no está logueado
-            if (!auth.currentUser) {
-                await auth.signInAnonymously();
+            const pin = prompt("🔐 Ingresa el PIN de administrador:");
+            if (pin === ADMIN_PIN) {
+                try {
+                    if (!auth.currentUser) {
+                        await auth.signInAnonymously();
+                    }
+                    showView('view-admin');
+                    renderAdminMatches();
+                    showToast("✅ Acceso de administrador concedido", "success");
+                } catch (error) {
+                    showToast("Error al autenticar: " + error.message, "error");
+                }
+            } else if (pin !== null) {
+                showToast("PIN incorrecto", "error");
             }
-            showView('view-admin');
-            renderAdminMatches();
-            showToast("✅ Acceso de administrador concedido", "success");
-        } catch (error) {
-            showToast("Error al autenticar: " + error.message, "error");
         }
-    } else if (pin !== null) {
-        showToast("PIN incorrecto", "error");
-    }
-}
 
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
@@ -831,7 +830,6 @@
             if (tab === 'cobranza') loadAdminCobranza();
         }
 
-        // 🎯 NUEVA FUNCIÓN: Renderiza partidos agrupados por DÍA en orden cronológico
         async function renderAdminMatches() {
             const container = document.getElementById('admin-matches-container');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
@@ -840,7 +838,6 @@
             const existingResults = {};
             rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
             
-            // 🎯 Crear array de partidos con su info completa
             const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({
                 id,
                 fecha: sched.fecha,
@@ -850,27 +847,23 @@
                 resultado: existingResults[id] || ''
             }));
             
-            // 🎯 Ordenar por fecha y hora
             allMatches.sort((a, b) => {
                 const dtA = a.fecha + ' ' + a.hora;
                 const dtB = b.fecha + ' ' + b.hora;
                 return dtA.localeCompare(dtB);
             });
             
-            // 🎯 Agrupar por día
             const matchesByDay = {};
             allMatches.forEach(m => {
                 if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = [];
                 matchesByDay[m.fecha].push(m);
             });
             
-            // 🎯 Nombres de días y meses en español
             const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
             const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             
             container.innerHTML = '';
             
-            // 🎯 Contador de progreso general
             const totalCargados = allMatches.filter(m => m.resultado !== '').length;
             const progreso = Math.round((totalCargados / 72) * 100);
             
@@ -886,7 +879,6 @@
                 </div>
             `;
             
-            // 🎯 Renderizar cada día
             Object.keys(matchesByDay).sort().forEach(fecha => {
                 const matchesOfDay = matchesByDay[fecha];
                 const dateObj = new Date(fecha + 'T12:00:00');
@@ -949,7 +941,6 @@
                 buttons.forEach(btn => btn.classList.remove('selected'));
                 clickedBtn.classList.add('selected');
                 
-                // 🎯 Recargar la vista para actualizar contadores de progreso
                 setTimeout(() => renderAdminMatches(), 500);
                 
             } catch (e) {
@@ -1159,7 +1150,6 @@
             }
         }
 
-        // 💰 NUEVA FUNCIÓN: Cargar tabla de cobranza
         async function loadAdminCobranza() {
             const container = document.getElementById('admin-cobranza-list');
             container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos de cobranza...</div>';
@@ -1169,9 +1159,9 @@
                 const participants = [];
                 
                 pSnap.forEach(doc => {
-					const data = doc.data();
-					if (!data.deleted && data.submitted === true) {
-						participants.push({
+                    const data = doc.data();
+                    if (!data.deleted && data.submitted === true) {
+                        participants.push({
                             id: doc.id,
                             ...data,
                             paid: data.paid || false
@@ -1184,13 +1174,11 @@
                     return;
                 }
                 
-                // Ordenar: Pendientes primero, pagados al final
                 participants.sort((a, b) => {
                     if (a.paid === b.paid) return (a.userCode || '').localeCompare(b.userCode || '');
                     return a.paid ? 1 : -1;
                 });
                 
-                // Calcular totales
                 const pendientes = participants.filter(p => !p.paid).length;
                 const pagados = participants.filter(p => p.paid).length;
                 const totalRecaudado = pagados * 5000;
@@ -1199,7 +1187,6 @@
                 document.getElementById('cobranza-pagados').innerText = pagados;
                 document.getElementById('cobranza-total').innerText = `Bs. ${totalRecaudado.toLocaleString('es-VE')},00`;
                 
-                // Generar HTML
                 let html = '';
                 participants.forEach(p => {
                     const statusHtml = p.paid 
@@ -1228,7 +1215,6 @@
             }
         }
 
-        // 💰 NUEVA FUNCIÓN: Marcar como pagado
         async function markAsPaid(participantId, participantName) {
             if (!confirm(`¿Confirmar que ${participantName} realizó el pago de Bs. 5.000,00?`)) return;
             if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro de marcar el pago de ${participantName}?`)) return;
@@ -1636,7 +1622,7 @@
 
         function logout() {
             if (!confirm("¿Seguro que quieres salir? Podrás crear una nueva participación con otro nombre.")) return;
-			sessionStorage.removeItem('ultimaPantalla'); // 🎯 NUEVO: Borrar memoria al salir
+            sessionStorage.removeItem('ultimaPantalla');
             auth.signOut().then(() => {
                 window.location.reload();
             }).catch((error) => {
@@ -1650,13 +1636,11 @@
             if (viewId === 'view-predictions') document.getElementById('submit-bar')?.classList.remove('hidden');
             else document.getElementById('submit-bar')?.classList.add('hidden');
             
-            // 🎯 NUEVO: Iniciar listener del ranking cuando se muestra
             if (viewId === 'view-leaderboard') {
                 startLeaderboardListener();
             }
 			
-			// 🎯 NUEVO: Guardar en memoria del navegador
-			sessionStorage.setItem('ultimaPantalla', viewId);
+            sessionStorage.setItem('ultimaPantalla', viewId);
         }
         
         function showToast(msg, type = 'success') {
@@ -1665,36 +1649,45 @@
             setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
         }
 
+        // 🎯 CORRECCIÓN 2: Restaurar pantalla con carga de datos
         document.addEventListener('DOMContentLoaded', () => {
-    startCountdown();
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            const doc = await db.collection('participants').doc(user.uid).get();
-            const data = doc.data();
-            if (data) {
-                currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
-                document.getElementById('view-home').classList.add('hidden');
-                document.getElementById('user-badge').classList.remove('hidden');
-                document.getElementById('display-username').innerText = data.displayName;
-                
-                // 🎯 NUEVO: ¿Hay una pantalla guardada en memoria?
-                const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
-                
-                if (pantallaGuardada) {
-                    showView(pantallaGuardada); // Restaurar pantalla exacta
-                } else {
-                    // Si no hay nada guardado, usar la lógica normal
-                    if (data.submitted || isDeadlinePassed) {
-                        showView('view-leaderboard');
-                    } else {
-                        showView('view-predictions');
-                        renderMatches();
+            startCountdown();
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    const doc = await db.collection('participants').doc(user.uid).get();
+                    const data = doc.data();
+                    if (data) {
+                        currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
+                        document.getElementById('view-home').classList.add('hidden');
+                        document.getElementById('user-badge').classList.remove('hidden');
+                        document.getElementById('display-username').innerText = data.displayName;
+                        
+                        const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
+                        
+                        if (pantallaGuardada) {
+                            showView(pantallaGuardada);
+                            
+                            // 🎯 Cargar datos según la pantalla restaurada
+                            if (pantallaGuardada === 'view-predictions') {
+                                renderMatches();
+                            } else if (pantallaGuardada === 'view-admin') {
+                                renderAdminMatches();
+                            } else if (pantallaGuardada === 'view-planilla') {
+                                generarPlanillaWeb();
+                            }
+                            // view-leaderboard ya carga automáticamente por showView()
+                        } else {
+                            if (data.submitted || isDeadlinePassed) {
+                                showView('view-leaderboard');
+                            } else {
+                                showView('view-predictions');
+                                renderMatches();
+                            }
+                        }
                     }
                 }
-            }
-        }
-    });
-});
+            });
+        });
     </script>
 </body>
 </html>
