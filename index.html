@@ -661,21 +661,13 @@
                 const userDoc = await db.collection('participants').doc(uid).get();
                 let userCode = userDoc.data()?.userCode;
                 if (!userCode) {
-                    const counterRef = db.collection('config').doc('userCounter');
-                    await db.runTransaction(async (transaction) => {
-                        const counterDoc = await transaction.get(counterRef);
-                        const newCount = (counterDoc.data()?.count || 0) + 1;
-                        transaction.set(counterRef, { count: newCount }, { merge: true });
-                        userCode = `QA${String(newCount).padStart(4, '0')}`;
-                        transaction.set(db.collection('participants').doc(uid), { 
-                            displayName: name, 
-                            createdAt: new Date(), 
-                            submitted: false, 
-                            userCode,
-                            paid: false
-                        }, { merge: true });
-                    });
-                } else {
+    await db.collection('participants').doc(uid).set({ 
+        displayName: name, 
+        createdAt: new Date(), 
+        submitted: false, 
+        paid: false
+    }, { merge: true });
+} else {
                     await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true });
                 }
                 currentUser = { uid, displayName: name, userCode };
@@ -700,19 +692,50 @@
         }
 
         async function handleSubmit() {
-            if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
-            if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
-            const btn = document.getElementById('btn-submit'); btn.disabled = true; btn.innerHTML = 'Enviando...';
-            try {
-                const batch = db.batch(); const userRef = db.collection('participants').doc(currentUser.uid);
-                batch.update(userRef, { submitted: true, submittedAt: new Date(), totalPredictions: 72 });
-                Object.entries(predictions).forEach(([matchId, value]) => {
-                    batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
-                });
-                await batch.commit(); isSubmitted = true;
-                showToast("✅ ¡Predicciones bloqueadas! Buena suerte ", "success");
-                setTimeout(() => showView('view-leaderboard'), 1500);
-            } catch (err) { showToast(" Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
+    if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
+    if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
+    const btn = document.getElementById('btn-submit'); btn.disabled = true; btn.innerHTML = 'Enviando...';
+    try {
+        const userDoc = await db.collection('participants').doc(currentUser.uid).get();
+        let userCode = userDoc.data()?.userCode;
+        
+        if (!userCode) {
+            const counterRef = db.collection('config').doc('userCounter');
+            await db.runTransaction(async (transaction) => {
+                const counterDoc = await transaction.get(counterRef);
+                const newCount = (counterDoc.data()?.count || 0) + 1;
+                transaction.set(counterRef, { count: newCount }, { merge: true });
+                userCode = `QA${String(newCount).padStart(4, '0')}`;
+            });
+        }
+        
+        const batch = db.batch(); 
+        const userRef = db.collection('participants').doc(currentUser.uid);
+        
+        batch.update(userRef, { 
+            submitted: true, 
+            submittedAt: new Date(), 
+            totalPredictions: 72,
+            userCode: userCode
+        });
+        
+        Object.entries(predictions).forEach(([matchId, value]) => {
+            batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
+        });
+        
+        await batch.commit(); 
+        isSubmitted = true;
+        currentUser.userCode = userCode;
+        
+        showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
+        setTimeout(() => showView('view-leaderboard'), 1500);
+    } catch (err) { 
+        showToast("Error: " + err.message, "error"); 
+        btn.disabled = false; 
+        btn.innerText = 'ENVIAR PREDICCIONES'; 
+    }
+}
+ catch (err) { showToast(" Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
         }
 
         let unsubscribeLB = null;
@@ -1146,9 +1169,9 @@
                 const participants = [];
                 
                 pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (!data.deleted) {
-                        participants.push({
+					const data = doc.data();
+					if (!data.deleted && data.submitted === true) {
+						participants.push({
                             id: doc.id,
                             ...data,
                             paid: data.paid || false
@@ -1613,6 +1636,7 @@
 
         function logout() {
             if (!confirm("¿Seguro que quieres salir? Podrás crear una nueva participación con otro nombre.")) return;
+			sessionStorage.removeItem('ultimaPantalla'); // 🎯 NUEVO: Borrar memoria al salir
             auth.signOut().then(() => {
                 window.location.reload();
             }).catch((error) => {
@@ -1630,6 +1654,9 @@
             if (viewId === 'view-leaderboard') {
                 startLeaderboardListener();
             }
+			
+			// 🎯 NUEVO: Guardar en memoria del navegador
+			sessionStorage.setItem('ultimaPantalla', viewId);
         }
         
         function showToast(msg, type = 'success') {
@@ -1639,22 +1666,35 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            startCountdown();
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    const doc = await db.collection('participants').doc(user.uid).get();
-                    const data = doc.data();
-                    if (data) {
-                        currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
-                        document.getElementById('view-home').classList.add('hidden');
-                        document.getElementById('user-badge').classList.remove('hidden');
-                        document.getElementById('display-username').innerText = data.displayName;
-                        if (data.submitted || isDeadlinePassed) { showView('view-leaderboard'); startLeaderboardListener(); }
-                        else { showView('view-predictions'); renderMatches(); startLeaderboardListener(); }
+    startCountdown();
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const doc = await db.collection('participants').doc(user.uid).get();
+            const data = doc.data();
+            if (data) {
+                currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
+                document.getElementById('view-home').classList.add('hidden');
+                document.getElementById('user-badge').classList.remove('hidden');
+                document.getElementById('display-username').innerText = data.displayName;
+                
+                // 🎯 NUEVO: ¿Hay una pantalla guardada en memoria?
+                const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
+                
+                if (pantallaGuardada) {
+                    showView(pantallaGuardada); // Restaurar pantalla exacta
+                } else {
+                    // Si no hay nada guardado, usar la lógica normal
+                    if (data.submitted || isDeadlinePassed) {
+                        showView('view-leaderboard');
+                    } else {
+                        showView('view-predictions');
+                        renderMatches();
                     }
                 }
-            });
-        });
+            }
+        }
+    });
+});
     </script>
 </body>
 </html>
