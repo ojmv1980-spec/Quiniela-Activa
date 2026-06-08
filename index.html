@@ -151,7 +151,7 @@
             </div>
 
             <div id="deadline-message" class="hidden glass px-6 py-3 rounded-xl border-l-4 border-red-500 text-red-300 font-bold text-sm">
-                🚫 Las predicciones están cerradas. Solo puedes ver el ranking.
+                 Las predicciones están cerradas. Solo puedes ver el ranking.
             </div>
             
             <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-2 border-blue-500/30 shadow-lg shadow-blue-500/20">
@@ -172,7 +172,7 @@
                         <p class="text-white font-bold text-sm">Envía tus predicciones antes del <span class="text-yellow-400">10 de junio 10:00 PM</span></p>
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
-                        <span class="text-2xl">4️⃣</span>
+                        <span class="text-2xl">4️</span>
                         <p class="text-white font-bold text-sm">Espera los resultados oficiales</p>
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
@@ -314,7 +314,7 @@
             </div>
 
             <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
-                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">📜 Reglamento Oficial</h4>
+                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide"> Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
                     <div>
                         <span class="font-bold text-white text-[13px]">I. El Objetivo:</span>
@@ -612,7 +612,6 @@
             } catch (e) { console.error('Auto-save error:', e); }
         }
 
-        // 🎯 FUNCIÓN ACTUALIZADA: Valida apodos únicos
         async function handleLogin() {
             const name = document.getElementById('username-input').value.trim();
             if (!name || name.length < 3) return showToast("Ingresa un apodo de al menos 3 caracteres", "error");
@@ -621,19 +620,16 @@
                 const cred = await auth.signInAnonymously();
                 const uid = cred.user.uid;
 
-                // 🎯 Verificar si el apodo ya existe en la base de datos
                 const nicknameQuery = db.collection('participants').where('displayName', '==', name);
                 const nicknameSnapshot = await nicknameQuery.get();
 
                 if (!nicknameSnapshot.empty) {
-                    // Si existe, verificar si es el mismo usuario (mismo UID)
                     let isSameUser = false;
                     nicknameSnapshot.forEach(doc => {
                         if (doc.id === uid) isSameUser = true;
                     });
 
                     if (!isSameUser) {
-                        // Es otro usuario, bloquear registro y cerrar sesión anónima
                         await auth.signOut();
                         showToast("❌ Ese apodo ya está registrado. Elige otro.", "error");
                         return;
@@ -735,7 +731,7 @@
             
             tbody.innerHTML = players.map((p, idx) => {
                 const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
+                const medal = idx === 0 ? '' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
                 
                 return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
                     <td class="p-6 text-center font-black text-lg">${medal}</td>
@@ -766,7 +762,6 @@
             if (tab === 'players') loadAdminPlayers();
         }
 
-        // 🎯 NUEVA FUNCIÓN: Renderiza partidos agrupados por DÍA en orden cronológico
         async function renderAdminMatches() {
             const container = document.getElementById('admin-matches-container');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
@@ -775,7 +770,6 @@
             const existingResults = {};
             rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
             
-            // 🎯 Crear array de partidos con su info completa
             const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({
                 id,
                 fecha: sched.fecha,
@@ -785,27 +779,23 @@
                 resultado: existingResults[id] || ''
             }));
             
-            // 🎯 Ordenar por fecha y hora
             allMatches.sort((a, b) => {
                 const dtA = a.fecha + ' ' + a.hora;
                 const dtB = b.fecha + ' ' + b.hora;
                 return dtA.localeCompare(dtB);
             });
             
-            // 🎯 Agrupar por día
             const matchesByDay = {};
             allMatches.forEach(m => {
                 if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = [];
                 matchesByDay[m.fecha].push(m);
             });
             
-            // 🎯 Nombres de días y meses en español
             const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
             const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
             
             container.innerHTML = '';
             
-            // 🎯 Contador de progreso general
             const totalCargados = allMatches.filter(m => m.resultado !== '').length;
             const progreso = Math.round((totalCargados / 72) * 100);
             
@@ -821,7 +811,6 @@
                 </div>
             `;
             
-            // 🎯 Renderizar cada día
             Object.keys(matchesByDay).sort().forEach(fecha => {
                 const matchesOfDay = matchesByDay[fecha];
                 const dateObj = new Date(fecha + 'T12:00:00');
@@ -884,7 +873,6 @@
                 buttons.forEach(btn => btn.classList.remove('selected'));
                 clickedBtn.classList.add('selected');
                 
-                // 🎯 Recargar la vista para actualizar contadores de progreso
                 setTimeout(() => renderAdminMatches(), 500);
                 
             } catch (e) {
@@ -922,7 +910,7 @@
                     } else if (p.submitted) {
                         statusBadge = '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>';
                     } else {
-                        statusBadge = '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>';
+                        statusBadge = '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded"> Pendiente</span>';
                     }
                     
                     const cardClass = p.deleted ? 'player-card deleted' : 'player-card';
@@ -1047,7 +1035,7 @@
 
         async function deletePlayer(playerId, playerName) {
             if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?\n\nEsta acción ocultará al participante del ranking y las planillas, pero sus datos quedarán guardados.`)) return;
-            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
+            if (!confirm(` CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
             
             try {
                 await db.collection('participants').doc(playerId).update({ 
@@ -1495,6 +1483,11 @@
             document.getElementById(viewId)?.classList.remove('hidden');
             if (viewId === 'view-predictions') document.getElementById('submit-bar')?.classList.remove('hidden');
             else document.getElementById('submit-bar')?.classList.add('hidden');
+            
+            //  NUEVO: Iniciar listener del ranking cuando se muestra
+            if (viewId === 'view-leaderboard') {
+                startLeaderboardListener();
+            }
         }
         
         function showToast(msg, type = 'success') {
