@@ -307,7 +307,6 @@
                 </table>
             </div>
             <div class="flex justify-center gap-4 mt-6 flex-wrap">
-                <button onclick="showView('view-predictions')" class="text-blue-400 font-bold text-sm hover:text-blue-300">← Mis predicciones</button>
                 <button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
                     📊 Ver Planilla Completa
                 </button>
@@ -350,6 +349,9 @@
                 <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
                     👥 Gestión de Participantes
                 </button>
+                <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
+                    💰 Cobranza
+                </button>
             </div>
             
             <div id="admin-tab-results">
@@ -362,6 +364,22 @@
                     <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
                     <div id="admin-players-list" class="space-y-3">
                         <div class="text-center text-slate-400 py-4">Cargando participantes...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="admin-tab-cobranza" class="hidden">
+                <div class="glass p-4 rounded-xl mb-4">
+                    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                        <h4 class="font-bold text-orange-400 text-lg">💰 CONTROL DE PAGOS</h4>
+                        <div class="text-xs text-slate-300 flex gap-3 flex-wrap">
+                            <span>Pendientes: <span id="cobranza-pendientes" class="font-bold text-red-400">0</span></span>
+                            <span>Pagados: <span id="cobranza-pagados" class="font-bold text-green-400">0</span></span>
+                            <span>Total: <span id="cobranza-total" class="font-bold text-yellow-400">Bs. 0,00</span></span>
+                        </div>
+                    </div>
+                    <div id="admin-cobranza-list" class="space-y-2">
+                        <div class="text-center text-slate-400 py-8">Cargando datos de cobranza...</div>
                     </div>
                 </div>
             </div>
@@ -649,7 +667,13 @@
                         const newCount = (counterDoc.data()?.count || 0) + 1;
                         transaction.set(counterRef, { count: newCount }, { merge: true });
                         userCode = `QA${String(newCount).padStart(4, '0')}`;
-                        transaction.set(db.collection('participants').doc(uid), { displayName: name, createdAt: new Date(), submitted: false, userCode }, { merge: true });
+                        transaction.set(db.collection('participants').doc(uid), { 
+                            displayName: name, 
+                            createdAt: new Date(), 
+                            submitted: false, 
+                            userCode,
+                            paid: false
+                        }, { merge: true });
                     });
                 } else {
                     await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true });
@@ -754,16 +778,21 @@
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
             document.getElementById('admin-tab-players').classList.add('hidden');
+            document.getElementById('admin-tab-cobranza').classList.add('hidden');
+            
             document.getElementById('tab-results').classList.remove('bg-blue-600');
             document.getElementById('tab-results').classList.add('bg-white/10');
             document.getElementById('tab-players').classList.remove('bg-blue-600');
             document.getElementById('tab-players').classList.add('bg-white/10');
+            document.getElementById('tab-cobranza').classList.remove('bg-blue-600');
+            document.getElementById('tab-cobranza').classList.add('bg-white/10');
             
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
             document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
             
             if (tab === 'players') loadAdminPlayers();
+            if (tab === 'cobranza') loadAdminCobranza();
         }
 
         // 🎯 NUEVA FUNCIÓN: Renderiza partidos agrupados por DÍA en orden cronológico
@@ -1091,6 +1120,94 @@
                 
             } catch (e) {
                 showToast("Error: " + e.message, "error");
+            }
+        }
+
+        // 💰 NUEVA FUNCIÓN: Cargar tabla de cobranza
+        async function loadAdminCobranza() {
+            const container = document.getElementById('admin-cobranza-list');
+            container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos de cobranza...</div>';
+            
+            try {
+                const pSnap = await db.collection('participants').get();
+                const participants = [];
+                
+                pSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted) {
+                        participants.push({
+                            id: doc.id,
+                            ...data,
+                            paid: data.paid || false
+                        });
+                    }
+                });
+                
+                if (participants.length === 0) {
+                    container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>';
+                    return;
+                }
+                
+                // Ordenar: Pendientes primero, pagados al final
+                participants.sort((a, b) => {
+                    if (a.paid === b.paid) return (a.userCode || '').localeCompare(b.userCode || '');
+                    return a.paid ? 1 : -1;
+                });
+                
+                // Calcular totales
+                const pendientes = participants.filter(p => !p.paid).length;
+                const pagados = participants.filter(p => p.paid).length;
+                const totalRecaudado = pagados * 5000;
+                
+                document.getElementById('cobranza-pendientes').innerText = pendientes;
+                document.getElementById('cobranza-pagados').innerText = pagados;
+                document.getElementById('cobranza-total').innerText = `Bs. ${totalRecaudado.toLocaleString('es-VE')},00`;
+                
+                // Generar HTML
+                let html = '';
+                participants.forEach(p => {
+                    const statusHtml = p.paid 
+                        ? '<span class="text-2xl text-green-400">✅</span>'
+                        : `<button onclick="markAsPaid('${p.id}', '${(p.displayName || 'Anónimo').replace(/'/g, "\\'")}')" 
+                                   class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-orange-500/30">
+                           PAGADO
+                         </button>`;
+                    
+                    html += `
+                        <div class="glass p-3 rounded-lg flex justify-between items-center ${p.paid ? 'opacity-60' : ''}">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-slate-400">${p.userCode || 'N/A'}</span>
+                                <span class="text-sm font-bold text-white">${p.displayName || 'Anónimo'}</span>
+                            </div>
+                            <div>${statusHtml}</div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
+            }
+        }
+
+        // 💰 NUEVA FUNCIÓN: Marcar como pagado
+        async function markAsPaid(participantId, participantName) {
+            if (!confirm(`¿Confirmar que ${participantName} realizó el pago de Bs. 5.000,00?`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro de marcar el pago de ${participantName}?`)) return;
+            
+            try {
+                await db.collection('participants').doc(participantId).update({
+                    paid: true,
+                    paidAt: new Date()
+                });
+                
+                showToast(`✅ Pago de ${participantName} registrado correctamente`, "success");
+                loadAdminCobranza();
+                
+            } catch (error) {
+                showToast("Error al registrar pago: " + error.message, "error");
             }
         }
 
