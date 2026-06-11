@@ -157,20 +157,7 @@
                 <p class="text-[9px] text-slate-500 mt-1 font-bold tracking-wide">DÍAS : HORAS : MIN : SEG</p>
             </div>
 
-            <div id="deadline-message" class="hidden glass px-6 py-3 rounded-xl border-l-4 border-red-500 text-red-300 font-bold text-sm">
-                🚫 Las predicciones están cerradas. Solo puedes ver el ranking.
-            </div>
-            
-            <!-- 🎯 MÓDULO DE REGISTRO ELIMINADO -->
-            <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/30 shadow-lg shadow-purple-500/20">
-                <h3 class="text-center text-lg font-black text-purple-400 uppercase tracking-wider mb-4 italic">
-                    📢 INFORMACIÓN IMPORTANTE
-                </h3>
-                <p class="text-sm text-slate-300 text-center">
-                    El registro de nuevos participantes está cerrado.<br>
-                    Solo puedes ver el ranking y las planillas.
-                </p>
-            </div>
+            <!-- 🎯 BLOQUES ELIMINADOS: deadline-message e INFORMACIÓN IMPORTANTE -->
 
             <div class="w-full max-w-md">
                 <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
@@ -336,7 +323,7 @@
             
             <div id="admin-tab-players" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
-                    <h4 class="font-bold text-blue-400 mb-2">👥 Lista de Participantes</h4>
+                    <h4 class="font-bold text-blue-400 mb-2"> Lista de Participantes</h4>
                     <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
                     <div id="admin-players-list" class="space-y-3">
                         <div class="text-center text-slate-400 py-4">Cargando participantes...</div>
@@ -446,6 +433,19 @@
         let currentUser = null;
         let predictions = {};
         let isSubmitted = false;
+
+        // 🎯 FUNCIÓN HELPER: Abreviar nombres de naciones largas
+        function abreviarPais(nombre) {
+            const abreviaciones = {
+                'Bosnia y Herzegovina': 'Bos y Herz',
+                'Costa de Marfil': 'C. de Marfil',
+                'Estados Unidos': 'USA',
+                'Corea del Sur': 'Cor del Sur',
+                'Nueva Zelanda': 'Nv. Zelanda',
+                'Arabia Saudita': 'Ara Saudita'
+            };
+            return abreviaciones[nombre] || nombre;
+        }
 
         const matchSchedule = {
             'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
@@ -562,7 +562,6 @@
 
         function lockPredictionsUI() {
             document.getElementById('btn-submit')?.classList.add('hidden');
-            document.getElementById('deadline-message')?.classList.remove('hidden');
             document.querySelectorAll('.btn-option').forEach(btn => {
                 btn.disabled = true;
                 btn.classList.add('opacity-40', 'cursor-not-allowed');
@@ -996,7 +995,7 @@
                                 ✏️ Editar
                             </button>
                             <button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">
-                                🗑️ Eliminar
+                                ️ Eliminar
                             </button>
                         `;
                     }
@@ -1038,7 +1037,7 @@
                                     [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
                                 ];
                                 const [local, visitante] = matchPairs[num-1];
-                                matchLabel = `${local.substring(0,3)} vs ${visitante.substring(0,3)}`;
+                                matchLabel = `${abreviarPais(local).substring(0,3)} vs ${abreviarPais(visitante).substring(0,3)}`;
                             }
                         }
                         
@@ -1127,7 +1126,7 @@
         }
 
         async function restorePlayer(playerId, playerName) {
-            if (!confirm(`♻️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
+            if (!confirm(`️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
             
             try {
                 await db.collection('participants').doc(playerId).update({ 
@@ -1246,7 +1245,6 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
-                    // ✅ FILTRO: Solo participantes que enviaron sus predicciones
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
                 
@@ -1324,7 +1322,8 @@
                         const dia = sched.fecha.substring(8, 10);
                         const mes = sched.fecha.substring(5, 7);
                         fechaHora = `${dia}/${mes} ${sched.hora}`;
-                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                        // 🎯 APLICAR ABREVIACIONES
+                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
                     }
                     
                     theadHTML += `<th colspan="3" class="text-[10px]">
@@ -1407,7 +1406,7 @@
         }
 
         async function generarPlanillaDigital() {
-            showToast("⏳ Generando planilla digital...", "success");
+            showToast(" Generando planilla digital...", "success");
             
             try {
                 const pSnap = await db.collection('participants').get();
@@ -1476,7 +1475,8 @@
                         const dia = sched.fecha.substring(8, 10);
                         const mes = sched.fecha.substring(5, 7);
                         fechaHora = `${dia}/${mes} ${sched.hora}`;
-                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                        //  APLICAR ABREVIACIONES
+                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
                     }
                     
                     tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]">
@@ -1591,7 +1591,7 @@
             }
         }
 
-        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones con nombres (COLORES VIVOS)
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones con nombres (SIN NEGRITAS)
         async function generarTablaSelecciones() {
             const loadingDiv = document.getElementById('tabla-selecciones-loading');
             const container = document.getElementById('tabla-selecciones-container');
@@ -1658,7 +1658,8 @@
                     const sched = matchSchedule[m];
                     let equipos = '';
                     if (sched) {
-                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                        // 🎯 APLICAR ABREVIACIONES
+                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
                     }
                     html += `<th class="text-[10px]">${i+1}<br><span class="text-slate-400">${equipos}</span></th>`;
                 });
@@ -1679,16 +1680,16 @@
                         let cellContent = '';
                         let cellClass = 'text-slate-600';
                         
-                        // 🎨 COLORES VIVOS
+                        // 🎨 COLORES VIVOS SIN NEGRITAS
                         if (pred === 'Local' && sched) {
-                            cellContent = sched.local;
-                            cellClass = 'text-cyan-400 font-bold'; // Cian brillante
+                            cellContent = abreviarPais(sched.local);
+                            cellClass = 'text-cyan-400';
                         } else if (pred === 'Empate') {
                             cellContent = 'Empate';
-                            cellClass = 'text-amber-400 font-bold'; // Ámbar brillante
+                            cellClass = 'text-amber-400';
                         } else if (pred === 'Visitante' && sched) {
-                            cellContent = sched.visitante;
-                            cellClass = 'text-rose-500 font-bold'; // Rosa vivo
+                            cellContent = abreviarPais(sched.visitante);
+                            cellClass = 'text-rose-500';
                         }
                         
                         html += `<td class="${cellClass} text-[10px]">${cellContent}</td>`;
@@ -1709,7 +1710,7 @@
             }
         }
 
-        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones en ventana nueva (COLORES VIVOS)
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones en ventana nueva (SIN NEGRITAS)
         async function generarTablaSeleccionesDigital() {
             const newWindow = window.open('', '_blank');
             if (!newWindow) {
@@ -1717,7 +1718,7 @@
                 return;
             }
             
-            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;font-weight:bold;}.empate{color:#fbbf24;font-weight:bold;}.visitante{color:#f43f5e;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
+            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;}.empate{color:#fbbf24;}.visitante{color:#f43f5e;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
             newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1>');
             newWindow.document.write('<button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button>');
             newWindow.document.write('<div id="loading">Cargando...</div>');
@@ -1773,7 +1774,10 @@
                 matchIds.forEach((m, i) => {
                     const sched = matchSchedule[m];
                     let equipos = '';
-                    if (sched) equipos = `${sched.local.substring(0,3)} vs ${sched.visitante.substring(0,3)}`;
+                    if (sched) {
+                        // 🎯 APLICAR ABREVIACIONES
+                        equipos = `${abreviarPais(sched.local).substring(0,3)} vs ${abreviarPais(sched.visitante).substring(0,3)}`;
+                    }
                     tableHTML += `<th>${i+1}<br><small>${equipos}</small></th>`;
                 });
                 tableHTML += '<th>TOTAL</th></tr></thead><tbody>';
@@ -1787,13 +1791,13 @@
                         let cellClass = '';
                         
                         if (pred === 'Local' && sched) {
-                            cellContent = sched.local;
+                            cellContent = abreviarPais(sched.local);
                             cellClass = 'local';
                         } else if (pred === 'Empate') {
                             cellContent = 'Empate';
                             cellClass = 'empate';
                         } else if (pred === 'Visitante' && sched) {
-                            cellContent = sched.visitante;
+                            cellContent = abreviarPais(sched.visitante);
                             cellClass = 'visitante';
                         }
                         
