@@ -448,7 +448,7 @@
                     <p class="text-orange-400 font-bold">Cargando selecciones...</p>
                 </div>
 
-                <div id="tabla-selecciones-container" class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto">
+                <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl" style="max-height: 80vh; overflow: auto;">
                     <!-- La tabla se generará aquí -->
                 </div>
             </div>
@@ -1803,7 +1803,7 @@
                 return;
             }
             
-            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;}.local{color:#2563eb;font-weight:bold;}.empate{color:#f97316;font-weight:bold;}.visitante{color:#991b1b;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
+            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#2563eb;font-weight:bold;}.empate{color:#f97316;font-weight:bold;}.visitante{color:#991b1b;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
             newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1>');
             newWindow.document.write('<button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button>');
             newWindow.document.write('<div id="loading">Cargando...</div>');
