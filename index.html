@@ -87,13 +87,12 @@
             #planilla-table { font-size: 8pt; }
         }
 		
-		/* 🎯 NUEVO: Barra de progreso sticky para el admin */
-    #admin-progress-bar {
-        position: sticky;
-        top: 80px;
-        z-index: 40;
-        transition: all 0.3s ease;
-    }
+        #admin-progress-bar {
+            position: sticky;
+            top: 80px;
+            z-index: 40;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -112,8 +111,8 @@
             
             <div class="flex items-center gap-3">
                 <button onclick="showView('view-leaderboard')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">
-				RANKING
-				</button>
+                RANKING
+                </button>
                 
                 <button onclick="promptAdmin()" class="p-1.5 md:p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
                     <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-4 h-4 md:w-5 md:h-5"></i>
@@ -191,20 +190,18 @@
                 <p class="text-center text-xs text-blue-300 font-bold mt-4 italic">¡Buena suerte y que gane el mejor! ⚽🏆</p>
             </div>
 
-            <div class="w-full max-w-md glass p-8 rounded-3xl space-y-6">
-                <div class="text-left space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-blue-500">Tu apodo</label>
-                    <input type="text" id="username-input" placeholder="Ej: ElCrack99" maxlength="20"
-                        class="w-full bg-[#161b2c] border border-white/10 px-5 py-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-bold text-white transition-all">
-                </div>
-                <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-blue-600/20">
-                    ENTRAR A TUS PREDICCIONES
-                </button>
-				<h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">
-                    INGRESE SOLO PARA AGREGAR UNA NUEVA PARTICIPACIÓN
+            <!-- 🎯 MÓDULO DE REGISTRO ELIMINADO -->
+            <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/30 shadow-lg shadow-purple-500/20">
+                <h3 class="text-center text-lg font-black text-purple-400 uppercase tracking-wider mb-4 italic">
+                    📢 INFORMACIÓN IMPORTANTE
                 </h3>
+                <p class="text-sm text-slate-300 text-center">
+                    El registro de nuevos participantes está cerrado.<br>
+                    Solo puedes ver el ranking y las planillas.
+                </p>
             </div>
-			            <div class="w-full max-w-md">
+
+            <div class="w-full max-w-md">
                 <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
                      VER RANKING DE PARTICIPANTES
                 </button>
@@ -299,17 +296,17 @@
         <div id="view-leaderboard" class="hidden space-y-12 py-8">
             <div class="text-center space-y-4">
                 <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">
-					Ranking  de  <span class="text-blue-600 underline underline-offset-8">  Participantes</span>
-				</h2>
+                    Ranking  de  <span class="text-blue-600 underline underline-offset-8">  Participantes</span>
+                </h2>
             </div>
             <div class="glass rounded-3xl overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-						<tr>
-							<th class="p-6 w-16 text-center">Pos</th>
-							<th class="p-6">Jugador</th>
-							<th class="p-6 text-center">Puntos</th>
-						</tr>
+                        <tr>
+                            <th class="p-6 w-16 text-center">Pos</th>
+                            <th class="p-6">Jugador</th>
+                            <th class="p-6 text-center">Puntos</th>
+                        </tr>
                     </thead>
                     <tbody id="leaderboard-body"></tbody>
                 </table>
@@ -448,7 +445,7 @@
                     <p class="text-orange-400 font-bold">Cargando selecciones...</p>
                 </div>
 
-                <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl" style="max-height: 80vh; overflow: auto;">
+                <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl overflow-x-auto">
                     <!-- La tabla se generará aquí -->
                 </div>
             </div>
@@ -479,96 +476,73 @@
         let predictions = {};
         let isSubmitted = false;
 
-                        const matchSchedule = {
-            // GRUPO A (México, Sudáfrica, Corea del Sur, Chequia)
+        const matchSchedule = {
             'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
             'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
             'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'México', visitante: 'Corea del Sur' },
             'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'Chequia', visitante: 'Sudáfrica' },
             'gam5': { fecha: '2026-06-24', hora: '21:00', local: 'Chequia', visitante: 'México' },
             'gam6': { fecha: '2026-06-24', hora: '21:00', local: 'Sudáfrica', visitante: 'Corea del Sur' },
-            
-            // GRUPO B (Canadá, Bosnia y Herzegovina, Qatar, Suiza)
             'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia y Herzegovina' },
             'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
             'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Canadá', visitante: 'Qatar' },
             'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Suiza', visitante: 'Bosnia y Herzegovina' },
             'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
             'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia y Herzegovina', visitante: 'Qatar' },
-            
-            // GRUPO C (Brasil, Marruecos, Haití, Escocia)
             'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
             'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
             'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Brasil', visitante: 'Haití' },
             'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Escocia', visitante: 'Marruecos' },
             'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
             'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
-            
-            // GRUPO D (Estados Unidos, Paraguay, Australia, Turquía)
             'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
             'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
             'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
             'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
             'gdm5': { fecha: '2026-06-25', hora: '22:00', local: 'Turquía', visitante: 'Estados Unidos' },
             'gdm6': { fecha: '2026-06-25', hora: '22:00', local: 'Paraguay', visitante: 'Australia' },
-
-            // GRUPO E (Alemania, Curazao, Costa de Marfil, Ecuador)
             'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
             'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
             'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
             'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
             'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
             'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
-
-            // GRUPO F (Países Bajos, Japón, Suecia, Túnez)
             'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
             'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
             'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
             'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
             'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
             'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
-
-            // GRUPO G (Bélgica, Egipto, Irán, Nueva Zelanda)
             'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
             'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
             'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
             'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
             'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
             'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
-
-            // GRUPO H (España, Cabo Verde, Arabia Saudita, Uruguay)
             'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
             'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
             'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
             'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
             'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
             'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
-
-            // GRUPO I (Francia, Senegal, Irak, Noruega)
             'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
             'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
             'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
             'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
             'gim5': { fecha: '2026-06-26', hora: '15:00', local: 'Noruega', visitante: 'Francia' },
             'gim6': { fecha: '2026-06-26', hora: '15:00', local: 'Senegal', visitante: 'Irak' },
-
-            // GRUPO J (Argentina, Argelia, Austria, Jordania)
             'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
             'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
             'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
             'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
             'gjm5': { fecha: '2026-06-27', hora: '22:00', local: 'Jordania', visitante: 'Argentina' },
             'gjm6': { fecha: '2026-06-27', hora: '22:00', local: 'Argelia', visitante: 'Austria' },
-
-            // GRUPO K (Portugal, RD Congo, Uzbekistán, Colombia)
             'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
             'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
             'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
             'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
             'gkm5': { fecha: '2026-06-27', hora: '19:30', local: 'Colombia', visitante: 'Portugal' },
             'gkm6': { fecha: '2026-06-27', hora: '19:30', local: 'RD Congo', visitante: 'Uzbekistán' },
-
-            // GRUPO L (Inglaterra, Croacia, Ghana, Panamá)
             'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
             'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
             'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
@@ -732,7 +706,6 @@
                 else showView('view-predictions');
                 renderMatches(); startLeaderboardListener();
                 
-                // 🎯 CORRECCIÓN 3: Mensaje de bienvenida sin "(undefined)"
                 const codigoMsg = userCode ? ` (${userCode})` : '';
                 showToast(`¡Bienvenido, ${name}!${codigoMsg}`, "success");
             } catch (err) { showToast("Error: " + err.message, "error"); }
@@ -747,7 +720,6 @@
             } catch (e) { console.error(e); }
         }
 
-        // 🎯 CORRECCIÓN 1: handleSubmit sin el catch duplicado
         async function handleSubmit() {
             if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
             if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
@@ -1303,6 +1275,7 @@
                 const players = [];
                 pSnap.forEach(doc => {
                     const data = doc.data();
+                    // ✅ FILTRO: Solo participantes que enviaron sus predicciones
                     if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
                 });
                 
@@ -1381,21 +1354,6 @@
                         const mes = sched.fecha.substring(5, 7);
                         fechaHora = `${dia}/${mes} ${sched.hora}`;
                         equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
-                    } else {
-                        const match = m.match(/^g([a-l])m(\d+)$/);
-                        if (match) {
-                            const g = match[1].toUpperCase();
-                            const num = parseInt(match[2]);
-                            const teams = groupsData[g];
-                            if (teams && num >= 1 && num <= 6) {
-                                const matchPairs = [
-                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
-                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
-                                ];
-                                const [local, visitante] = matchPairs[num-1];
-                                equipos = `${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}`;
-                            }
-                        }
                     }
                     
                     theadHTML += `<th colspan="3" class="text-[10px]">
@@ -1548,21 +1506,6 @@
                         const mes = sched.fecha.substring(5, 7);
                         fechaHora = `${dia}/${mes} ${sched.hora}`;
                         equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
-                    } else {
-                        const match = m.match(/^g([a-l])m(\d+)$/);
-                        if (match) {
-                            const g = match[1].toUpperCase();
-                            const num = parseInt(match[2]);
-                            const teams = groupsData[g];
-                            if (teams && num >= 1 && num <= 6) {
-                                const matchPairs = [
-                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
-                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
-                                ];
-                                const [local, visitante] = matchPairs[num-1];
-                                equipos = `${local.substring(0,3).toUpperCase()} vs ${visitante.substring(0,3).toUpperCase()}`;
-                            }
-                        }
                     }
                     
                     tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]">
@@ -1643,10 +1586,10 @@
                             table { border-collapse: collapse; width: 100%; font-size: 8pt; }
                             th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; }
                             .sticky-col { position: sticky; left: 0; background: #e0e7ff; z-index: 10; border-right: 2px solid #4f46e5; color: #1e293b; }
-							.sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; }
+                            .sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; }
                             .rank-1 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
-							.rank-2 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
-							.rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
+                            .rank-2 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
+                            .rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
                             .rank-1 td, .rank-2 td, .rank-3 td { color: white; border-color: #fff; }
                             .rank-1 .sticky-col, .rank-2 .sticky-col, .rank-3 .sticky-col { background: inherit; }
                             .rank-1 .sticky-col-right, .rank-2 .sticky-col-right, .rank-3 .sticky-col-right { background: inherit; }
@@ -1677,7 +1620,7 @@
             }
         }
 
-        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones con nombres
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones con nombres (COLORES VIVOS)
         async function generarTablaSelecciones() {
             const loadingDiv = document.getElementById('tabla-selecciones-loading');
             const container = document.getElementById('tabla-selecciones-container');
@@ -1735,7 +1678,6 @@
                 }
                 players.sort((a, b) => b.total - a.total);
                 
-                // Generar HTML de la tabla
                 let html = '<table class="w-full text-sm text-left" style="min-width: 2000px;">';
                 html += '<thead class="text-xs uppercase bg-[#161b2c] text-orange-400">';
                 html += '<tr>';
@@ -1766,15 +1708,16 @@
                         let cellContent = '';
                         let cellClass = 'text-slate-600';
                         
+                        // 🎨 COLORES VIVOS
                         if (pred === 'Local' && sched) {
                             cellContent = sched.local;
-                            cellClass = 'text-blue-500 font-bold';
+                            cellClass = 'text-cyan-400 font-bold'; // Cian brillante
                         } else if (pred === 'Empate') {
                             cellContent = 'Empate';
-                            cellClass = 'text-orange-500 font-bold';
+                            cellClass = 'text-amber-400 font-bold'; // Ámbar brillante
                         } else if (pred === 'Visitante' && sched) {
                             cellContent = sched.visitante;
-                            cellClass = 'text-red-700 font-bold';
+                            cellClass = 'text-rose-500 font-bold'; // Rosa vivo
                         }
                         
                         html += `<td class="${cellClass} text-[10px]">${cellContent}</td>`;
@@ -1795,7 +1738,7 @@
             }
         }
 
-        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones en ventana nueva
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones en ventana nueva (COLORES VIVOS)
         async function generarTablaSeleccionesDigital() {
             const newWindow = window.open('', '_blank');
             if (!newWindow) {
@@ -1803,7 +1746,7 @@
                 return;
             }
             
-            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#2563eb;font-weight:bold;}.empate{color:#f97316;font-weight:bold;}.visitante{color:#991b1b;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
+            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;font-weight:bold;}.empate{color:#fbbf24;font-weight:bold;}.visitante{color:#f43f5e;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
             newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1>');
             newWindow.document.write('<button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button>');
             newWindow.document.write('<div id="loading">Cargando...</div>');
@@ -1916,7 +1859,7 @@
             if (viewId === 'view-leaderboard') {
                 startLeaderboardListener();
             }
-			
+            
             sessionStorage.setItem('ultimaPantalla', viewId);
         }
         
@@ -1926,7 +1869,6 @@
             setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
         }
 
-        // 🎯 CORRECCIÓN 2: Restaurar pantalla con carga de datos
         document.addEventListener('DOMContentLoaded', () => {
             startCountdown();
             auth.onAuthStateChanged(async (user) => {
@@ -1944,7 +1886,6 @@
                         if (pantallaGuardada) {
                             showView(pantallaGuardada);
                             
-                            // 🎯 Cargar datos según la pantalla restaurada
                             if (pantallaGuardada === 'view-predictions') {
                                 renderMatches();
                             } else if (pantallaGuardada === 'view-admin') {
@@ -1952,7 +1893,6 @@
                             } else if (pantallaGuardada === 'view-planilla') {
                                 generarPlanillaWeb();
                             }
-                            // view-leaderboard ya carga automáticamente por showView()
                         } else {
                             if (data.submitted || isDeadlinePassed) {
                                 showView('view-leaderboard');
