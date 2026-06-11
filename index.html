@@ -177,7 +177,7 @@
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
                         <span class="text-2xl">3️⃣</span>
-                        <p class="text-white font-bold text-sm">Envía tus selecciones antes del <span class="text-yellow-400">10 de Junio a las 10:00 PM</span></p>
+                        <p class="text-white font-bold text-sm">Envía tus selecciones antes del <span class="text-yellow-400">11 de Junio a las 12:30 PM</span></p>
                     </div>
                     <div class="flex items-start gap-3 bg-white/5 px-4 py-2 rounded-lg">
                         <span class="text-2xl">4️⃣</span>
@@ -426,6 +426,32 @@
             <p class="text-center text-[10px] text-slate-500">
                 * Desliza horizontalmente para ver todos los partidos. Los 3 primeros lugares están resaltados.
             </p>
+
+            <!-- NUEVA TABLA: Selecciones por Nombre -->
+            <div class="mt-12 space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl md:text-3xl italic-black uppercase text-orange-400">Selecciones por Nombre</h2>
+                    <p class="text-xs text-slate-400">Vista detallada con los nombres de los equipos seleccionados</p>
+                </div>
+                
+                <div class="flex justify-center gap-3 flex-wrap">
+                    <button onclick="generarTablaSelecciones()" class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition shadow-lg">
+                         Cargar Tabla de Selecciones
+                    </button>
+                    <button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">
+                        📱 Ver en Ventana Nueva
+                    </button>
+                </div>
+
+                <div id="tabla-selecciones-loading" class="hidden text-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-orange-500 mx-auto mb-4"></div>
+                    <p class="text-orange-400 font-bold">Cargando selecciones...</p>
+                </div>
+
+                <div id="tabla-selecciones-container" class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto">
+                    <!-- La tabla se generará aquí -->
+                </div>
+            </div>
         </div>
     </main>
 
@@ -446,86 +472,109 @@
         const auth = firebase.auth();
 
         const ADMIN_PIN = "111180";
-        const DEADLINE = new Date('2026-06-11T02:00:00Z');  
+        const DEADLINE = new Date('2026-06-11T16:30:00Z');    
         let isDeadlinePassed = Date.now() >= DEADLINE.getTime();
         let countdownInterval = null;
         let currentUser = null;
         let predictions = {};
         let isSubmitted = false;
 
-        const matchSchedule = {
+                        const matchSchedule = {
+            // GRUPO A (México, Sudáfrica, Corea del Sur, Chequia)
             'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
             'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
-            'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia' },
-            'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
-            'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
-            'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
-            'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
-            'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
-            'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
-            'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
-            'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
-            'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
-            'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
-            'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
-            'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
-            'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
-            'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
-            'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
-            'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
-            'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
-            'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
-            'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
-            'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
-            'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
-            'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'Chequia', visitante: 'Sudáfrica' },
-            'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Suiza', visitante: 'Bosnia' },
-            'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Canadá', visitante: 'Qatar' },
-            'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'México', visitante: 'Corea del Sur' },
-            'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
-            'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Escocia', visitante: 'Marruecos' },
-            'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Brasil', visitante: 'Haití' },
-            'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
-            'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
-            'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
-            'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
-            'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
-            'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
-            'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
-            'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
-            'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
-            'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
-            'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
-            'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
-            'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
-            'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
-            'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
-            'glm4': { fecha: '2026-06-23', hora: '19:00', local: 'Panamá', visitante: 'Croacia' },
-            'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
-            'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
-            'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia', visitante: 'Qatar' },
-            'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
-            'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
+            'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'México', visitante: 'Corea del Sur' },
+            'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'Chequia', visitante: 'Sudáfrica' },
             'gam5': { fecha: '2026-06-24', hora: '21:00', local: 'Chequia', visitante: 'México' },
             'gam6': { fecha: '2026-06-24', hora: '21:00', local: 'Sudáfrica', visitante: 'Corea del Sur' },
-            'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
-            'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
-            'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
-            'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
+            
+            // GRUPO B (Canadá, Bosnia y Herzegovina, Qatar, Suiza)
+            'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia y Herzegovina' },
+            'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
+            'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Canadá', visitante: 'Qatar' },
+            'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Suiza', visitante: 'Bosnia y Herzegovina' },
+            'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
+            'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia y Herzegovina', visitante: 'Qatar' },
+            
+            // GRUPO C (Brasil, Marruecos, Haití, Escocia)
+            'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
+            'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
+            'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Brasil', visitante: 'Haití' },
+            'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Escocia', visitante: 'Marruecos' },
+            'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
+            'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
+            
+            // GRUPO D (Estados Unidos, Paraguay, Australia, Turquía)
+            'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
+            'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
+            'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
+            'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
             'gdm5': { fecha: '2026-06-25', hora: '22:00', local: 'Turquía', visitante: 'Estados Unidos' },
             'gdm6': { fecha: '2026-06-25', hora: '22:00', local: 'Paraguay', visitante: 'Australia' },
+
+            // GRUPO E (Alemania, Curazao, Costa de Marfil, Ecuador)
+            'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
+            'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
+            'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
+            'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
+            'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
+            'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
+
+            // GRUPO F (Países Bajos, Japón, Suecia, Túnez)
+            'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
+            'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
+            'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
+            'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
+            'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
+            'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
+
+            // GRUPO G (Bélgica, Egipto, Irán, Nueva Zelanda)
+            'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
+            'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
+            'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
+            'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
+            'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
+            'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
+
+            // GRUPO H (España, Cabo Verde, Arabia Saudita, Uruguay)
+            'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
+            'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
+            'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
+            'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
+            'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
+            'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
+
+            // GRUPO I (Francia, Senegal, Irak, Noruega)
+            'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
+            'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
+            'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
+            'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
             'gim5': { fecha: '2026-06-26', hora: '15:00', local: 'Noruega', visitante: 'Francia' },
             'gim6': { fecha: '2026-06-26', hora: '15:00', local: 'Senegal', visitante: 'Irak' },
-            'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
-            'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
-            'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
-            'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
-            'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
-            'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' },
+
+            // GRUPO J (Argentina, Argelia, Austria, Jordania)
+            'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
+            'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
+            'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
+            'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
+            'gjm5': { fecha: '2026-06-27', hora: '22:00', local: 'Jordania', visitante: 'Argentina' },
+            'gjm6': { fecha: '2026-06-27', hora: '22:00', local: 'Argelia', visitante: 'Austria' },
+
+            // GRUPO K (Portugal, RD Congo, Uzbekistán, Colombia)
+            'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
+            'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
+            'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
+            'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
             'gkm5': { fecha: '2026-06-27', hora: '19:30', local: 'Colombia', visitante: 'Portugal' },
             'gkm6': { fecha: '2026-06-27', hora: '19:30', local: 'RD Congo', visitante: 'Uzbekistán' },
-            'gjm5': { fecha: '2026-06-27', hora: '22:00', local: 'Argelia', visitante: 'Austria' },
-            'gjm6': { fecha: '2026-06-27', hora: '22:00', local: 'Jordania', visitante: 'Argentina' }
+
+            // GRUPO L (Inglaterra, Croacia, Ghana, Panamá)
+            'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
+            'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
+            'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
+            'glm4': { fecha: '2026-06-23', hora: '19:00', local: 'Panamá', visitante: 'Croacia' },
+            'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
+            'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' }
         };
 
         const groupsData = {
@@ -1625,6 +1674,226 @@
             } catch (error) {
                 console.error(error);
                 showToast("❌ Error al generar la planilla: " + error.message, "error");
+            }
+        }
+
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones con nombres
+        async function generarTablaSelecciones() {
+            const loadingDiv = document.getElementById('tabla-selecciones-loading');
+            const container = document.getElementById('tabla-selecciones-container');
+            
+            if (loadingDiv) loadingDiv.classList.remove('hidden');
+            container.innerHTML = '';
+            
+            try {
+                const pSnap = await db.collection('participants').get();
+                const players = [];
+                pSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
+                });
+                
+                if (players.length === 0) {
+                    container.innerHTML = '<p class="text-yellow-400 font-bold p-4 text-center">Aún no hay participantes.</p>';
+                    return;
+                }
+                
+                const rSnap = await db.collection('matches').get();
+                const results = {};
+                rSnap.forEach(d => results[d.id] = d.data().result);
+                
+                let matchIds = [];
+                'ABCDEFGHIJKL'.split('').forEach(g => { 
+                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
+                });
+                
+                matchIds.sort((a, b) => {
+                    const schedA = matchSchedule[a];
+                    const schedB = matchSchedule[b];
+                    if (!schedA || !schedB) return 0;
+                    const dtA = schedA.fecha + ' ' + schedA.hora;
+                    const dtB = schedB.fecha + ' ' + schedB.hora;
+                    return dtA.localeCompare(dtB);
+                });
+                
+                for (const p of players) {
+                    const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
+                    const preds = {}; 
+                    predSnap.forEach(d => preds[d.id] = d.data().value);
+                    p.predictions = preds;
+                    
+                    let total = 0;
+                    matchIds.forEach(mId => {
+                        const pred = preds[mId];
+                        const res = results[mId];
+                        if (res) {
+                            if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
+                            else total += (pred === res) ? 3 : 0;
+                        }
+                    });
+                    p.total = total;
+                }
+                players.sort((a, b) => b.total - a.total);
+                
+                // Generar HTML de la tabla
+                let html = '<table class="w-full text-sm text-left" style="min-width: 2000px;">';
+                html += '<thead class="text-xs uppercase bg-[#161b2c] text-orange-400">';
+                html += '<tr>';
+                html += '<th rowspan="2" class="col-fixed-left">#</th>';
+                html += '<th rowspan="2" class="col-fixed-left">PARTICIPANTE</th>';
+                matchIds.forEach((m, i) => {
+                    const sched = matchSchedule[m];
+                    let equipos = '';
+                    if (sched) {
+                        equipos = `${sched.local.substring(0,3).toUpperCase()} vs ${sched.visitante.substring(0,3).toUpperCase()}`;
+                    }
+                    html += `<th class="text-[10px]">${i+1}<br><span class="text-slate-400">${equipos}</span></th>`;
+                });
+                html += '<th rowspan="2" class="col-fixed-right text-yellow-400">TOTAL</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody class="text-slate-300">';
+                
+                players.forEach((p, idx) => {
+                    const rankClass = idx < 3 ? `rank-${idx+1}` : '';
+                    html += `<tr class="${rankClass}">`;
+                    html += `<td class="col-fixed-left font-bold text-lg">${String(idx+1).padStart(2,'0')}</td>`;
+                    html += `<td class="col-fixed-left font-bold">${p.displayName || 'Anónimo'}</td>`;
+                    
+                    matchIds.forEach(mId => {
+                        const pred = p.predictions[mId] || '';
+                        const sched = matchSchedule[mId];
+                        let cellContent = '';
+                        let cellClass = 'text-slate-600';
+                        
+                        if (pred === 'Local' && sched) {
+                            cellContent = sched.local;
+                            cellClass = 'text-blue-500 font-bold';
+                        } else if (pred === 'Empate') {
+                            cellContent = 'Empate';
+                            cellClass = 'text-orange-500 font-bold';
+                        } else if (pred === 'Visitante' && sched) {
+                            cellContent = sched.visitante;
+                            cellClass = 'text-red-700 font-bold';
+                        }
+                        
+                        html += `<td class="${cellClass} text-[10px]">${cellContent}</td>`;
+                    });
+                    
+                    html += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td>`;
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error en tabla de selecciones:', error);
+                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
+            } finally {
+                if (loadingDiv) loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // 🎯 NUEVA FUNCIÓN: Generar tabla de selecciones en ventana nueva
+        async function generarTablaSeleccionesDigital() {
+            const newWindow = window.open('', '_blank');
+            if (!newWindow) {
+                showToast("Permite las ventanas emergentes para ver la tabla", "error");
+                return;
+            }
+            
+            newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;}.local{color:#2563eb;font-weight:bold;}.empate{color:#f97316;font-weight:bold;}.visitante{color:#991b1b;font-weight:bold;}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
+            newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1>');
+            newWindow.document.write('<button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button>');
+            newWindow.document.write('<div id="loading">Cargando...</div>');
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            
+            try {
+                const pSnap = await db.collection('participants').get();
+                const players = [];
+                pSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
+                });
+                
+                const rSnap = await db.collection('matches').get();
+                const results = {};
+                rSnap.forEach(d => results[d.id] = d.data().result);
+                
+                let matchIds = [];
+                'ABCDEFGHIJKL'.split('').forEach(g => { 
+                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
+                });
+                
+                matchIds.sort((a, b) => {
+                    const schedA = matchSchedule[a];
+                    const schedB = matchSchedule[b];
+                    if (!schedA || !schedB) return 0;
+                    const dtA = schedA.fecha + ' ' + schedA.hora;
+                    const dtB = schedB.fecha + ' ' + schedB.hora;
+                    return dtA.localeCompare(dtB);
+                });
+                
+                for (const p of players) {
+                    const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
+                    const preds = {}; 
+                    predSnap.forEach(d => preds[d.id] = d.data().value);
+                    p.predictions = preds;
+                    
+                    let total = 0;
+                    matchIds.forEach(mId => {
+                        const pred = preds[mId];
+                        const res = results[mId];
+                        if (res) {
+                            if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
+                            else total += (pred === res) ? 3 : 0;
+                        }
+                    });
+                    p.total = total;
+                }
+                players.sort((a, b) => b.total - a.total);
+                
+                let tableHTML = '<table><thead><tr><th>#</th><th>PARTICIPANTE</th>';
+                matchIds.forEach((m, i) => {
+                    const sched = matchSchedule[m];
+                    let equipos = '';
+                    if (sched) equipos = `${sched.local.substring(0,3)} vs ${sched.visitante.substring(0,3)}`;
+                    tableHTML += `<th>${i+1}<br><small>${equipos}</small></th>`;
+                });
+                tableHTML += '<th>TOTAL</th></tr></thead><tbody>';
+                
+                players.forEach((p, idx) => {
+                    tableHTML += `<tr><td>${String(idx+1).padStart(2,'0')}</td><td>${p.displayName || 'Anónimo'}</td>`;
+                    matchIds.forEach(mId => {
+                        const pred = p.predictions[mId] || '';
+                        const sched = matchSchedule[mId];
+                        let cellContent = '';
+                        let cellClass = '';
+                        
+                        if (pred === 'Local' && sched) {
+                            cellContent = sched.local;
+                            cellClass = 'local';
+                        } else if (pred === 'Empate') {
+                            cellContent = 'Empate';
+                            cellClass = 'empate';
+                        } else if (pred === 'Visitante' && sched) {
+                            cellContent = sched.visitante;
+                            cellClass = 'visitante';
+                        }
+                        
+                        tableHTML += `<td class="${cellClass}">${cellContent}</td>`;
+                    });
+                    tableHTML += `<td>${p.total}</td></tr>`;
+                });
+                
+                tableHTML += '</tbody></table>';
+                
+                newWindow.document.getElementById('loading').outerHTML = tableHTML;
+                
+            } catch (error) {
+                newWindow.document.body.innerHTML += `<p style="color:red">Error: ${error.message}</p>`;
             }
         }
 
