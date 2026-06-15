@@ -28,25 +28,19 @@
         .tabular-nums { font-variant-numeric: tabular-nums; }
         
         #sticky-progress { position: sticky; top: 80px; z-index: 30; transition: all 0.3s ease; }
-        
         #planilla-table th, #planilla-table td { padding: 8px 4px; border: 1px solid rgba(255,255,255,0.1); text-align: center; white-space: nowrap; }
         #planilla-table th { font-weight: 900; background: #161b2c; }
         #planilla-table tbody tr:hover { background: rgba(37, 99, 235, 0.1); }
-        
         .col-fixed-left { position: sticky; left: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; }
         .col-fixed-right { position: sticky; right: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-left: 2px solid #2563eb; }
-        
         .rank-1 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-2 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-3 { background: rgba(51, 153, 204, 0.2) !important; }
-        
         #planilla-table td:nth-child(4n+6), #planilla-table th:nth-child(4n+6) { background: rgba(255, 255, 255, 0.08); font-weight: 900; }
         #planilla-table th.text-yellow-400 { background: rgba(234, 179, 8, 0.25) !important; color: #fbbf24; font-weight: 900; }
-        
         .btn-result-1.selected { background: #2563eb !important; color: white !important; }
         .btn-result-X.selected { background: #eab308 !important; color: white !important; }
         .btn-result-2.selected { background: #dc2626 !important; color: white !important; }
-        
         .player-card { transition: all 0.2s ease; }
         .player-card:hover { background: rgba(37, 99, 235, 0.1); }
         .player-card.deleted { opacity: 0.5; border: 1px dashed #dc2626 !important; }
@@ -54,17 +48,12 @@
         .pred-btn.active-1 { background: #2563eb !important; color: white !important; }
         .pred-btn.active-X { background: #eab308 !important; color: white !important; }
         .pred-btn.active-2 { background: #dc2626 !important; color: white !important; }
-        
         @media (max-width: 768px) { #planilla-table { font-size: 0.65rem; } #planilla-table th, #planilla-table td { padding: 4px 2px; } }
         @media print { .glass { box-shadow: none; border: 1px solid #000; } #planilla-table { font-size: 8pt; } }
-		
         #admin-progress-bar { position: sticky; top: 80px; z-index: 40; transition: all 0.3s ease; }
-
         .col-fixed-num { position: sticky; left: 0; background: #0a0f1e; z-index: 11; width: 40px; text-align: center; font-weight: 900; }
         .col-fixed-name { position: sticky; left: 40px; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; text-align: left; padding-left: 8px; }
-        tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name,
-        tr.rank-2 .col-fixed-num, tr.rank-2 .col-fixed-name,
-        tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name { background: rgba(51, 153, 204, 0.2) !important; }
+        tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name, tr.rank-2 .col-fixed-num, tr.rank-2 .col-fixed-name, tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name { background: rgba(51, 153, 204, 0.2) !important; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -76,9 +65,7 @@
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-lg shadow-lg shadow-blue-500/20">
                     <i data-lucide="trophy" class="text-white w-5 h-5"></i>
                 </div>
-                <div>
-                    <h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1>
-                </div>
+                <div><h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1></div>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="showView('view-leaderboard')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">RANKING</button>
@@ -106,40 +93,16 @@
                 <h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">MONTO: <span class="text-blue-600">Bs.</span> 5.000,00</h3>
             </div>
 
-            <!-- 🎯 TABLA DE RANKING INSERTADA AQUÍ (Reemplazando temporalmente el botón para tu revisión) -->
-            <div class="w-full max-w-4xl mx-auto mt-4">
-                <h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
-                    Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
-                </h3>
-                <div class="glass rounded-3xl overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-                            <tr>
-                                <th class="p-4 w-16 text-center">Pos</th>
-                                <th class="p-4">Jugador</th>
-                                <th class="p-4 text-center">Puntos</th>
-                            </tr>
-                        </thead>
-                        <tbody id="home-leaderboard-body">
-                            <tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Cuando confirmes que te gusta, podemos quitar o ajustar el botón de abajo -->
-                <div class="w-full max-w-md mt-6">
-                    <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
-                         VER RANKING COMPLETO Y PLANILLAS
-                    </button>
-                </div>
+            <div class="w-full max-w-md">
+                <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
+                     VER RANKING DE PARTICIPANTES
+                </button>
             </div>
 
             <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
                 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
-                    <div>
-                        <span class="font-bold text-white text-[13px]">I. El Objetivo:</span>
-                        <p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p>
-                    </div>
+                    <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
                     <div>
                         <span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
                         <ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
@@ -149,10 +112,7 @@
                             <li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li>
                         </ul>
                     </div>
-                    <div>
-                        <span class="font-bold text-white text-[13px]">III. Tiempo válido:</span>
-                        <p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p>
-                    </div>
+                    <div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
                 </div>
             </div>
             
@@ -170,52 +130,36 @@
         <div id="view-predictions" class="hidden space-y-12">
             <div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
                 <div class="space-y-1">
-                    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
-                        <span>Progreso</span><span id="progress-text">0%</span>
-                    </div>
-                    <div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div>
-                    </div>
+                    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500"><span>Progreso</span><span id="progress-text">0%</span></div>
+                    <div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden"><div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div></div>
                 </div>
-                <div class="text-center">
-                    <span id="completed-count" class="block text-2xl font-black leading-none">0</span>
-                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span>
-                </div>
+                <div class="text-center"><span id="completed-count" class="block text-2xl font-black leading-none">0</span><span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span></div>
             </div>
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-                <h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2>
-            </div>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6"><h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2></div>
             <div id="matches-container" class="space-y-16"></div>
             <div id="submit-bar" class="fixed bottom-0 left-0 right-0 bg-[#0a0f1e]/90 backdrop-blur-xl border-t border-white/10 p-6 z-50">
                 <div class="max-w-5xl mx-auto flex justify-between items-center gap-6">
-                    <div class="hidden md:block">
-                        <h4 class="italic-black uppercase text-lg leading-tight">Finalizar Jugada</h4>
-                        <p class="text-xs text-slate-500 font-bold">Revisa bien antes de enviar.</p>
-                    </div>
-                    <button id="btn-submit" onclick="handleSubmit()" disabled class="flex-1 md:flex-none bg-green-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-green-500 disabled:opacity-30 disabled:grayscale transition-all shadow-[0_10px_30px_rgba(22,163,74,0.3)]">
-                        ENVIAR PREDICCIONES
-                    </button>
+                    <div class="hidden md:block"><h4 class="italic-black uppercase text-lg leading-tight">Finalizar Jugada</h4><p class="text-xs text-slate-500 font-bold">Revisa bien antes de enviar.</p></div>
+                    <button id="btn-submit" onclick="handleSubmit()" disabled class="flex-1 md:flex-none bg-green-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-green-500 disabled:opacity-30 disabled:grayscale transition-all shadow-[0_10px_30px_rgba(22,163,74,0.3)]">ENVIAR PREDICCIONES</button>
                 </div>
             </div>
         </div>
 
         <div id="view-leaderboard" class="hidden space-y-12 py-8">
-            <div class="text-center space-y-4">
-                <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span></h2>
-            </div>
+            <div class="text-center space-y-4"><h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span></h2></div>
             <div class="glass rounded-3xl overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
                         <tr><th class="p-6 w-16 text-center">Pos</th><th class="p-6">Jugador</th><th class="p-6 text-center">Puntos</th></tr>
                     </thead>
-                    <tbody id="leaderboard-body"></tbody>
+                    <tbody id="leaderboard-body"><tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr></tbody>
                 </table>
             </div>
             <div class="flex justify-center gap-4 mt-6 flex-wrap">
                 <button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
             </div>
             <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
-                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">📜 Reglamento Oficial</h4>
+                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide"> Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
                     <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
                     <div><span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span><ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30"><li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li><li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li><li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li><li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li></ul></div>
@@ -227,7 +171,7 @@
         <div id="view-admin" class="hidden space-y-8 py-8">
             <div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p></div>
             <div class="flex justify-center gap-3 flex-wrap">
-                <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">📊 Cargar Resultados</button>
+                <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition"> Cargar Resultados</button>
                 <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
                 <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
             </div>
@@ -492,7 +436,6 @@
             try {
                 const cred = await auth.signInAnonymously();
                 const uid = cred.user.uid;
-
                 const nicknameQuery = db.collection('participants').where('displayName', '==', name);
                 const nicknameSnapshot = await nicknameQuery.get();
 
@@ -520,7 +463,7 @@
                 document.getElementById('display-username').innerText = name;
                 if (isSubmitted) showView('view-leaderboard');
                 else showView('view-predictions');
-                renderMatches(); startLeaderboardListener();
+                renderMatches(); 
                 
                 const codigoMsg = userCode ? ` (${userCode})` : '';
                 showToast(`¡Bienvenido, ${name}!${codigoMsg}`, "success");
@@ -570,12 +513,18 @@
             }
         }
 
+        // 🎯 FUNCIÓN CLAVE: Carga el ranking para TODOS los visitantes
         let unsubscribeLB = null;
         function startLeaderboardListener() {
-            if (unsubscribeLB) unsubscribeLB();
+            console.log(' Iniciando listener del ranking...');
+            if (unsubscribeLB) {
+                unsubscribeLB();
+            }
             const unsubParticipants = db.collection('participants').onSnapshot(pSnap => {
+                console.log('📦 Participantes recibidos:', pSnap.size);
                 const unsubMatches = db.collection('matches').onSnapshot(mSnap => {
-                    const results = {}; mSnap.forEach(doc => results[doc.id] = doc.data().result);
+                    const results = {}; 
+                    mSnap.forEach(doc => results[doc.id] = doc.data().result);
                     const players = [];
                     pSnap.forEach(doc => {
                         const data = doc.data();
@@ -583,6 +532,7 @@
                         if (!data.submitted) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
                     });
+                    console.log('✅ Participantes con submitted=true:', players.length);
                     Promise.all(players.map(async p => {
                         const predsSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                         let score = 0;
@@ -590,8 +540,12 @@
                             const pred = doc.data().value; 
                             const res = results[doc.id]; 
                             if (!res) return;
-                            if (res === 'Empate') { if (pred === 'Empate') score += 5; else score += 1; } 
-                            else { if (pred === res) score += 3; }
+                            if (res === 'Empate') { 
+                                if (pred === 'Empate') score += 5; 
+                                else score += 1; 
+                            } else { 
+                                if (pred === res) score += 3; 
+                            }
                         });
                         p.score = score;
                     })).then(() => {
@@ -604,27 +558,23 @@
         }
 
         function renderLeaderboard(players) {
-            // 🎯 ACTUALIZACIÓN: Llenar tanto la tabla de inicio como la de la vista de ranking
-            const homeTbody = document.getElementById('home-leaderboard-body');
-            const mainTbody = document.getElementById('leaderboard-body');
+            const tbody = document.getElementById('leaderboard-body');
+            if (!tbody) return;
             
-            let html = '';
             if (players.length === 0) { 
-                html = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay predicciones enviadas.</td></tr>`; 
-            } else {
-                html = players.map((p, idx) => {
-                    const isMe = p.id === currentUser?.uid;
-                    const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-                    return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
-                        <td class="p-4 text-center font-black text-lg">${medal}</td>
-                        <td class="p-4 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
-                        <td class="p-4 text-center font-black text-xl text-yellow-400">${p.score}</td>
-                    </tr>`;
-                }).join('');
+                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay participantes que hayan enviado sus predicciones oficialmente.</td></tr>`; 
+                return; 
             }
             
-            if (homeTbody) homeTbody.innerHTML = html;
-            if (mainTbody) mainTbody.innerHTML = html;
+            tbody.innerHTML = players.map((p, idx) => {
+                const isMe = p.id === currentUser?.uid;
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+                return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
+                    <td class="p-6 text-center font-black text-lg">${medal}</td>
+                    <td class="p-6 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
+                    <td class="p-6 text-center font-black text-xl text-yellow-400">${p.score}</td>
+                </tr>`;
+            }).join('');
         }
 
         async function promptAdmin() {
@@ -772,7 +722,7 @@
                 await db.collection('participants').doc(playerId).update({ deleted: false, deletedAt: firebase.firestore.FieldValue.delete() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
                 const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
-                await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
+                await batch.commit(); showToast(`️ ${playerName} restaurado`, "success"); loadAdminPlayers();
             } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
@@ -1043,7 +993,11 @@
             setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
         }
 
+        // 🎯 CAMBIO CLAVE: Iniciar el listener del ranking INMEDIATAMENTE al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
+            console.log(' Página cargada, iniciando listener del ranking...');
+            startLeaderboardListener();
+            
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     const doc = await db.collection('participants').doc(user.uid).get();
@@ -1053,9 +1007,6 @@
                         document.getElementById('view-home').classList.add('hidden');
                         document.getElementById('user-badge').classList.remove('hidden');
                         document.getElementById('display-username').innerText = data.displayName;
-                        
-                        // 🎯 Aseguramos que el listener del ranking se active para llenar la tabla de inicio
-                        startLeaderboardListener();
 
                         const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
                         if (pantallaGuardada) {
