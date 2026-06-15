@@ -99,6 +99,27 @@
                 </button>
             </div>
 
+            <!-- 🎯 RANKING EN PANTALLA PRINCIPAL -->
+            <div class="w-full max-w-4xl mx-auto mt-4">
+                <h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
+                    Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
+                </h3>
+                <div class="glass rounded-3xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+                            <tr>
+                                <th class="p-4 w-16 text-center">Pos</th>
+                                <th class="p-4">Jugador</th>
+                                <th class="p-4 text-center">Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="home-leaderboard-body">
+                            <tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
                 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
@@ -516,12 +537,10 @@
         // 🎯 FUNCIÓN CLAVE: Carga el ranking para TODOS los visitantes
         let unsubscribeLB = null;
         function startLeaderboardListener() {
-            console.log(' Iniciando listener del ranking...');
             if (unsubscribeLB) {
                 unsubscribeLB();
             }
             const unsubParticipants = db.collection('participants').onSnapshot(pSnap => {
-                console.log('📦 Participantes recibidos:', pSnap.size);
                 const unsubMatches = db.collection('matches').onSnapshot(mSnap => {
                     const results = {}; 
                     mSnap.forEach(doc => results[doc.id] = doc.data().result);
@@ -532,7 +551,6 @@
                         if (!data.submitted) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
                     });
-                    console.log('✅ Participantes con submitted=true:', players.length);
                     Promise.all(players.map(async p => {
                         const predsSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                         let score = 0;
@@ -557,24 +575,29 @@
             });
         }
 
+        // 🎯 FUNCIÓN MODIFICADA: Actualiza AMBAS tablas (pantalla principal y vista ranking)
         function renderLeaderboard(players) {
-            const tbody = document.getElementById('leaderboard-body');
-            if (!tbody) return;
+            const homeTbody = document.getElementById('home-leaderboard-body');
+            const mainTbody = document.getElementById('leaderboard-body');
             
+            let html = '';
             if (players.length === 0) { 
-                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay participantes que hayan enviado sus predicciones oficialmente.</td></tr>`; 
-                return; 
+                html = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay participantes que hayan enviado sus predicciones oficialmente.</td></tr>`; 
+            } else {
+                html = players.map((p, idx) => {
+                    const isMe = p.id === currentUser?.uid;
+                    const medal = idx === 0 ? '🥇' : idx === 1 ? '' : idx === 2 ? '' : `#${idx + 1}`;
+                    return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
+                        <td class="p-4 text-center font-black text-lg">${medal}</td>
+                        <td class="p-4 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
+                        <td class="p-4 text-center font-black text-xl text-yellow-400">${p.score}</td>
+                    </tr>`;
+                }).join('');
             }
             
-            tbody.innerHTML = players.map((p, idx) => {
-                const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-                return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
-                    <td class="p-6 text-center font-black text-lg">${medal}</td>
-                    <td class="p-6 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
-                    <td class="p-6 text-center font-black text-xl text-yellow-400">${p.score}</td>
-                </tr>`;
-            }).join('');
+            // Actualizar AMBAS tablas si existen
+            if (homeTbody) homeTbody.innerHTML = html;
+            if (mainTbody) mainTbody.innerHTML = html;
         }
 
         async function promptAdmin() {
@@ -665,7 +688,7 @@
                     const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
                     p.predictions = preds; p.predCount = Object.keys(preds).length;
                     let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
-                    let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
+                    let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">️ Eliminar</button>`;
                     html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
                     const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
                     matchIds.forEach((mId, idx) => {
@@ -722,7 +745,7 @@
                 await db.collection('participants').doc(playerId).update({ deleted: false, deletedAt: firebase.firestore.FieldValue.delete() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
                 const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
-                await batch.commit(); showToast(`️ ${playerName} restaurado`, "success"); loadAdminPlayers();
+                await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
             } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
@@ -995,7 +1018,7 @@
 
         // 🎯 CAMBIO CLAVE: Iniciar el listener del ranking INMEDIATAMENTE al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
-            console.log(' Página cargada, iniciando listener del ranking...');
+            console.log('📱 Página cargada, iniciando listener del ranking...');
             startLeaderboardListener();
             
             auth.onAuthStateChanged(async (user) => {
