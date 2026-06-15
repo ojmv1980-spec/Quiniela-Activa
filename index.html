@@ -27,44 +27,21 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .tabular-nums { font-variant-numeric: tabular-nums; }
         
-        #sticky-progress {
-            position: sticky;
-            top: 80px;
-            z-index: 30;
-            transition: all 0.3s ease;
-        }
+        #sticky-progress { position: sticky; top: 80px; z-index: 30; transition: all 0.3s ease; }
         
-        #planilla-table th, #planilla-table td {
-            padding: 8px 4px;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            white-space: nowrap;
-        }
+        #planilla-table th, #planilla-table td { padding: 8px 4px; border: 1px solid rgba(255,255,255,0.1); text-align: center; white-space: nowrap; }
         #planilla-table th { font-weight: 900; background: #161b2c; }
         #planilla-table tbody tr:hover { background: rgba(37, 99, 235, 0.1); }
-        .col-fixed-left {
-            position: sticky; left: 0; background: #0a0f1e; z-index: 10;
-            font-weight: 900; border-right: 2px solid #2563eb;
-        }
-        .col-fixed-right {
-            position: sticky; right: 0; background: #0a0f1e; z-index: 10;
-            font-weight: 900; border-left: 2px solid #2563eb;
-        }
+        
+        .col-fixed-left { position: sticky; left: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; }
+        .col-fixed-right { position: sticky; right: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-left: 2px solid #2563eb; }
+        
         .rank-1 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-2 { background: rgba(51, 153, 204, 0.2) !important; }
         .rank-3 { background: rgba(51, 153, 204, 0.2) !important; }
         
-        #planilla-table td:nth-child(4n+6),
-        #planilla-table th:nth-child(4n+6) {
-            background: rgba(255, 255, 255, 0.08);
-            font-weight: 900;
-        }
-        
-        #planilla-table th.text-yellow-400 {
-            background: rgba(234, 179, 8, 0.25) !important;
-            color: #fbbf24;
-            font-weight: 900;
-        }
+        #planilla-table td:nth-child(4n+6), #planilla-table th:nth-child(4n+6) { background: rgba(255, 255, 255, 0.08); font-weight: 900; }
+        #planilla-table th.text-yellow-400 { background: rgba(234, 179, 8, 0.25) !important; color: #fbbf24; font-weight: 900; }
         
         .btn-result-1.selected { background: #2563eb !important; color: white !important; }
         .btn-result-X.selected { background: #eab308 !important; color: white !important; }
@@ -78,37 +55,16 @@
         .pred-btn.active-X { background: #eab308 !important; color: white !important; }
         .pred-btn.active-2 { background: #dc2626 !important; color: white !important; }
         
-        @media (max-width: 768px) {
-            #planilla-table { font-size: 0.65rem; }
-            #planilla-table th, #planilla-table td { padding: 4px 2px; }
-        }
-        @media print {
-            .glass { box-shadow: none; border: 1px solid #000; }
-            #planilla-table { font-size: 8pt; }
-        }
+        @media (max-width: 768px) { #planilla-table { font-size: 0.65rem; } #planilla-table th, #planilla-table td { padding: 4px 2px; } }
+        @media print { .glass { box-shadow: none; border: 1px solid #000; } #planilla-table { font-size: 8pt; } }
 		
-        #admin-progress-bar {
-            position: sticky;
-            top: 80px;
-            z-index: 40;
-            transition: all 0.3s ease;
-        }
+        #admin-progress-bar { position: sticky; top: 80px; z-index: 40; transition: all 0.3s ease; }
 
-        /* Nuevas clases para la tabla de Selecciones por Nombre */
-        .col-fixed-num {
-            position: sticky; left: 0; background: #0a0f1e; z-index: 11;
-            width: 40px; text-align: center; font-weight: 900;
-        }
-        .col-fixed-name {
-            position: sticky; left: 40px; background: #0a0f1e; z-index: 10;
-            font-weight: 900; border-right: 2px solid #2563eb; text-align: left; padding-left: 8px;
-        }
-        /* Para que los colores de los Top 3 se vean en las columnas fijas */
+        .col-fixed-num { position: sticky; left: 0; background: #0a0f1e; z-index: 11; width: 40px; text-align: center; font-weight: 900; }
+        .col-fixed-name { position: sticky; left: 40px; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; text-align: left; padding-left: 8px; }
         tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name,
         tr.rank-2 .col-fixed-num, tr.rank-2 .col-fixed-name,
-        tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name {
-            background: rgba(51, 153, 204, 0.2) !important;
-        }
+        tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name { background: rgba(51, 153, 204, 0.2) !important; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -124,54 +80,33 @@
                     <h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1>
                 </div>
             </div>
-            
             <div class="flex items-center gap-3">
-                <button onclick="showView('view-leaderboard')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">
-                RANKING
-                </button>
-                
+                <button onclick="showView('view-leaderboard')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">RANKING</button>
                 <button onclick="promptAdmin()" class="p-1.5 md:p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
                     <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-4 h-4 md:w-5 md:h-5"></i>
                 </button>
             </div>
         </div>
-        
         <div class="flex justify-between items-center mt-1 pt-1 border-t border-white/5">
             <span class="text-[10px] md:text-xs text-blue-400 font-bold uppercase tracking-widest">Fase de Grupos</span>
-            
             <div id="user-badge" class="hidden flex items-center gap-2 px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-full">
                 <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span id="display-username" class="text-[10px] md:text-xs font-bold text-white"></span>
-                <button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir">
-                    ✕
-                </button>
+                <button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir">✕</button>
             </div>
         </div>
     </div>
 </header>
 
     <main class="max-w-5xl mx-auto px-4 py-8">
-        
         <div id="view-home" class="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6">
             <div class="text-center space-y-1">
-                <h2 class="text-2xl md:text-4xl italic-black tracking-tighter leading-none uppercase">
-                    JUEGA TU <span class="text-blue-600">QUINIELA ACTIVA</span>
-                </h2>
-                <p class="max-w-xl text-slate-400 text-sm md:text-base mt-2">
-                    y conviértete en el campeón de la Fase de Grupos.
-                </p>
-                <h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">
-                    MONTO: <span class="text-blue-600">Bs.</span> 5.000,00
-                </h3>
+                <h2 class="text-2xl md:text-4xl italic-black tracking-tighter leading-none uppercase">JUEGA TU <span class="text-blue-600">QUINIELA ACTIVA</span></h2>
+                <p class="max-w-xl text-slate-400 text-sm md:text-base mt-2">y conviértete en el campeón de la Fase de Grupos.</p>
+                <h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">MONTO: <span class="text-blue-600">Bs.</span> 5.000,00</h3>
             </div>
 
-            <div id="countdown-container" class="glass p-4 rounded-2xl border-l-4 border-blue-500 text-center max-w-md w-full shadow-lg shadow-blue-500/10">
-                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">⏳ Cierre de predicciones</p>
-                <div id="countdown-display" class="text-2xl md:text-3xl font-black italic-black tracking-tighter text-white tabular-nums">
-                    00:00:00:00
-                </div>
-                <p class="text-[9px] text-slate-500 mt-1 font-bold tracking-wide">DÍAS : HORAS : MIN : SEG</p>
-            </div>
+            <!-- 🎯 BLOQUE DEL CONTADOR ELIMINADO AQUÍ -->
 
             <div class="w-full max-w-md">
                 <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
@@ -180,7 +115,7 @@
             </div>
 
             <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
-                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide"> Reglamento Oficial</h4>
+                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
                     <div>
                         <span class="font-bold text-white text-[13px]">I. El Objetivo:</span>
@@ -203,37 +138,21 @@
             </div>
             
             <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/30 shadow-lg shadow-yellow-500/20">
-                <h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">
-                    💳 PAGO MÓVIL
-                </h3>
+                <h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">💳 PAGO MÓVIL</h3>
                 <div class="space-y-3 text-center">
-                    <div class="bg-white/5 px-4 py-2 rounded-lg">
-                        <p class="text-slate-300 font-bold text-sm">Banco de Venezuela</p>
-                        <p class="text-white font-mono font-bold text-base">0102</p>
-                    </div>
-                    <div class="bg-white/5 px-4 py-2 rounded-lg">
-                        <p class="text-slate-300 font-bold text-sm">Teléfono</p>
-                        <p class="text-white font-mono font-bold text-base">0412-3538806</p>
-                    </div>
-                    <div class="bg-white/5 px-4 py-2 rounded-lg">
-                        <p class="text-slate-300 font-bold text-sm">Cédula</p>
-                        <p class="text-white font-mono font-bold text-base">14841975</p>
-                    </div>
-                    <div class="bg-white/5 px-4 py-2 rounded-lg">
-                        <p class="text-slate-300 font-bold text-sm">Costo</p>
-                        <p class="text-white font-mono font-bold text-base">Bs. 5.000,00</p>
-                    </div>
+                    <div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Banco de Venezuela</p><p class="text-white font-mono font-bold text-base">0102</p></div>
+                    <div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Teléfono</p><p class="text-white font-mono font-bold text-base">0412-3538806</p></div>
+                    <div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Cédula</p><p class="text-white font-mono font-bold text-base">14841975</p></div>
+                    <div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Costo</p><p class="text-white font-mono font-bold text-base">Bs. 5.000,00</p></div>
                 </div>
             </div>
         </div>
-        
 
         <div id="view-predictions" class="hidden space-y-12">
             <div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
                 <div class="space-y-1">
                     <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500">
-                        <span>Progreso</span>
-                        <span id="progress-text">0%</span>
+                        <span>Progreso</span><span id="progress-text">0%</span>
                     </div>
                     <div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div>
@@ -244,21 +163,17 @@
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span>
                 </div>
             </div>
-
             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                 <h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2>
             </div>
-
             <div id="matches-container" class="space-y-16"></div>
-
             <div id="submit-bar" class="fixed bottom-0 left-0 right-0 bg-[#0a0f1e]/90 backdrop-blur-xl border-t border-white/10 p-6 z-50">
                 <div class="max-w-5xl mx-auto flex justify-between items-center gap-6">
                     <div class="hidden md:block">
                         <h4 class="italic-black uppercase text-lg leading-tight">Finalizar Jugada</h4>
                         <p class="text-xs text-slate-500 font-bold">Revisa bien antes de enviar.</p>
                     </div>
-                    <button id="btn-submit" onclick="handleSubmit()" disabled 
-                        class="flex-1 md:flex-none bg-green-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-green-500 disabled:opacity-30 disabled:grayscale transition-all shadow-[0_10px_30px_rgba(22,163,74,0.3)]">
+                    <button id="btn-submit" onclick="handleSubmit()" disabled class="flex-1 md:flex-none bg-green-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-green-500 disabled:opacity-30 disabled:grayscale transition-all shadow-[0_10px_30px_rgba(22,163,74,0.3)]">
                         ENVIAR PREDICCIONES
                     </button>
                 </div>
@@ -267,84 +182,44 @@
 
         <div id="view-leaderboard" class="hidden space-y-12 py-8">
             <div class="text-center space-y-4">
-                <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">
-                    Ranking  de  <span class="text-blue-600 underline underline-offset-8">  Participantes</span>
-                </h2>
+                <h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span></h2>
             </div>
             <div class="glass rounded-3xl overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-                        <tr>
-                            <th class="p-6 w-16 text-center">Pos</th>
-                            <th class="p-6">Jugador</th>
-                            <th class="p-6 text-center">Puntos</th>
-                        </tr>
+                        <tr><th class="p-6 w-16 text-center">Pos</th><th class="p-6">Jugador</th><th class="p-6 text-center">Puntos</th></tr>
                     </thead>
                     <tbody id="leaderboard-body"></tbody>
                 </table>
             </div>
             <div class="flex justify-center gap-4 mt-6 flex-wrap">
-                <button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
-                    📊 Ver Planilla Completa
-                </button>
+                <button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
             </div>
-
             <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
                 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">📜 Reglamento Oficial</h4>
                 <div class="space-y-3 text-xs md:text-sm text-slate-300">
-                    <div>
-                        <span class="font-bold text-white text-[13px]">I. El Objetivo:</span>
-                        <p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p>
-                    </div>
-                    <div>
-                        <span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
-                        <ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
-                            <li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li>
-                            <li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li>
-                            <li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li>
-                            <li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <span class="font-bold text-white text-[13px]">III. Tiempo válido:</span>
-                        <p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p>
-                    </div>
+                    <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
+                    <div><span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span><ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30"><li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li><li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li><li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li><li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li></ul></div>
+                    <div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
                 </div>
             </div>
         </div>
 
         <div id="view-admin" class="hidden space-y-8 py-8">
-            <div class="text-center">
-                <h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2>
-                <p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p>
-            </div>
-            
+            <div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p></div>
             <div class="flex justify-center gap-3 flex-wrap">
-                <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">
-                    📊 Cargar Resultados
-                </button>
-                <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
-                    👥 Gestión de Participantes
-                </button>
-                <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
-                    💰 Cobranza
-                </button>
+                <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">📊 Cargar Resultados</button>
+                <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
+                <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
             </div>
-            
-            <div id="admin-tab-results">
-                <div id="admin-matches-container" class="space-y-6"></div>
-            </div>
-            
+            <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
             <div id="admin-tab-players" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
-                    <h4 class="font-bold text-blue-400 mb-2"> Lista de Participantes</h4>
+                    <h4 class="font-bold text-blue-400 mb-2">👥 Lista de Participantes</h4>
                     <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
-                    <div id="admin-players-list" class="space-y-3">
-                        <div class="text-center text-slate-400 py-4">Cargando participantes...</div>
-                    </div>
+                    <div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
                 </div>
             </div>
-            
             <div id="admin-tab-cobranza" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
                     <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
@@ -355,71 +230,44 @@
                             <span>Total: <span id="cobranza-total" class="font-bold text-yellow-400">Bs. 0,00</span></span>
                         </div>
                     </div>
-                    <div id="admin-cobranza-list" class="space-y-2">
-                        <div class="text-center text-slate-400 py-8">Cargando datos de cobranza...</div>
-                    </div>
+                    <div id="admin-cobranza-list" class="space-y-2"><div class="text-center text-slate-400 py-8">Cargando datos de cobranza...</div></div>
                 </div>
             </div>
-            
-            <div class="text-center">
-                <button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button>
-            </div>
+            <div class="text-center"><button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button></div>
         </div>
 
         <div id="view-planilla" class="hidden space-y-6 py-8">
-            <div class="text-center space-y-2">
-                <h2 class="text-2xl md:text-3xl italic-black uppercase text-blue-400">Resultados Partido a Partido</h2>
-            </div>
-            
+            <div class="text-center space-y-2"><h2 class="text-2xl md:text-3xl italic-black uppercase text-blue-400">Resultados Partido a Partido</h2></div>
             <div class="flex justify-center gap-3 flex-wrap">
-                <button onclick="showView('view-leaderboard')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg transition">
-                    ← Volver al Ranking
-                </button>
-                <button onclick="generarPlanillaDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">
-                    📱 Ver Planilla Digital
-                </button>
+                <button onclick="showView('view-leaderboard')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg transition">← Volver al Ranking</button>
+                <button onclick="generarPlanillaDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver Planilla Digital</button>
             </div>
-
             <div id="planilla-loading" class="text-center py-12">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div>
                 <p class="text-blue-400 font-bold">Cargando 72 partidos × <span id="total-users">0</span> participantes...</p>
             </div>
-
             <div class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto">
                 <table id="planilla-table" class="w-full text-sm text-left" style="min-width: 2000px;">
                     <thead class="text-xs uppercase bg-[#161b2c] text-blue-400"></thead>
                     <tbody id="planilla-body" class="text-slate-300"></tbody>
                 </table>
             </div>
-            
-            <p class="text-center text-[10px] text-slate-500">
-                * Desliza horizontalmente para ver todos los partidos. Los 3 primeros lugares están resaltados.
-            </p>
+            <p class="text-center text-[10px] text-slate-500">* Desliza horizontalmente para ver todos los partidos. Los 3 primeros lugares están resaltados.</p>
 
-            <!-- NUEVA TABLA: Selecciones por Nombre -->
             <div class="mt-12 space-y-6">
                 <div class="text-center space-y-2">
                     <h2 class="text-2xl md:text-3xl italic-black uppercase text-orange-400">Selecciones por Nombre</h2>
                     <p class="text-xs text-slate-400">Vista detallada con los nombres de los equipos seleccionados</p>
                 </div>
-                
                 <div class="flex justify-center gap-3 flex-wrap">
-                    <button onclick="generarTablaSelecciones()" class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition shadow-lg">
-                         Cargar Tabla de Selecciones
-                    </button>
-                    <button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">
-                         Ver en Ventana Nueva
-                    </button>
+                    <button onclick="generarTablaSelecciones()" class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition shadow-lg">Cargar Tabla de Selecciones</button>
+                    <button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver en Ventana Nueva</button>
                 </div>
-
                 <div id="tabla-selecciones-loading" class="hidden text-center py-12">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-orange-500 mx-auto mb-4"></div>
                     <p class="text-orange-400 font-bold">Cargando selecciones...</p>
                 </div>
-
-                <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl overflow-x-auto">
-                    <!-- La tabla se generará aquí -->
-                </div>
+                <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl overflow-x-auto"></div>
             </div>
         </div>
     </main>
@@ -441,9 +289,6 @@
         const auth = firebase.auth();
 
         const ADMIN_PIN = "111180";
-        const DEADLINE = new Date('2026-06-11T16:30:00Z');    
-        let isDeadlinePassed = Date.now() >= DEADLINE.getTime();
-        let countdownInterval = null;
         let currentUser = null;
         let predictions = {};
         let isSubmitted = false;
@@ -550,29 +395,6 @@
             L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
         };
 
-        function startCountdown() {
-            const display = document.getElementById('countdown-display');
-            clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = DEADLINE.getTime() - now;
-                if (distance <= 0) {
-                    clearInterval(countdownInterval);
-                    display.innerHTML = " CERRADO";
-                    display.classList.remove('text-white');
-                    display.classList.add('text-red-400');
-                    isDeadlinePassed = true;
-                    lockPredictionsUI();
-                    return;
-                }
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                display.innerHTML = `${String(days).padStart(2,'0')} : ${String(hours).padStart(2,'0')} : ${String(minutes).padStart(2,'0')} : ${String(seconds).padStart(2,'0')}`;
-            }, 1000);
-        }
-
         function lockPredictionsUI() {
             document.getElementById('btn-submit')?.classList.add('hidden');
             document.querySelectorAll('.btn-option').forEach(btn => {
@@ -595,7 +417,7 @@
                 groupMatches.forEach((m, mIdx) => {
                     const matchId = `g${group.toLowerCase()}m${mIdx + 1}`;
                     const saved = predictions[matchId];
-                    const disabled = isSubmitted || isDeadlinePassed ? 'disabled opacity-50 cursor-not-allowed' : '';
+                    const disabled = isSubmitted ? 'disabled opacity-50 cursor-not-allowed' : '';
                     groupHtml += `<div class="glass p-5 rounded-2xl space-y-4 hover:border-white/20 transition-all">
                         <div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase text-slate-500">Partido #${(gIdx * 6) + mIdx + 1}</span>
                         ${isSubmitted ? `<span class="text-[10px] font-bold text-green-400">✓ Enviado</span>` : ''}</div>
@@ -614,7 +436,7 @@
         }
 
         function select(matchId, value) {
-            if (isSubmitted || isDeadlinePassed) return;
+            if (isSubmitted) return;
             predictions[matchId] = value;
             document.querySelectorAll(`[id^="btn-${matchId}-"]`).forEach(btn => btn.classList.remove('selected'));
             document.getElementById(`btn-${matchId}-${value}`)?.classList.add('selected');
@@ -628,11 +450,11 @@
             document.getElementById('progress-bar').style.width = pct + '%';
             document.getElementById('progress-text').innerText = pct + '%';
             document.getElementById('completed-count').innerText = count;
-            document.getElementById('btn-submit').disabled = count < 72 || isSubmitted || isDeadlinePassed;
+            document.getElementById('btn-submit').disabled = count < 72 || isSubmitted;
         }
 
         async function autoSave() {
-            if (!currentUser || isSubmitted || isDeadlinePassed) return;
+            if (!currentUser || isSubmitted) return;
             try {
                 const batch = db.batch();
                 const userRef = db.collection('participants').doc(currentUser.uid);
@@ -657,10 +479,7 @@
 
                 if (!nicknameSnapshot.empty) {
                     let isSameUser = false;
-                    nicknameSnapshot.forEach(doc => {
-                        if (doc.id === uid) isSameUser = true;
-                    });
-
+                    nicknameSnapshot.forEach(doc => { if (doc.id === uid) isSameUser = true; });
                     if (!isSameUser) {
                         await auth.signOut();
                         showToast("❌ Ese apodo ya está registrado. Elige otro.", "error");
@@ -671,12 +490,7 @@
                 const userDoc = await db.collection('participants').doc(uid).get();
                 let userCode = userDoc.data()?.userCode;
                 if (!userCode) {
-                    await db.collection('participants').doc(uid).set({ 
-                        displayName: name, 
-                        createdAt: new Date(), 
-                        submitted: false, 
-                        paid: false
-                    }, { merge: true });
+                    await db.collection('participants').doc(uid).set({ displayName: name, createdAt: new Date(), submitted: false, paid: false }, { merge: true });
                 } else {
                     await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true });
                 }
@@ -685,7 +499,7 @@
                 document.getElementById('view-home').classList.add('hidden');
                 document.getElementById('user-badge').classList.remove('hidden');
                 document.getElementById('display-username').innerText = name;
-                if (isSubmitted || isDeadlinePassed) showView('view-leaderboard');
+                if (isSubmitted) showView('view-leaderboard');
                 else showView('view-predictions');
                 renderMatches(); startLeaderboardListener();
                 
@@ -704,15 +518,13 @@
         }
 
         async function handleSubmit() {
-            if (Object.keys(predictions).length < 72 || isDeadlinePassed) return;
-            if (!confirm("️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
+            if (Object.keys(predictions).length < 72) return;
+            if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
             const btn = document.getElementById('btn-submit'); 
-            btn.disabled = true; 
-            btn.innerHTML = 'Enviando...';
+            btn.disabled = true; btn.innerHTML = 'Enviando...';
             try {
                 const userDoc = await db.collection('participants').doc(currentUser.uid).get();
                 let userCode = userDoc.data()?.userCode;
-                
                 if (!userCode) {
                     const counterRef = db.collection('config').doc('userCounter');
                     await db.runTransaction(async (transaction) => {
@@ -722,31 +534,20 @@
                         userCode = `QA${String(newCount).padStart(4, '0')}`;
                     });
                 }
-                
                 const batch = db.batch(); 
                 const userRef = db.collection('participants').doc(currentUser.uid);
-                
-                batch.update(userRef, { 
-                    submitted: true, 
-                    submittedAt: new Date(), 
-                    totalPredictions: 72,
-                    userCode: userCode
-                });
-                
+                batch.update(userRef, { submitted: true, submittedAt: new Date(), totalPredictions: 72, userCode: userCode });
                 Object.entries(predictions).forEach(([matchId, value]) => {
                     batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
                 });
-                
                 await batch.commit(); 
                 isSubmitted = true;
                 currentUser.userCode = userCode;
-                
                 showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
                 setTimeout(() => showView('view-leaderboard'), 1500);
             } catch (err) { 
                 showToast("Error: " + err.message, "error"); 
-                btn.disabled = false; 
-                btn.innerText = 'ENVIAR PREDICCIONES'; 
+                btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; 
             }
         }
 
@@ -760,10 +561,9 @@
                     pSnap.forEach(doc => {
                         const data = doc.data();
                         if (data.deleted) return;
-                        if (!data.submitted && !isDeadlinePassed) return;
+                        if (!data.submitted) return;
                         players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', submitted: data.submitted || false });
                     });
-                    
                     Promise.all(players.map(async p => {
                         const predsSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                         let score = 0;
@@ -771,12 +571,8 @@
                             const pred = doc.data().value; 
                             const res = results[doc.id]; 
                             if (!res) return;
-                            if (res === 'Empate') {
-                                if (pred === 'Empate') score += 5;
-                                else score += 1;
-                            } else {
-                                if (pred === res) score += 3;
-                            }
+                            if (res === 'Empate') { if (pred === 'Empate') score += 5; else score += 1; } 
+                            else { if (pred === res) score += 3; }
                         });
                         p.score = score;
                     })).then(() => {
@@ -791,11 +587,9 @@
         function renderLeaderboard(players) {
             const tbody = document.getElementById('leaderboard-body');
             if (players.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay predicciones enviadas.</td></tr>`; return; }
-            
             tbody.innerHTML = players.map((p, idx) => {
                 const isMe = p.id === currentUser?.uid;
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-                
                 return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
                     <td class="p-6 text-center font-black text-lg">${medal}</td>
                     <td class="p-6 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
@@ -808,36 +602,23 @@
             const pin = prompt("🔐 Ingresa el PIN de administrador:");
             if (pin === ADMIN_PIN) {
                 try {
-                    if (!auth.currentUser) {
-                        await auth.signInAnonymously();
-                    }
+                    if (!auth.currentUser) await auth.signInAnonymously();
                     showView('view-admin');
                     renderAdminMatches();
                     showToast("✅ Acceso de administrador concedido", "success");
-                } catch (error) {
-                    showToast("Error al autenticar: " + error.message, "error");
-                }
-            } else if (pin !== null) {
-                showToast("PIN incorrecto", "error");
-            }
+                } catch (error) { showToast("Error al autenticar: " + error.message, "error"); }
+            } else if (pin !== null) { showToast("PIN incorrecto", "error"); }
         }
 
         function showAdminTab(tab) {
             document.getElementById('admin-tab-results').classList.add('hidden');
             document.getElementById('admin-tab-players').classList.add('hidden');
             document.getElementById('admin-tab-cobranza').classList.add('hidden');
-            
-            document.getElementById('tab-results').classList.remove('bg-blue-600');
-            document.getElementById('tab-results').classList.add('bg-white/10');
-            document.getElementById('tab-players').classList.remove('bg-blue-600');
-            document.getElementById('tab-players').classList.add('bg-white/10');
-            document.getElementById('tab-cobranza').classList.remove('bg-blue-600');
-            document.getElementById('tab-cobranza').classList.add('bg-white/10');
-            
+            document.getElementById('tab-results').classList.remove('bg-blue-600'); document.getElementById('tab-results').classList.add('bg-white/10');
+            document.getElementById('tab-players').classList.remove('bg-blue-600'); document.getElementById('tab-players').classList.add('bg-white/10');
+            document.getElementById('tab-cobranza').classList.remove('bg-blue-600'); document.getElementById('tab-cobranza').classList.add('bg-white/10');
             document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
-            document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
-            
+            document.getElementById(`tab-${tab}`).classList.remove('bg-white/10'); document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
             if (tab === 'players') loadAdminPlayers();
             if (tab === 'cobranza') loadAdminCobranza();
         }
@@ -845,100 +626,37 @@
         async function renderAdminMatches() {
             const container = document.getElementById('admin-matches-container');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
-            
             const rSnap = await db.collection('matches').get();
-            const existingResults = {};
-            rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
-            
-            const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({
-                id,
-                fecha: sched.fecha,
-                hora: sched.hora,
-                local: sched.local,
-                visitante: sched.visitante,
-                resultado: existingResults[id] || ''
-            }));
-            
-            allMatches.sort((a, b) => {
-                const dtA = a.fecha + ' ' + a.hora;
-                const dtB = b.fecha + ' ' + b.hora;
-                return dtA.localeCompare(dtB);
-            });
-            
-            const matchesByDay = {};
-            allMatches.forEach(m => {
-                if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = [];
-                matchesByDay[m.fecha].push(m);
-            });
-            
+            const existingResults = {}; rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
+            const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({ id, fecha: sched.fecha, hora: sched.hora, local: sched.local, visitante: sched.visitante, resultado: existingResults[id] || '' }));
+            allMatches.sort((a, b) => (a.fecha + ' ' + a.hora).localeCompare(b.fecha + ' ' + b.hora));
+            const matchesByDay = {}; allMatches.forEach(m => { if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = []; matchesByDay[m.fecha].push(m); });
             const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
             const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-            
             container.innerHTML = '';
-            
             const totalCargados = allMatches.filter(m => m.resultado !== '').length;
             const progreso = Math.round((totalCargados / 72) * 100);
-            
-            let html = `
-                <div id="admin-progress-bar" class="glass p-4 rounded-xl mb-4 border-l-4 border-green-500">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-bold text-green-400">📊 Progreso de carga</span>
-                        <span class="text-sm font-bold text-white">${totalCargados} / 72 partidos (${progreso}%)</span>
-                    </div>
-                    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div class="h-full bg-green-500 transition-all" style="width: ${progreso}%"></div>
-                    </div>
-                </div>
-            `;
-            
+            let html = `<div id="admin-progress-bar" class="glass p-4 rounded-xl mb-4 border-l-4 border-green-500">
+                <div class="flex justify-between items-center mb-2"><span class="text-sm font-bold text-green-400">📊 Progreso de carga</span><span class="text-sm font-bold text-white">${totalCargados} / 72 partidos (${progreso}%)</span></div>
+                <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: ${progreso}%"></div></div></div>`;
             Object.keys(matchesByDay).sort().forEach(fecha => {
                 const matchesOfDay = matchesByDay[fecha];
                 const dateObj = new Date(fecha + 'T12:00:00');
-                const diaNombre = diasSemana[dateObj.getDay()];
-                const diaNum = dateObj.getDate();
-                const mesNombre = meses[dateObj.getMonth()];
-                
                 const cargadosEnDia = matchesOfDay.filter(m => m.resultado !== '').length;
-                
-                html += `
-                    <div class="glass p-4 rounded-xl mb-4">
-                        <div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-                            <h4 class="font-bold text-blue-400 text-sm md:text-base">
-                                📅 ${diaNombre}, ${diaNum} de ${mesNombre} ${dateObj.getFullYear()}
-                            </h4>
-                            <span class="text-[10px] font-bold px-2 py-1 rounded ${cargadosEnDia === matchesOfDay.length ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
-                                ${cargadosEnDia}/${matchesOfDay.length}
-                            </span>
-                        </div>
-                        <div class="space-y-2">
-                `;
-                
+                html += `<div class="glass p-4 rounded-xl mb-4"><div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
+                    <h4 class="font-bold text-blue-400 text-sm md:text-base">📅 ${diasSemana[dateObj.getDay()]}, ${dateObj.getDate()} de ${meses[dateObj.getMonth()]} ${dateObj.getFullYear()}</h4>
+                    <span class="text-[10px] font-bold px-2 py-1 rounded ${cargadosEnDia === matchesOfDay.length ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">${cargadosEnDia}/${matchesOfDay.length}</span></div><div class="space-y-2">`;
                 matchesOfDay.forEach(m => {
-                    const btn1Class = m.resultado === 'Local' ? 'btn-result-1 selected' : 'btn-result-1';
-                    const btnXClass = m.resultado === 'Empate' ? 'btn-result-X selected' : 'btn-result-X';
-                    const btn2Class = m.resultado === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2';
-                    
-                    const estadoIcono = m.resultado ? '✅' : '⏳';
-                    
-                    html += `
-                        <div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg gap-2">
-                            <div class="flex items-center gap-2 flex-1 min-w-0">
-                                <span class="text-[10px] font-bold text-green-400 whitespace-nowrap">${m.hora}</span>
-                                <span class="text-xs md:text-sm font-bold truncate">${m.local} vs ${m.visitante}</span>
-                                <span class="text-xs">${estadoIcono}</span>
-                            </div>
-                            <div class="flex gap-1 md:gap-2 flex-shrink-0">
-                                <button onclick="setResult('${m.id}', 'Local', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-blue-600 rounded text-xs font-bold transition ${btn1Class}">1</button>
-                                <button onclick="setResult('${m.id}', 'Empate', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-yellow-600 rounded text-xs font-bold transition ${btnXClass}">X</button>
-                                <button onclick="setResult('${m.id}', 'Visitante', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-red-600 rounded text-xs font-bold transition ${btn2Class}">2</button>
-                            </div>
-                        </div>
-                    `;
+                    html += `<div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg gap-2">
+                        <div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-[10px] font-bold text-green-400 whitespace-nowrap">${m.hora}</span><span class="text-xs md:text-sm font-bold truncate">${m.local} vs ${m.visitante}</span><span class="text-xs">${m.resultado ? '✅' : '⏳'}</span></div>
+                        <div class="flex gap-1 md:gap-2 flex-shrink-0">
+                            <button onclick="setResult('${m.id}', 'Local', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-blue-600 rounded text-xs font-bold transition ${m.resultado === 'Local' ? 'btn-result-1 selected' : 'btn-result-1'}">1</button>
+                            <button onclick="setResult('${m.id}', 'Empate', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-yellow-600 rounded text-xs font-bold transition ${m.resultado === 'Empate' ? 'btn-result-X selected' : 'btn-result-X'}">X</button>
+                            <button onclick="setResult('${m.id}', 'Visitante', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-red-600 rounded text-xs font-bold transition ${m.resultado === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2'}">2</button>
+                        </div></div>`;
                 });
-                
                 html += `</div></div>`;
             });
-            
             container.innerHTML = html;
         }
 
@@ -947,888 +665,338 @@
             try {
                 await db.collection('matches').doc(matchId).set({ result, updatedAt: new Date() }, { merge: true });
                 showToast(`✅ Resultado guardado: ${matchId} → ${result}`, "success");
-                
                 const parentDiv = clickedBtn.parentElement;
-                const buttons = parentDiv.querySelectorAll('button');
-                buttons.forEach(btn => btn.classList.remove('selected'));
+                parentDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
                 clickedBtn.classList.add('selected');
-                
                 setTimeout(() => renderAdminMatches(), 500);
-                
-            } catch (e) {
-                showToast("Error: " + e.message, "error");
-            }
+            } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
         async function loadAdminPlayers() {
             const container = document.getElementById('admin-players-list');
             container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
-            
             try {
                 const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => players.push({ id: doc.id, ...doc.data() }));
-                
-                if (players.length === 0) {
-                    container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>';
-                    return;
-                }
-                
+                const players = []; pSnap.forEach(doc => players.push({ id: doc.id, ...doc.data() }));
+                if (players.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>'; return; }
                 players.sort((a, b) => (a.deleted ? 1 : 0) - (b.deleted ? 1 : 0));
-                
                 let html = '';
                 for (const p of players) {
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                    const preds = {};
-                    predSnap.forEach(doc => preds[doc.id] = doc.data().value);
-                    p.predictions = preds;
-                    p.predCount = Object.keys(preds).length;
-                    
-                    let statusBadge;
-                    if (p.deleted) {
-                        statusBadge = '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>';
-                    } else if (p.submitted) {
-                        statusBadge = '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>';
-                    } else {
-                        statusBadge = '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded"> Pendiente</span>';
-                    }
-                    
-                    const cardClass = p.deleted ? 'player-card deleted' : 'player-card';
-                    
-                    let actionButtons;
-                    if (p.deleted) {
-                        actionButtons = `
-                            <button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">
-                                ♻️ Restaurar
-                            </button>
-                        `;
-                    } else {
-                        actionButtons = `
-                            <button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">
-                                ✏️ Editar
-                            </button>
-                            <button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">
-                                ️ Eliminar
-                            </button>
-                        `;
-                    }
-                    
-                    html += `
-                        <div class="${cardClass} glass p-4 rounded-xl">
-                            <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
-                                <div>
-                                    <span class="font-bold text-white">${p.displayName || 'Anónimo'}</span>
-                                    <span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>
-                                    ${statusBadge}
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>
-                                    ${actionButtons}
-                                </div>
-                            </div>
-                            <div id="preds-${p.id}" class="hidden">
-                                <div class="border-t border-white/10 pt-3 mt-3">
-                                    <p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción. Los cambios se guardan automáticamente.</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">
-                    `;
-                    
-                    const matchIds = [];
-                    'ABCDEFGHIJKL'.split('').forEach(g => { 
-                        for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-                    });
-                    
+                    const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
+                    p.predictions = preds; p.predCount = Object.keys(preds).length;
+                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
+                    let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
+                    html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
+                    const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
                     matchIds.forEach((mId, idx) => {
                         const match = mId.match(/^g([a-l])m(\d+)$/);
                         let matchLabel = mId;
                         if (match) {
-                            const g = match[1].toUpperCase();
-                            const num = parseInt(match[2]);
-                            const teams = groupsData[g];
+                            const g = match[1].toUpperCase(); const num = parseInt(match[2]); const teams = groupsData[g];
                             if (teams && num >= 1 && num <= 6) {
-                                const matchPairs = [
-                                    [teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], 
-                                    [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]
-                                ];
+                                const matchPairs = [[teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]];
                                 const [local, visitante] = matchPairs[num-1];
                                 matchLabel = `${abreviarPais(local).substring(0,3)} vs ${abreviarPais(visitante).substring(0,3)}`;
                             }
                         }
-                        
                         const currentPred = preds[mId] || '';
-                        const btn1Active = currentPred === 'Local' ? 'active-1' : '';
-                        const btnXActive = currentPred === 'Empate' ? 'active-X' : '';
-                        const btn2Active = currentPred === 'Visitante' ? 'active-2' : '';
-                        
-                        html += `
-                            <div class="bg-[#161b2c] p-2 rounded-lg flex items-center justify-between gap-2">
-                                <span class="text-[10px] text-slate-300 truncate flex-1">${idx+1}. ${matchLabel}</span>
-                                <div class="flex gap-1">
-                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Local', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-blue-600 rounded text-[10px] font-bold ${btn1Active}">1</button>
-                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Empate', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-yellow-600 rounded text-[10px] font-bold ${btnXActive}">X</button>
-                                    <button onclick="adminSetPred('${p.id}', '${mId}', 'Visitante', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-red-600 rounded text-[10px] font-bold ${btn2Active}">2</button>
-                                </div>
-                            </div>
-                        `;
+                        html += `<div class="bg-[#161b2c] p-2 rounded-lg flex items-center justify-between gap-2"><span class="text-[10px] text-slate-300 truncate flex-1">${idx+1}. ${matchLabel}</span><div class="flex gap-1">
+                            <button onclick="adminSetPred('${p.id}', '${mId}', 'Local', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-blue-600 rounded text-[10px] font-bold ${currentPred === 'Local' ? 'active-1' : ''}">1</button>
+                            <button onclick="adminSetPred('${p.id}', '${mId}', 'Empate', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-yellow-600 rounded text-[10px] font-bold ${currentPred === 'Empate' ? 'active-X' : ''}">X</button>
+                            <button onclick="adminSetPred('${p.id}', '${mId}', 'Visitante', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-red-600 rounded text-[10px] font-bold ${currentPred === 'Visitante' ? 'active-2' : ''}">2</button></div></div>`;
                     });
-                    
-                    html += `
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    html += `</div></div></div></div>`;
                 }
-                
                 container.innerHTML = html;
-                
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
-            }
+            } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
         }
 
-        function togglePlayerPreds(playerId) {
-            const el = document.getElementById(`preds-${playerId}`);
-            el.classList.toggle('hidden');
-        }
+        function togglePlayerPreds(playerId) { document.getElementById(`preds-${playerId}`).classList.toggle('hidden'); }
 
         async function adminSetPred(playerId, matchId, value, clickedBtn) {
             try {
-                await db.collection('participants').doc(playerId).collection('predictions').doc(matchId)
-                    .set({ value, updatedAt: new Date(), adminModified: true }, { merge: true });
+                await db.collection('participants').doc(playerId).collection('predictions').doc(matchId).set({ value, updatedAt: new Date(), adminModified: true }, { merge: true });
                 showToast(`✅ Predicción actualizada`, "success");
-                
                 const parentDiv = clickedBtn.parentElement;
-                const buttons = parentDiv.querySelectorAll('.pred-btn');
-                buttons.forEach(btn => {
-                    btn.classList.remove('active-1', 'active-X', 'active-2');
-                });
-                
+                parentDiv.querySelectorAll('.pred-btn').forEach(btn => btn.classList.remove('active-1', 'active-X', 'active-2'));
                 if (value === 'Local') clickedBtn.classList.add('active-1');
                 else if (value === 'Empate') clickedBtn.classList.add('active-X');
                 else if (value === 'Visitante') clickedBtn.classList.add('active-2');
-                
-            } catch (e) {
-                showToast("Error: " + e.message, "error");
-            }
+            } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
         async function deletePlayer(playerId, playerName) {
-            if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?\n\nEsta acción ocultará al participante del ranking y las planillas, pero sus datos quedarán guardados.`)) return;
-            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro que deseas eliminar a ${playerName}?`)) return;
-            
+            if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
             try {
-                await db.collection('participants').doc(playerId).update({ 
-                    deleted: true, 
-                    deletedAt: new Date() 
-                });
-                
+                await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
-                const batch = db.batch();
-                predSnap.forEach(doc => {
-                    batch.update(doc.ref, { deleted: true });
-                });
-                await batch.commit();
-                
-                showToast(`🗑️ ${playerName} eliminado correctamente`, "success");
-                loadAdminPlayers();
-                
-            } catch (e) {
-                showToast("Error: " + e.message, "error");
-            }
+                const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: true }));
+                await batch.commit(); showToast(`🗑️ ${playerName} eliminado`, "success"); loadAdminPlayers();
+            } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
         async function restorePlayer(playerId, playerName) {
-            if (!confirm(`️ ¿Restaurar a "${playerName}"?\n\nVolverá a aparecer en el ranking y las planillas.`)) return;
-            
+            if (!confirm(`♻️ ¿Restaurar a "${playerName}"?`)) return;
             try {
-                await db.collection('participants').doc(playerId).update({ 
-                    deleted: false, 
-                    deletedAt: firebase.firestore.FieldValue.delete()
-                });
-                
+                await db.collection('participants').doc(playerId).update({ deleted: false, deletedAt: firebase.firestore.FieldValue.delete() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
-                const batch = db.batch();
-                predSnap.forEach(doc => {
-                    batch.update(doc.ref, { deleted: false });
-                });
-                await batch.commit();
-                
-                showToast(`♻️ ${playerName} restaurado correctamente`, "success");
-                loadAdminPlayers();
-                
-            } catch (e) {
-                showToast("Error: " + e.message, "error");
-            }
+                const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
+                await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
+            } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
         async function loadAdminCobranza() {
             const container = document.getElementById('admin-cobranza-list');
-            container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos de cobranza...</div>';
-            
+            container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos...</div>';
             try {
                 const pSnap = await db.collection('participants').get();
                 const participants = [];
-                
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (!data.deleted && data.submitted === true) {
-                        participants.push({
-                            id: doc.id,
-                            ...data,
-                            paid: data.paid || false
-                        });
-                    }
-                });
-                
-                if (participants.length === 0) {
-                    container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>';
-                    return;
-                }
-                
-                participants.sort((a, b) => {
-                    if (a.paid === b.paid) return (a.userCode || '').localeCompare(b.userCode || '');
-                    return a.paid ? 1 : -1;
-                });
-                
+                pSnap.forEach(doc => { const data = doc.data(); if (!data.deleted && data.submitted === true) participants.push({ id: doc.id, ...data, paid: data.paid || false }); });
+                if (participants.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes.</div>'; return; }
+                participants.sort((a, b) => { if (a.paid === b.paid) return (a.userCode || '').localeCompare(b.userCode || ''); return a.paid ? 1 : -1; });
                 const pendientes = participants.filter(p => !p.paid).length;
                 const pagados = participants.filter(p => p.paid).length;
-                const totalRecaudado = pagados * 5000;
-                
                 document.getElementById('cobranza-pendientes').innerText = pendientes;
                 document.getElementById('cobranza-pagados').innerText = pagados;
-                document.getElementById('cobranza-total').innerText = `Bs. ${totalRecaudado.toLocaleString('es-VE')},00`;
-                
+                document.getElementById('cobranza-total').innerText = `Bs. ${(pagados * 5000).toLocaleString('es-VE')},00`;
                 let html = '';
                 participants.forEach(p => {
-                    const statusHtml = p.paid 
-                        ? '<span class="text-2xl text-green-400">✅</span>'
-                        : `<button onclick="markAsPaid('${p.id}', '${(p.displayName || 'Anónimo').replace(/'/g, "\\'")}')" 
-                                   class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-orange-500/30">
-                           PAGADO
-                         </button>`;
-                    
-                    html += `
-                        <div class="glass p-3 rounded-lg flex justify-between items-center ${p.paid ? 'opacity-60' : ''}">
-                            <div class="flex items-center gap-3">
-                                <span class="text-xs font-bold text-slate-400">${p.userCode || 'N/A'}</span>
-                                <span class="text-sm font-bold text-white">${p.displayName || 'Anónimo'}</span>
-                            </div>
-                            <div>${statusHtml}</div>
-                        </div>
-                    `;
+                    const statusHtml = p.paid ? '<span class="text-2xl text-green-400">✅</span>' : `<button onclick="markAsPaid('${p.id}', '${(p.displayName || 'Anónimo').replace(/'/g, "\\'")}')" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-orange-500/30">PAGADO</button>`;
+                    html += `<div class="glass p-3 rounded-lg flex justify-between items-center ${p.paid ? 'opacity-60' : ''}"><div class="flex items-center gap-3"><span class="text-xs font-bold text-slate-400">${p.userCode || 'N/A'}</span><span class="text-sm font-bold text-white">${p.displayName || 'Anónimo'}</span></div><div>${statusHtml}</div></div>`;
                 });
-                
                 container.innerHTML = html;
-                
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
-            }
+            } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
         }
 
         async function markAsPaid(participantId, participantName) {
-            if (!confirm(`¿Confirmar que ${participantName} realizó el pago de Bs. 5.000,00?`)) return;
-            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro de marcar el pago de ${participantName}?`)) return;
-            
+            if (!confirm(`¿Confirmar pago de ${participantName}?`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
             try {
-                await db.collection('participants').doc(participantId).update({
-                    paid: true,
-                    paidAt: new Date()
-                });
-                
-                showToast(`✅ Pago de ${participantName} registrado correctamente`, "success");
-                loadAdminCobranza();
-                
-            } catch (error) {
-                showToast("Error al registrar pago: " + error.message, "error");
-            }
+                await db.collection('participants').doc(participantId).update({ paid: true, paidAt: new Date() });
+                showToast(`✅ Pago de ${participantName} registrado`, "success"); loadAdminCobranza();
+            } catch (error) { showToast("Error: " + error.message, "error"); }
         }
 
         async function generarPlanillaWeb() {
             showView('view-planilla');
             const loadingDiv = document.getElementById('planilla-loading');
-            if (loadingDiv) {
-                loadingDiv.classList.remove('hidden');
-                loadingDiv.innerHTML = '<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div><p class="text-blue-400 font-bold">Cargando datos...</p>';
-            }
-            
+            if (loadingDiv) { loadingDiv.classList.remove('hidden'); loadingDiv.innerHTML = '<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div><p class="text-blue-400 font-bold">Cargando datos...</p>'; }
             try {
                 const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
-                });
-                
-                if (players.length === 0) {
-                    if (loadingDiv) loadingDiv.innerHTML = '<p class="text-yellow-400 font-bold p-4">️ Aún no hay participantes.</p>';
-                    return;
-                }
-                
+                const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
+                if (players.length === 0) { if (loadingDiv) loadingDiv.innerHTML = '<p class="text-yellow-400 font-bold p-4">Aún no hay participantes.</p>'; return; }
                 const rSnap = await db.collection('matches').get();
-                const results = {};
-                rSnap.forEach(d => results[d.id] = d.data().result);
-                
-                let matchIds = [];
-                'ABCDEFGHIJKL'.split('').forEach(g => { 
-                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-                });
-                
-                matchIds.sort((a, b) => {
-                    const schedA = matchSchedule[a];
-                    const schedB = matchSchedule[b];
-                    if (!schedA || !schedB) return 0;
-                    const dtA = schedA.fecha + ' ' + schedA.hora;
-                    const dtB = schedB.fecha + ' ' + schedB.hora;
-                    return dtA.localeCompare(dtB);
-                });
-                
+                const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
+                let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
+                matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
                 for (const p of players) {
                     try {
                         const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                        const preds = {}; 
-                        predSnap.forEach(d => preds[d.id] = d.data().value);
-                        p.predictions = preds;
-                        
+                        const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
                         let total = 0;
                         matchIds.forEach(mId => {
-                            const pred = preds[mId];
-                            const res = results[mId];
-                            let pts = 0;
-                            if (res) {
-                                if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-                                else pts = (pred === res) ? 3 : 0;
-                            }
+                            const pred = preds[mId]; const res = results[mId]; let pts = 0;
+                            if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
                             total += pts;
                         });
                         p.total = total;
-                    } catch (err) {
-                        console.error(`Error con ${p.displayName}:`, err);
-                        p.predictions = {};
-                        p.total = 0;
-                    }
+                    } catch (err) { p.predictions = {}; p.total = 0; }
                 }
-                
                 players.sort((a, b) => b.total - a.total);
-                const totalUsersSpan = document.getElementById('total-users');
-                if (totalUsersSpan) totalUsersSpan.innerText = players.length;
-                
-                let theadHTML = '';
-                theadHTML += '<tr>';
-                theadHTML += '<th rowspan="4" class="col-fixed-left">#</th>';
-                theadHTML += '<th rowspan="4" class="col-fixed-left">PARTICIPANTE</th>';
-                matchIds.forEach((m, i) => {
-                    theadHTML += `<th colspan="3" class="text-blue-300">Partido ${i+1}</th>`;
-                    theadHTML += '<th></th>';
+                const totalUsersSpan = document.getElementById('total-users'); if (totalUsersSpan) totalUsersSpan.innerText = players.length;
+                let theadHTML = '<tr><th rowspan="4" class="col-fixed-left">#</th><th rowspan="4" class="col-fixed-left">PARTICIPANTE</th>';
+                matchIds.forEach((m, i) => { theadHTML += `<th colspan="3" class="text-blue-300">Partido ${i+1}</th><th></th>`; });
+                theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th></tr><tr>';
+                matchIds.forEach(m => {
+                    const sched = matchSchedule[m]; let fechaHora = '', equipos = '';
+                    if (sched) { fechaHora = `${sched.fecha.substring(8, 10)}/${sched.fecha.substring(5, 7)} ${sched.hora}`; equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`; }
+                    theadHTML += `<th colspan="3" class="text-[10px]"><div class="text-green-400 text-[8px] font-bold">${fechaHora}</div><div>${equipos}</div></th><th></th>`;
                 });
-                theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th>';
-                theadHTML += '</tr>';
-                
-                theadHTML += '<tr>';
-                matchIds.forEach((m, idx) => {
-                    const sched = matchSchedule[m];
-                    let fechaHora = '';
-                    let equipos = '';
-                    
-                    if (sched) {
-                        const dia = sched.fecha.substring(8, 10);
-                        const mes = sched.fecha.substring(5, 7);
-                        fechaHora = `${dia}/${mes} ${sched.hora}`;
-                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
-                    }
-                    
-                    theadHTML += `<th colspan="3" class="text-[10px]">
-                        <div class="text-green-400 text-[8px] font-bold">${fechaHora}</div>
-                        <div>${equipos}</div>
-                    </th>`;
-                    theadHTML += '<th></th>';
-                });
-                theadHTML += '</tr>';
-                
-                theadHTML += '<tr>';
-                matchIds.forEach(() => {
-                    theadHTML += '<th>1</th><th>X</th><th>2</th>';
-                    theadHTML += '<th></th>';
-                });
-                theadHTML += '</tr>';
-                
-                theadHTML += '<tr>';
+                theadHTML += '</tr><tr>'; matchIds.forEach(() => { theadHTML += '<th>1</th><th>X</th><th>2</th><th></th>'; }); theadHTML += '</tr><tr>';
                 matchIds.forEach(mId => {
-                    const result = results[mId];
-                    let resultText = 'RESULTADO';
-                    let resultClass = 'text-[10px] text-center text-slate-400';
-                    let resultStyle = '';
-                    
-                    if (result === 'Local') {
-                        resultText = 'LOCAL';
-                        resultClass = 'text-[10px] text-center font-bold';
-                        resultStyle = 'color: #3b82f6 !important;';
-                    } else if (result === 'Empate') {
-                        resultText = 'EMPATE';
-                        resultClass = 'text-[10px] text-center font-bold';
-                        resultStyle = 'color: #7c3aed !important;';
-                    } else if (result === 'Visitante') {
-                        resultText = 'VISITANTE';
-                        resultClass = 'text-[10px] text-center font-bold';
-                        resultStyle = 'color: #dc2626 !important;';
-                    }
-                    
-                    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th>`;
-                    theadHTML += '<th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>';
+                    const result = results[mId]; let resultText = 'RESULTADO', resultClass = 'text-[10px] text-center text-slate-400', resultStyle = '';
+                    if (result === 'Local') { resultText = 'LOCAL'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #3b82f6 !important;'; }
+                    else if (result === 'Empate') { resultText = 'EMPATE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #7c3aed !important;'; }
+                    else if (result === 'Visitante') { resultText = 'VISITANTE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #dc2626 !important;'; }
+                    theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th><th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>`;
                 });
                 theadHTML += '</tr>';
-                
                 document.querySelector('#planilla-table thead').innerHTML = theadHTML;
-                
                 let tbodyHTML = '';
                 players.forEach((p, idx) => {
                     const rankClass = idx < 3 ? `rank-${idx+1}` : '';
-                    tbodyHTML += `<tr class="${rankClass}">
-                        <td class="col-fixed-left font-bold text-lg">${String(idx+1).padStart(2,'0')}</td>
-                        <td class="col-fixed-left font-bold">${p.displayName || 'Anónimo'}</td>`;
-                    
+                    tbodyHTML += `<tr class="${rankClass}"><td class="col-fixed-left font-bold text-lg">${String(idx+1).padStart(2,'0')}</td><td class="col-fixed-left font-bold">${p.displayName || 'Anónimo'}</td>`;
                     matchIds.forEach(mId => {
-                        const pred = p.predictions[mId] || '';
-                        const res = results[mId] || '';
-                        let pts = 0;
-                        if (res) {
-                            if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-                            else pts = (pred === res) ? 3 : 0;
-                        }
-                        
+                        const pred = p.predictions[mId] || ''; const res = results[mId] || ''; let pts = 0;
+                        if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
                         const val1 = pred === 'Local' ? '<span class="text-white font-bold">1</span>' : '';
                         const valX = pred === 'Empate' ? '<span class="text-white font-bold">X</span>' : '';
                         const val2 = pred === 'Visitante' ? '<span class="text-white font-bold">2</span>' : '';
                         const ptsClass = pts > 0 ? 'text-green-400 font-bold' : 'text-slate-600';
-                        
                         tbodyHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="${ptsClass}">${pts}</td>`;
                     });
-                    
                     tbodyHTML += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td></tr>`;
                 });
-                
                 document.getElementById('planilla-body').innerHTML = tbodyHTML;
                 if (loadingDiv) loadingDiv.classList.add('hidden');
-                
-            } catch (error) {
-                console.error('Error en planilla:', error);
-                if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`;
-            }
+            } catch (error) { if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`; }
         }
 
         async function generarPlanillaDigital() {
-            showToast(" Generando planilla digital...", "success");
-            
+            showToast("⏳ Generando planilla digital...", "success");
             try {
                 const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
-                });
-
+                const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
                 const rSnap = await db.collection('matches').get();
-                const results = {};
-                rSnap.forEach(d => results[d.id] = d.data().result);
-
-                let matchIds = [];
-                'ABCDEFGHIJKL'.split('').forEach(g => { 
-                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-                });
-                
-                matchIds.sort((a, b) => {
-                    const schedA = matchSchedule[a];
-                    const schedB = matchSchedule[b];
-                    if (!schedA || !schedB) return 0;
-                    const dtA = schedA.fecha + ' ' + schedA.hora;
-                    const dtB = schedB.fecha + ' ' + schedB.hora;
-                    return dtA.localeCompare(dtB);
-                });
-
+                const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
+                let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
+                matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
                 for (const p of players) {
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                    const preds = {}; 
-                    predSnap.forEach(d => preds[d.id] = d.data().value);
-                    p.predictions = preds;
-                    
+                    const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
                     let total = 0;
-                    matchIds.forEach(mId => {
-                        const pred = preds[mId];
-                        const res = results[mId];
-                        if (res) {
-                            if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
-                            else total += (pred === res) ? 3 : 0;
-                        }
-                    });
+                    matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
                     p.total = total;
                 }
                 players.sort((a, b) => b.total - a.total);
-
-                let tableHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th rowspan="4" class="sticky-col">#</th>
-                                <th rowspan="4" class="sticky-col">PARTICIPANTE</th>`;
-                
-                matchIds.forEach((m, i) => {
-                    tableHTML += `<th colspan="3" class="bg-blue-800 text-white">Partido ${i+1}</th><th class="bg-gray-200"></th>`;
+                let tableHTML = `<table><thead><tr><th rowspan="4" class="sticky-col">#</th><th rowspan="4" class="sticky-col">PARTICIPANTE</th>`;
+                matchIds.forEach((m, i) => { tableHTML += `<th colspan="3" class="bg-blue-800 text-white">Partido ${i+1}</th><th class="bg-gray-200"></th>`; });
+                tableHTML += `<th rowspan="4" class="sticky-col-right bg-yellow-400 text-black">TOTAL</th></tr><tr>`;
+                matchIds.forEach(m => {
+                    const sched = matchSchedule[m]; let fechaHora = '', equipos = '';
+                    if (sched) { fechaHora = `${sched.fecha.substring(8, 10)}/${sched.fecha.substring(5, 7)} ${sched.hora}`; equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`; }
+                    tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]"><div style="color: #90EE90; font-size: 7pt;">${fechaHora}</div><div>${equipos}</div></th><th class="bg-gray-200"></th>`;
                 });
-                tableHTML += `<th rowspan="4" class="sticky-col-right bg-yellow-400 text-black">TOTAL</th></tr>
-                            <tr>`;
-                
-                matchIds.forEach((m, idx) => {
-                    const sched = matchSchedule[m];
-                    let fechaHora = '';
-                    let equipos = '';
-                    
-                    if (sched) {
-                        const dia = sched.fecha.substring(8, 10);
-                        const mes = sched.fecha.substring(5, 7);
-                        fechaHora = `${dia}/${mes} ${sched.hora}`;
-                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
-                    }
-                    
-                    tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]">
-                        <div style="color: #90EE90; font-size: 7pt;">${fechaHora}</div>
-                        <div>${equipos}</div>
-                    </th><th class="bg-gray-200"></th>`;
-                });
-                tableHTML += `</tr>
-                            <tr>`;
-                
-                matchIds.forEach(() => {
-                    tableHTML += `<th class="bg-blue-400 text-white">1</th><th class="bg-blue-400 text-white">X</th><th class="bg-blue-400 text-white">2</th><th class="bg-gray-200"></th>`;
-                });
-                tableHTML += `</tr>
-                            <tr>`;
-                
+                tableHTML += `</tr><tr>`; matchIds.forEach(() => { tableHTML += `<th class="bg-blue-400 text-white">1</th><th class="bg-blue-400 text-white">X</th><th class="bg-blue-400 text-white">2</th><th class="bg-gray-200"></th>`; }); tableHTML += `</tr><tr>`;
                 matchIds.forEach(mId => {
-                    const result = results[mId];
-                    let resultText = 'RESULTADO';
-                    let resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
-                    
-                    if (result === 'Local') {
-                        resultText = 'LOCAL';
-                        resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;';
-                    } else if (result === 'Empate') {
-                        resultText = 'EMPATE';
-                        resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;';
-                    } else if (result === 'Visitante') {
-                        resultText = 'VISITANTE';
-                        resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;';
-                    }
-                    
-                    tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th>`;
-                    tableHTML += `<th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
+                    const result = results[mId]; let resultText = 'RESULTADO', resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
+                    if (result === 'Local') { resultText = 'LOCAL'; resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;'; }
+                    else if (result === 'Empate') { resultText = 'EMPATE'; resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;'; }
+                    else if (result === 'Visitante') { resultText = 'VISITANTE'; resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;'; }
+                    tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th><th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
                 });
-                tableHTML += `</tr>
-        </thead>
-        <tbody>`;
-                
+                tableHTML += `</tr></thead><tbody>`;
                 players.forEach((p, idx) => {
                     const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
-                    tableHTML += `<tr class="${rankClass}">
-                        <td class="sticky-col font-bold">${String(idx+1).padStart(2,'0')}</td>
-                        <td class="sticky-col font-bold text-left pl-2">${p.displayName || 'Anónimo'}</td>`;
-                    
+                    tableHTML += `<tr class="${rankClass}"><td class="sticky-col font-bold">${String(idx+1).padStart(2,'0')}</td><td class="sticky-col font-bold text-left pl-2">${p.displayName || 'Anónimo'}</td>`;
                     matchIds.forEach(mId => {
-                        const pred = p.predictions[mId] || '';
-                        const res = results[mId] || '';
-                        let pts = 0;
-                        if (res) {
-                            if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-                            else pts = (pred === res) ? 3 : 0;
-                        }
-                        
+                        const pred = p.predictions[mId] || ''; const res = results[mId] || ''; let pts = 0;
+                        if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
                         const val1 = pred === 'Local' ? '<span style="color:#000;font-weight:bold">1</span>' : '';
                         const valX = pred === 'Empate' ? '<span style="color:#000;font-weight:bold">X</span>' : '';
                         const val2 = pred === 'Visitante' ? '<span style="color:#000;font-weight:bold">2</span>' : '';
                         const ptsStyle = pts > 0 ? 'style="color:#000;font-weight:bold"' : 'style="color:#999"';
-                        
                         tableHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="bg-yellow-50" ${ptsStyle}>${pts}</td>`;
                     });
-                    
                     tableHTML += `<td class="sticky-col-right bg-yellow-200 font-black text-lg border-l-2 border-gray-400">${p.total}</td></tr>`;
                 });
-                
                 tableHTML += `</tbody></table>`;
-
-                const fullHTML = `
-                    <!DOCTYPE html>
-                    <html lang="es">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Planilla Digital - Quiniela Activa</title>
-                        <script src="https://cdn.tailwindcss.com"><\/script>
-                        <style>
-                            @page { size: landscape; margin: 0.5cm; }
-                            body { font-family: 'Inter', sans-serif; background: white; padding: 10px; }
-                            table { border-collapse: collapse; width: 100%; font-size: 8pt; }
-                            th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; }
-                            .sticky-col { position: sticky; left: 0; background: #e0e7ff; z-index: 10; border-right: 2px solid #4f46e5; color: #1e293b; }
-                            .sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; }
-                            .rank-1 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
-                            .rank-2 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
-                            .rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; }
-                            .rank-1 td, .rank-2 td, .rank-3 td { color: white; border-color: #fff; }
-                            .rank-1 .sticky-col, .rank-2 .sticky-col, .rank-3 .sticky-col { background: inherit; }
-                            .rank-1 .sticky-col-right, .rank-2 .sticky-col-right, .rank-3 .sticky-col-right { background: inherit; }
-                            h1 { text-align: center; font-size: 16pt; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
-                            .btn-print { display: block; margin: 10px auto; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-                            @media print { .btn-print { display: none; } body { padding: 0; } }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>Quiniela Activa Mundialista - Planilla Digital</h1>
-                        <button class="btn-print" onclick="window.print()">️ Imprimir / Guardar como PDF</button>
-                        ${tableHTML}
-                    </body>
-                    </html>
-                `;
-
+                const fullHTML = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Planilla Digital</title><script src="https://cdn.tailwindcss.com"><\/script><style>@page { size: landscape; margin: 0.5cm; } body { font-family: 'Inter', sans-serif; background: white; padding: 10px; } table { border-collapse: collapse; width: 100%; font-size: 8pt; } th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; } .sticky-col { position: sticky; left: 0; background: #e0e7ff; z-index: 10; border-right: 2px solid #4f46e5; color: #1e293b; } .sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; } .rank-1, .rank-2, .rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; } .rank-1 td, .rank-2 td, .rank-3 td { color: white; border-color: #fff; } .rank-1 .sticky-col, .rank-2 .sticky-col, .rank-3 .sticky-col { background: inherit; } .rank-1 .sticky-col-right, .rank-2 .sticky-col-right, .rank-3 .sticky-col-right { background: inherit; } h1 { text-align: center; font-size: 16pt; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; } .btn-print { display: block; margin: 10px auto; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; } @media print { .btn-print { display: none; } body { padding: 0; } }</style></head><body><h1>Quiniela Activa Mundialista - Planilla Digital</h1><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>${tableHTML}</body></html>`;
                 const newWindow = window.open('', '_blank');
-                if (newWindow) {
-                    newWindow.document.write(fullHTML);
-                    newWindow.document.close();
-                } else {
-                    showToast("️ Permite las ventanas emergentes para ver la planilla", "error");
-                }
-
-            } catch (error) {
-                console.error(error);
-                showToast("❌ Error al generar la planilla: " + error.message, "error");
-            }
+                if (newWindow) { newWindow.document.write(fullHTML); newWindow.document.close(); }
+                else { showToast("Permite las ventanas emergentes", "error"); }
+            } catch (error) { showToast("❌ Error: " + error.message, "error"); }
         }
 
         async function generarTablaSelecciones() {
             const loadingDiv = document.getElementById('tabla-selecciones-loading');
             const container = document.getElementById('tabla-selecciones-container');
-            
             if (loadingDiv) loadingDiv.classList.remove('hidden');
             container.innerHTML = '';
-            
             try {
                 const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
-                });
-                
-                if (players.length === 0) {
-                    container.innerHTML = '<p class="text-yellow-400 font-bold p-4 text-center">Aún no hay participantes.</p>';
-                    return;
-                }
-                
+                const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
+                if (players.length === 0) { container.innerHTML = '<p class="text-yellow-400 font-bold p-4 text-center">Aún no hay participantes.</p>'; return; }
                 const rSnap = await db.collection('matches').get();
-                const results = {};
-                rSnap.forEach(d => results[d.id] = d.data().result);
-                
-                let matchIds = [];
-                'ABCDEFGHIJKL'.split('').forEach(g => { 
-                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-                });
-                
-                matchIds.sort((a, b) => {
-                    const schedA = matchSchedule[a];
-                    const schedB = matchSchedule[b];
-                    if (!schedA || !schedB) return 0;
-                    const dtA = schedA.fecha + ' ' + schedA.hora;
-                    const dtB = schedB.fecha + ' ' + schedB.hora;
-                    return dtA.localeCompare(dtB);
-                });
-                
+                const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
+                let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
+                matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
                 for (const p of players) {
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                    const preds = {}; 
-                    predSnap.forEach(d => preds[d.id] = d.data().value);
-                    p.predictions = preds;
-                    
+                    const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
                     let total = 0;
-                    matchIds.forEach(mId => {
-                        const pred = preds[mId];
-                        const res = results[mId];
-                        if (res) {
-                            if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
-                            else total += (pred === res) ? 3 : 0;
-                        }
-                    });
+                    matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
                     p.total = total;
                 }
                 players.sort((a, b) => b.total - a.total);
-                
-                let html = '<table class="w-full text-sm text-left" style="min-width: 2000px;">';
-                html += '<thead class="text-xs uppercase bg-[#161b2c] text-orange-400">';
-                html += '<tr>';
-                html += '<th rowspan="2" class="col-fixed-num">#</th>';
-                html += '<th rowspan="2" class="col-fixed-name">PARTICIPANTE</th>';
+                let html = '<table class="w-full text-sm text-left" style="min-width: 2000px;"><thead class="text-xs uppercase bg-[#161b2c] text-orange-400"><tr>';
+                html += '<th rowspan="2" class="col-fixed-num">#</th><th rowspan="2" class="col-fixed-name">PARTICIPANTE</th>';
                 matchIds.forEach((m, i) => {
-                    const sched = matchSchedule[m];
-                    let equipos = '';
-                    if (sched) {
-                        equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
-                    }
+                    const sched = matchSchedule[m]; let equipos = '';
+                    if (sched) equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
                     html += `<th class="text-[10px]">${i+1}<br><span class="text-slate-400">${equipos}</span></th>`;
                 });
-                html += '<th rowspan="2" class="col-fixed-right text-yellow-400">TOTAL</th>';
-                html += '</tr>';
-                html += '</thead>';
-                html += '<tbody class="text-slate-300">';
-                
+                html += '<th rowspan="2" class="col-fixed-right text-yellow-400">TOTAL</th></tr></thead><tbody class="text-slate-300">';
                 players.forEach((p, idx) => {
                     const rankClass = idx < 3 ? `rank-${idx+1}` : '';
-                    html += `<tr class="${rankClass}">`;
-                    html += `<td class="col-fixed-num font-bold text-lg">${String(idx+1).padStart(2,'0')}</td>`;
-                    html += `<td class="col-fixed-name font-bold">${p.displayName || 'Anónimo'}</td>`;
-                    
+                    html += `<tr class="${rankClass}"><td class="col-fixed-num font-bold text-lg">${String(idx+1).padStart(2,'0')}</td><td class="col-fixed-name font-bold">${p.displayName || 'Anónimo'}</td>`;
                     matchIds.forEach(mId => {
-                        const pred = p.predictions[mId] || '';
-                        const sched = matchSchedule[mId];
-                        let cellContent = '';
-                        let cellClass = 'text-slate-600';
-                        
-                        if (pred === 'Local' && sched) {
-                            cellContent = abreviarPais(sched.local);
-                            cellClass = 'text-cyan-400';
-                        } else if (pred === 'Empate') {
-                            cellContent = 'Empate';
-                            cellClass = 'text-amber-400';
-                        } else if (pred === 'Visitante' && sched) {
-                            cellContent = abreviarPais(sched.visitante);
-                            cellClass = 'text-rose-500';
-                        }
-                        
+                        const pred = p.predictions[mId] || ''; const sched = matchSchedule[mId];
+                        let cellContent = '', cellClass = 'text-slate-600';
+                        if (pred === 'Local' && sched) { cellContent = abreviarPais(sched.local); cellClass = 'text-cyan-400'; }
+                        else if (pred === 'Empate') { cellContent = 'Empate'; cellClass = 'text-amber-400'; }
+                        else if (pred === 'Visitante' && sched) { cellContent = abreviarPais(sched.visitante); cellClass = 'text-rose-500'; }
                         html += `<td class="${cellClass} text-[10px]">${cellContent}</td>`;
                     });
-                    
-                    html += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td>`;
-                    html += '</tr>';
+                    html += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td></tr>`;
                 });
-                
                 html += '</tbody></table>';
                 container.innerHTML = html;
-                
-            } catch (error) {
-                console.error('Error en tabla de selecciones:', error);
-                container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
-            } finally {
-                if (loadingDiv) loadingDiv.classList.add('hidden');
-            }
+            } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
+            finally { if (loadingDiv) loadingDiv.classList.add('hidden'); }
         }
 
         async function generarTablaSeleccionesDigital() {
             const newWindow = window.open('', '_blank');
-            if (!newWindow) {
-                showToast("Permite las ventanas emergentes para ver la tabla", "error");
-                return;
-            }
-            
+            if (!newWindow) { showToast("Permite las ventanas emergentes", "error"); return; }
             newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;}.empate{color:#fbbf24;}.visitante{color:#f43f5e;}.sn{position:sticky;left:0;background:#0a0f1e;z-index:5;width:30px;text-align:center;} .sp{position:sticky;left:30px;background:#0a0f1e;z-index:5;text-align:left;padding-left:5px;border-right:1px solid rgba(255,255,255,0.1);}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
-            newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1>');
-            newWindow.document.write('<button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button>');
-            newWindow.document.write('<div id="loading">Cargando...</div>');
-            newWindow.document.write('</body></html>');
+            newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button><div id="loading">Cargando...</div></body></html>');
             newWindow.document.close();
-            
             try {
                 const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
-                });
-                
+                const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
                 const rSnap = await db.collection('matches').get();
-                const results = {};
-                rSnap.forEach(d => results[d.id] = d.data().result);
-                
-                let matchIds = [];
-                'ABCDEFGHIJKL'.split('').forEach(g => { 
-                    for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-                });
-                
-                matchIds.sort((a, b) => {
-                    const schedA = matchSchedule[a];
-                    const schedB = matchSchedule[b];
-                    if (!schedA || !schedB) return 0;
-                    const dtA = schedA.fecha + ' ' + schedA.hora;
-                    const dtB = schedB.fecha + ' ' + schedB.hora;
-                    return dtA.localeCompare(dtB);
-                });
-                
+                const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
+                let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
+                matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
                 for (const p of players) {
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                    const preds = {}; 
-                    predSnap.forEach(d => preds[d.id] = d.data().value);
-                    p.predictions = preds;
-                    
+                    const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
                     let total = 0;
-                    matchIds.forEach(mId => {
-                        const pred = preds[mId];
-                        const res = results[mId];
-                        if (res) {
-                            if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1;
-                            else total += (pred === res) ? 3 : 0;
-                        }
-                    });
+                    matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
                     p.total = total;
                 }
                 players.sort((a, b) => b.total - a.total);
-                
                 let tableHTML = '<table><thead><tr><th class="sn">#</th><th class="sp">PARTICIPANTE</th>';
                 matchIds.forEach((m, i) => {
-                    const sched = matchSchedule[m];
-                    let equipos = '';
-                    if (sched) {
-                        equipos = `${abreviarPais(sched.local).substring(0,3)} vs ${abreviarPais(sched.visitante).substring(0,3)}`;
-                    }
+                    const sched = matchSchedule[m]; let equipos = '';
+                    if (sched) equipos = `${abreviarPais(sched.local).substring(0,3)} vs ${abreviarPais(sched.visitante).substring(0,3)}`;
                     tableHTML += `<th>${i+1}<br><small>${equipos}</small></th>`;
                 });
                 tableHTML += '<th>TOTAL</th></tr></thead><tbody>';
-                
                 players.forEach((p, idx) => {
                     tableHTML += `<tr><td class="sn">${String(idx+1).padStart(2,'0')}</td><td class="sp">${p.displayName || 'Anónimo'}</td>`;
                     matchIds.forEach(mId => {
-                        const pred = p.predictions[mId] || '';
-                        const sched = matchSchedule[mId];
-                        let cellContent = '';
-                        let cellClass = '';
-                        
-                        if (pred === 'Local' && sched) {
-                            cellContent = abreviarPais(sched.local);
-                            cellClass = 'local';
-                        } else if (pred === 'Empate') {
-                            cellContent = 'Empate';
-                            cellClass = 'empate';
-                        } else if (pred === 'Visitante' && sched) {
-                            cellContent = abreviarPais(sched.visitante);
-                            cellClass = 'visitante';
-                        }
-                        
+                        const pred = p.predictions[mId] || ''; const sched = matchSchedule[mId];
+                        let cellContent = '', cellClass = '';
+                        if (pred === 'Local' && sched) { cellContent = abreviarPais(sched.local); cellClass = 'local'; }
+                        else if (pred === 'Empate') { cellContent = 'Empate'; cellClass = 'empate'; }
+                        else if (pred === 'Visitante' && sched) { cellContent = abreviarPais(sched.visitante); cellClass = 'visitante'; }
                         tableHTML += `<td class="${cellClass}">${cellContent}</td>`;
                     });
                     tableHTML += `<td>${p.total}</td></tr>`;
                 });
-                
                 tableHTML += '</tbody></table>';
-                
                 newWindow.document.getElementById('loading').outerHTML = tableHTML;
-                
-            } catch (error) {
-                newWindow.document.body.innerHTML += `<p style="color:red">Error: ${error.message}</p>`;
-            }
+            } catch (error) { newWindow.document.body.innerHTML += `<p style="color:red">Error: ${error.message}</p>`; }
         }
 
         function logout() {
-            if (!confirm("¿Seguro que quieres salir? Podrás crear una nueva participación con otro nombre.")) return;
+            if (!confirm("¿Seguro que quieres salir?")) return;
             sessionStorage.removeItem('ultimaPantalla');
-            auth.signOut().then(() => {
-                window.location.reload();
-            }).catch((error) => {
-                showToast("Error al salir: " + error.message, "error");
-            });
+            auth.signOut().then(() => { window.location.reload(); }).catch((error) => { showToast("Error: " + error.message, "error"); });
         }
 
         function showView(viewId) {
@@ -1836,11 +1004,7 @@
             document.getElementById(viewId)?.classList.remove('hidden');
             if (viewId === 'view-predictions') document.getElementById('submit-bar')?.classList.remove('hidden');
             else document.getElementById('submit-bar')?.classList.add('hidden');
-            
-            if (viewId === 'view-leaderboard') {
-                startLeaderboardListener();
-            }
-            
+            if (viewId === 'view-leaderboard') startLeaderboardListener();
             sessionStorage.setItem('ultimaPantalla', viewId);
         }
         
@@ -1851,7 +1015,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            startCountdown();
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     const doc = await db.collection('participants').doc(user.uid).get();
@@ -1861,26 +1024,15 @@
                         document.getElementById('view-home').classList.add('hidden');
                         document.getElementById('user-badge').classList.remove('hidden');
                         document.getElementById('display-username').innerText = data.displayName;
-                        
                         const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
-                        
                         if (pantallaGuardada) {
                             showView(pantallaGuardada);
-                            
-                            if (pantallaGuardada === 'view-predictions') {
-                                renderMatches();
-                            } else if (pantallaGuardada === 'view-admin') {
-                                renderAdminMatches();
-                            } else if (pantallaGuardada === 'view-planilla') {
-                                generarPlanillaWeb();
-                            }
+                            if (pantallaGuardada === 'view-predictions') renderMatches();
+                            else if (pantallaGuardada === 'view-admin') renderAdminMatches();
+                            else if (pantallaGuardada === 'view-planilla') generarPlanillaWeb();
                         } else {
-                            if (data.submitted || isDeadlinePassed) {
-                                showView('view-leaderboard');
-                            } else {
-                                showView('view-predictions');
-                                renderMatches();
-                            }
+                            if (data.submitted) showView('view-leaderboard');
+                            else { showView('view-predictions'); renderMatches(); }
                         }
                     }
                 }
