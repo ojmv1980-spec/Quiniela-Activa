@@ -106,11 +106,31 @@
                 <h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">MONTO: <span class="text-blue-600">Bs.</span> 5.000,00</h3>
             </div>
 
-            <!-- 🎯 BOTÓN DE RANKING MOVIDO AQUÍ -->
-            <div class="w-full max-w-md">
-                <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
-                     VER RANKING DE PARTICIPANTES
-                </button>
+            <!-- 🎯 TABLA DE RANKING INSERTADA AQUÍ (Reemplazando temporalmente el botón para tu revisión) -->
+            <div class="w-full max-w-4xl mx-auto mt-4">
+                <h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
+                    Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
+                </h3>
+                <div class="glass rounded-3xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+                            <tr>
+                                <th class="p-4 w-16 text-center">Pos</th>
+                                <th class="p-4">Jugador</th>
+                                <th class="p-4 text-center">Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="home-leaderboard-body">
+                            <tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Cuando confirmes que te gusta, podemos quitar o ajustar el botón de abajo -->
+                <div class="w-full max-w-md mt-6">
+                    <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
+                         VER RANKING COMPLETO Y PLANILLAS
+                    </button>
+                </div>
             </div>
 
             <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
@@ -584,17 +604,27 @@
         }
 
         function renderLeaderboard(players) {
-            const tbody = document.getElementById('leaderboard-body');
-            if (players.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay predicciones enviadas.</td></tr>`; return; }
-            tbody.innerHTML = players.map((p, idx) => {
-                const isMe = p.id === currentUser?.uid;
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-                return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
-                    <td class="p-6 text-center font-black text-lg">${medal}</td>
-                    <td class="p-6 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
-                    <td class="p-6 text-center font-black text-xl text-yellow-400">${p.score}</td>
-                </tr>`;
-            }).join('');
+            // 🎯 ACTUALIZACIÓN: Llenar tanto la tabla de inicio como la de la vista de ranking
+            const homeTbody = document.getElementById('home-leaderboard-body');
+            const mainTbody = document.getElementById('leaderboard-body');
+            
+            let html = '';
+            if (players.length === 0) { 
+                html = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay predicciones enviadas.</td></tr>`; 
+            } else {
+                html = players.map((p, idx) => {
+                    const isMe = p.id === currentUser?.uid;
+                    const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+                    return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
+                        <td class="p-4 text-center font-black text-lg">${medal}</td>
+                        <td class="p-4 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
+                        <td class="p-4 text-center font-black text-xl text-yellow-400">${p.score}</td>
+                    </tr>`;
+                }).join('');
+            }
+            
+            if (homeTbody) homeTbody.innerHTML = html;
+            if (mainTbody) mainTbody.innerHTML = html;
         }
 
         async function promptAdmin() {
@@ -1023,6 +1053,10 @@
                         document.getElementById('view-home').classList.add('hidden');
                         document.getElementById('user-badge').classList.remove('hidden');
                         document.getElementById('display-username').innerText = data.displayName;
+                        
+                        // 🎯 Aseguramos que el listener del ranking se active para llenar la tabla de inicio
+                        startLeaderboardListener();
+
                         const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
                         if (pantallaGuardada) {
                             showView(pantallaGuardada);
