@@ -197,12 +197,12 @@
                 <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">Cargar Resultados</button>
                 <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
                 <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
-                <button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">️ Generar Imagen</button>
+                <button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🖼️ Generar Imagen</button>
             </div>
             <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
             <div id="admin-tab-players" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
-                    <h4 class="font-bold text-blue-400 mb-2"> Lista de Participantes</h4>
+                    <h4 class="font-bold text-blue-400 mb-2">📋 Lista de Participantes</h4>
                     <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
                     <div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
                 </div>
@@ -223,7 +223,7 @@
             <div id="admin-tab-imagen" class="hidden">
                 <div class="glass p-4 rounded-xl mb-4">
                     <h4 class="font-bold text-purple-400 mb-2">🖼️ Generar Imagen del Ranking</h4>
-                    <p class="text-xs text-slate-400 mb-4">Genera una imagen JPG exacta del ranking actual para compartir en redes sociales.</p>
+                    <p class="text-xs text-slate-400 mb-4">Genera una imagen JPG profesional del ranking actual para compartir en redes sociales.</p>
                     <div class="flex justify-center gap-4">
                         <button onclick="generarImagenRanking()" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition shadow-lg">
                             📸 Generar y Descargar Imagen
@@ -242,7 +242,7 @@
             <div class="text-center space-y-2"><h2 class="text-2xl md:text-3xl italic-black uppercase text-blue-400">Resultados Partido a Partido</h2></div>
             <div class="flex justify-center gap-3 flex-wrap">
                 <button onclick="showView('view-leaderboard')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg transition">← Volver al Ranking</button>
-                <button onclick="generarPlanillaDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg"> Ver Planilla Digital</button>
+                <button onclick="generarPlanillaDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver Planilla Digital</button>
             </div>
             <div id="planilla-loading" class="text-center py-12">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div>
@@ -273,27 +273,6 @@
             </div>
         </div>
     </main>
-
-    <!-- 🎯 CANVAS OCULTO PARA GENERAR IMAGEN -->
-    <div id="ranking-canvas-container" style="position: absolute; left: -9999px; top: 0; width: 1080px; background: #0a0f1e; padding: 40px; font-family: 'Inter', sans-serif;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="font-size: 48px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px;">TRIVIA MUNDIAL 2026</h1>
-            <h2 style="font-size: 32px; font-weight: 900; font-style: italic; color: white; margin: 10px 0 0 0;">RANKING DE <span style="color: #3b82f6; text-decoration: underline; text-underline-offset: 8px;">PARTICIPANTES</span></h2>
-        </div>
-        <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px);">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: rgba(255, 255, 255, 0.05);">
-                        <th style="padding: 20px; text-align: left; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #60a5fa; width: 15%;">POS</th>
-                        <th style="padding: 20px; text-align: left; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #60a5fa; width: 55%;">JUGADOR</th>
-                        <th style="padding: 20px; text-align: right; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #60a5fa; width: 30%;">PUNTOS</th>
-                    </tr>
-                </thead>
-                <tbody id="ranking-canvas-body">
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <div id="toast-container"></div>
 
@@ -725,7 +704,7 @@
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                     const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
                     p.predictions = preds; p.predCount = Object.keys(preds).length;
-                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">Pendiente</span>');
+                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
                     let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
                     html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
                     const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
@@ -768,7 +747,7 @@
 
         async function deletePlayer(playerId, playerName) {
             if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
-            if (!confirm(`CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
             try {
                 await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
@@ -812,17 +791,17 @@
 
         async function markAsPaid(participantId, participantName) {
             if (!confirm(`¿Confirmar pago de ${participantName}?`)) return;
-            if (!confirm(`CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
+            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
             try {
                 await db.collection('participants').doc(participantId).update({ paid: true, paidAt: new Date() });
                 showToast(`✅ Pago de ${participantName} registrado`, "success"); loadAdminCobranza();
             } catch (error) { showToast("Error: " + error.message, "error"); }
         }
 
-        //  FUNCIÓN PARA GENERAR IMAGEN DEL RANKING
+        // 🎨 FUNCIÓN MEJORADA PARA GENERAR IMAGEN DEL RANKING
         async function generarImagenRanking() {
             try {
-                showToast("📸 Generando imagen...", "success");
+                showToast("📸 Generando imagen profesional...", "success");
                 
                 // Obtener datos de Firebase
                 const pSnap = await db.collection('participants').get();
@@ -858,34 +837,95 @@
                 
                 players.sort((a, b) => b.score - a.score || a.code.localeCompare(b.code));
                 
-                // Generar HTML del canvas
-                const tbody = document.getElementById('ranking-canvas-body');
-                tbody.innerHTML = '';
+                // Crear canvas temporal con diseño profesional
+                const canvasContainer = document.createElement('div');
+                canvasContainer.style.cssText = `
+                    position: fixed;
+                    left: -9999px;
+                    top: 0;
+                    width: 1080px;
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    padding: 60px 40px;
+                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                `;
                 
-                players.forEach((p, idx) => {
-                    const row = document.createElement('tr');
-                    row.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
+                // Contenido HTML profesional
+                canvasContainer.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h1 style="font-size: 56px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px; text-shadow: 0 0 40px rgba(255,255,255,0.3);">
+                            TRIVIA MUNDIAL 2026
+                        </h1>
+                        <h2 style="font-size: 32px; font-weight: 700; color: white; margin: 10px 0 0 0; letter-spacing: 1px;">
+                            RANKING DE <span style="color: #22d3ee; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">PARTICIPANTES</span>
+                        </h2>
+                    </div>
                     
-                    let posText = '';
-                    if (idx === 0) posText = '';
-                    else if (idx === 1) posText = '🥈';
-                    else if (idx === 2) posText = '🥉';
-                    else posText = `#${idx + 1}`;
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid rgba(34, 211, 238, 0.3);">
+                                    <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 15%;">POS</th>
+                                    <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 55%;">JUGADOR</th>
+                                    <th style="padding: 20px 15px; text-align: right; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 30%;">PUNTOS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${players.map((p, idx) => {
+                                    let posContent = '';
+                                    let rowBg = '';
+                                    let posColor = '';
+                                    
+                                    if (idx === 0) {
+                                        posContent = '🥇';
+                                        rowBg = 'rgba(251, 191, 36, 0.1)';
+                                        posColor = '#fbbf24';
+                                    } else if (idx === 1) {
+                                        posContent = '🥈';
+                                        rowBg = 'rgba(148, 163, 184, 0.1)';
+                                        posColor = '#94a3b8';
+                                    } else if (idx === 2) {
+                                        posContent = '🥉';
+                                        rowBg = 'rgba(217, 119, 6, 0.1)';
+                                        posColor = '#d97706';
+                                    } else {
+                                        posContent = `<span style="color: #94a3b8; font-weight: 700;">#${idx + 1}</span>`;
+                                        rowBg = 'transparent';
+                                        posColor = '#e2e8f0';
+                                    }
+                                    
+                                    const borderColor = idx < players.length - 1 ? 'border-bottom: 1px solid rgba(255,255,255,0.06);' : '';
+                                    
+                                    return `
+                                        <tr style="${borderColor} ${rowBg ? `background: ${rowBg};` : ''} transition: all 0.2s;">
+                                            <td style="padding: 18px 15px; font-size: 20px; font-weight: 900; color: ${posColor};">${posContent}</td>
+                                            <td style="padding: 18px 15px; font-size: 20px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td>
+                                            <td style="padding: 18px 15px; font-size: 24px; font-weight: 900; color: #fbbf24; text-align: right; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);">${p.score}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
                     
-                    row.innerHTML = `
-                        <td style="padding: 20px; font-size: 18px; font-weight: 900; color: ${idx < 3 ? '#fbbf24' : '#e2e8f0'};">${posText}</td>
-                        <td style="padding: 20px; font-size: 18px; font-weight: 700; color: white;">${p.name}</td>
-                        <td style="padding: 20px; font-size: 20px; font-weight: 900; color: #fbbf24; text-align: right;">${p.score}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
+                    <div style="text-align: center; margin-top: 30px; opacity: 0.6;">
+                        <p style="color: #94a3b8; font-size: 14px; font-weight: 500;">Fase de Grupos - Mundial 2026</p>
+                    </div>
+                `;
                 
-                // Convertir a imagen usando html2canvas
-                const canvas = await html2canvas(document.getElementById('ranking-canvas-container'), {
-                    backgroundColor: '#0a0f1e',
+                document.body.appendChild(canvasContainer);
+                
+                // Esperar a que se renderice
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Convertir a imagen con html2canvas
+                const canvas = await html2canvas(canvasContainer, {
+                    backgroundColor: null,
                     scale: 2,
                     useCORS: true,
-                    logging: false
+                    allowTaint: true,
+                    logging: false,
+                    width: 1080,
+                    height: canvasContainer.offsetHeight
                 });
                 
                 // Mostrar preview
@@ -893,7 +933,11 @@
                 const containerDiv = document.getElementById('imagen-container');
                 previewDiv.classList.remove('hidden');
                 containerDiv.innerHTML = '';
-                containerDiv.appendChild(canvas);
+                
+                const previewCanvas = canvas.cloneNode(true);
+                previewCanvas.style.width = '100%';
+                previewCanvas.style.height = 'auto';
+                containerDiv.appendChild(previewCanvas);
                 
                 // Descargar imagen
                 const link = document.createElement('a');
@@ -901,7 +945,10 @@
                 link.href = canvas.toDataURL('image/jpeg', 0.95);
                 link.click();
                 
-                showToast("✅ Imagen generada y descargada", "success");
+                // Limpiar
+                document.body.removeChild(canvasContainer);
+                
+                showToast("✅ Imagen profesional generada y descargada", "success");
                 
             } catch (error) {
                 console.error('Error generando imagen:', error);
