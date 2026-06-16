@@ -68,7 +68,7 @@
                 <div><h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1></div>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="showView('view-leaderboard')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">RANKING</button>
+                <button onclick="showView('view-home')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">INICIO</button>
                 <button onclick="promptAdmin()" class="p-1.5 md:p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
                     <i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-4 h-4 md:w-5 md:h-5"></i>
                 </button>
@@ -537,7 +537,6 @@
             }
         }
 
-        // 🎯 FUNCIÓN CLAVE: Carga el ranking para TODOS los visitantes
         let unsubscribeLB = null;
         function startLeaderboardListener() {
             if (unsubscribeLB) {
@@ -578,7 +577,6 @@
             });
         }
 
-        // 🎯 FUNCIÓN MODIFICADA: Actualiza AMBAS tablas (pantalla principal y vista ranking)
         function renderLeaderboard(players) {
             const homeTbody = document.getElementById('home-leaderboard-body');
             const mainTbody = document.getElementById('leaderboard-body');
@@ -598,7 +596,6 @@
                 }).join('');
             }
             
-            // Actualizar AMBAS tablas si existen
             if (homeTbody) homeTbody.innerHTML = html;
             if (mainTbody) mainTbody.innerHTML = html;
         }
@@ -777,7 +774,7 @@
 
         async function markAsPaid(participantId, participantName) {
             if (!confirm(`¿Confirmar pago de ${participantName}?`)) return;
-            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
+            if (!confirm(` CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
             try {
                 await db.collection('participants').doc(participantId).update({ paid: true, paidAt: new Date() });
                 showToast(`✅ Pago de ${participantName} registrado`, "success"); loadAdminCobranza();
@@ -1005,10 +1002,19 @@
         }
 
         function showView(viewId) {
-            ['view-home', 'view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
-            document.getElementById(viewId)?.classList.remove('hidden');
-            if (viewId === 'view-predictions') document.getElementById('submit-bar')?.classList.remove('hidden');
-            else document.getElementById('submit-bar')?.classList.add('hidden');
+            ['view-home', 'view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            const targetEl = document.getElementById(viewId);
+            if (targetEl) targetEl.classList.remove('hidden');
+            
+            const submitBar = document.getElementById('submit-bar');
+            if (submitBar) {
+                if (viewId === 'view-predictions') submitBar.classList.remove('hidden');
+                else submitBar.classList.add('hidden');
+            }
+            
             if (viewId === 'view-leaderboard') startLeaderboardListener();
             sessionStorage.setItem('ultimaPantalla', viewId);
         }
@@ -1019,34 +1025,90 @@
             setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
         }
 
-        // 🎯 CAMBIO CLAVE: Iniciar el listener del ranking INMEDIATAMENTE al cargar la página
+        // 🎯 INICIALIZACIÓN SEGURA CON MANEJO DE ERRORES
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('📱 Página cargada, iniciando listener del ranking...');
-            startLeaderboardListener();
-            
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    const doc = await db.collection('participants').doc(user.uid).get();
-                    const data = doc.data();
-                    if (data) {
-                        currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
-                        document.getElementById('view-home').classList.add('hidden');
-                        document.getElementById('user-badge').classList.remove('hidden');
-                        document.getElementById('display-username').innerText = data.displayName;
-
-                        const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
-                        if (pantallaGuardada) {
-                            showView(pantallaGuardada);
-                            if (pantallaGuardada === 'view-predictions') renderMatches();
-                            else if (pantallaGuardada === 'view-admin') renderAdminMatches();
-                            else if (pantallaGuardada === 'view-planilla') generarPlanillaWeb();
-                        } else {
-                            if (data.submitted) showView('view-leaderboard');
-                            else { showView('view-predictions'); renderMatches(); }
-                        }
-                    }
+            try {
+                console.log('📱 Página cargada, iniciando aplicación...');
+                
+                // Iniciar el listener del ranking SIEMPRE (incluso sin usuario logueado)
+                if (typeof startLeaderboardListener === 'function') {
+                    startLeaderboardListener();
+                    console.log('✅ Listener de ranking iniciado');
+                } else {
+                    console.error('❌ startLeaderboardListener no está definido');
                 }
-            });
+                
+                // Manejo seguro de autenticación
+                if (typeof auth !== 'undefined' && auth.onAuthStateChanged) {
+                    auth.onAuthStateChanged(async (user) => {
+                        try {
+                            console.log('🔍 Estado de autenticación:', user ? 'Logueado' : 'No logueado');
+                            
+                            if (user) {
+                                try {
+                                    const doc = await db.collection('participants').doc(user.uid).get();
+                                    const data = doc.data();
+                                    
+                                    if (data) {
+                                        console.log('✅ Usuario cargado:', data.displayName);
+                                        currentUser = { 
+                                            uid: user.uid, 
+                                            displayName: data.displayName, 
+                                            userCode: data.userCode 
+                                        };
+                                        
+                                        const viewHome = document.getElementById('view-home');
+                                        const userBadge = document.getElementById('user-badge');
+                                        const displayUsername = document.getElementById('display-username');
+                                        
+                                        if (viewHome) viewHome.classList.add('hidden');
+                                        if (userBadge) userBadge.classList.remove('hidden');
+                                        if (displayUsername) displayUsername.innerText = data.displayName;
+
+                                        const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
+                                        if (pantallaGuardada) {
+                                            console.log('📍 Restaurando vista:', pantallaGuardada);
+                                            showView(pantallaGuardada);
+                                            if (pantallaGuardada === 'view-predictions') renderMatches();
+                                            else if (pantallaGuardada === 'view-admin') renderAdminMatches();
+                                            else if (pantallaGuardada === 'view-planilla') generarPlanillaWeb();
+                                        } else {
+                                            if (data.submitted) {
+                                                showView('view-leaderboard');
+                                            } else { 
+                                                showView('view-predictions'); 
+                                                renderMatches(); 
+                                            }
+                                        }
+                                    }
+                                } catch (dbError) {
+                                    console.error('❌ Error cargando datos del usuario:', dbError);
+                                    showView('view-home');
+                                }
+                            } else {
+                                console.log('👤 Usuario no logueado, mostrando inicio');
+                                showView('view-home');
+                            }
+                        } catch (authError) {
+                            console.error('❌ Error en auth state change:', authError);
+                            showView('view-home');
+                        }
+                    });
+                } else {
+                    console.error('❌ Firebase Auth no está disponible');
+                    showView('view-home');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error crítico en inicialización:', error);
+                const allViews = ['view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'];
+                allViews.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                const viewHome = document.getElementById('view-home');
+                if (viewHome) viewHome.classList.remove('hidden');
+            }
         });
     </script>
 </body>
