@@ -799,162 +799,187 @@
         }
 
         // 🎨 FUNCIÓN MEJORADA PARA GENERAR IMAGEN DEL RANKING
-        async function generarImagenRanking() {
-            try {
-                showToast("📸 Generando imagen profesional...", "success");
-                
-                // Obtener datos de Firebase
-                const pSnap = await db.collection('participants').get();
-                const players = [];
-                pSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.deleted) return;
-                    if (!data.submitted) return;
-                    players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000' });
-                });
-                
-                const mSnap = await db.collection('matches').get();
-                const results = {};
-                mSnap.forEach(doc => results[doc.id] = doc.data().result);
-                
-                // Calcular puntajes
-                for (const p of players) {
-                    const predsSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-                    let score = 0;
-                    predsSnap.forEach(doc => {
-                        const pred = doc.data().value;
-                        const res = results[doc.id];
-                        if (!res) return;
-                        if (res === 'Empate') {
-                            if (pred === 'Empate') score += 5;
-                            else score += 1;
-                        } else {
-                            if (pred === res) score += 3;
-                        }
-                    });
-                    p.score = score;
+async function generarImagenRanking() {
+    try {
+        showToast("📸 Generando imagen profesional...", "success");
+        
+        // Obtener datos de Firebase
+        const pSnap = await db.collection('participants').get();
+        const players = [];
+        pSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.deleted) return;
+            if (!data.submitted) return;
+            players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000' });
+        });
+        
+        const mSnap = await db.collection('matches').get();
+        const results = {};
+        mSnap.forEach(doc => results[doc.id] = doc.data().result);
+        
+        // Calcular puntajes
+        for (const p of players) {
+            const predsSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
+            let score = 0;
+            predsSnap.forEach(doc => {
+                const pred = doc.data().value;
+                const res = results[doc.id];
+                if (!res) return;
+                if (res === 'Empate') {
+                    if (pred === 'Empate') score += 5;
+                    else score += 1;
+                } else {
+                    if (pred === res) score += 3;
                 }
-                
-                players.sort((a, b) => b.score - a.score || a.code.localeCompare(b.code));
-                
-                // Crear canvas temporal con diseño profesional
-                const canvasContainer = document.createElement('div');
-                canvasContainer.style.cssText = `
-                    position: fixed;
-                    left: -9999px;
-                    top: 0;
-                    width: 1080px;
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-                    padding: 60px 40px;
-                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-                `;
-                
-                // Contenido HTML profesional
-                canvasContainer.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 40px;">
-                        <h1 style="font-size: 56px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px; text-shadow: 0 0 40px rgba(255,255,255,0.3);">
-                            TRIVIA MUNDIAL 2026
-                        </h1>
-                        <h2 style="font-size: 32px; font-weight: 700; color: white; margin: 10px 0 0 0; letter-spacing: 1px;">
-                            RANKING DE <span style="color: #22d3ee; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">PARTICIPANTES</span>
-                        </h2>
-                    </div>
-                    
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
-                        <table style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                            <thead>
-                                <tr style="border-bottom: 2px solid rgba(34, 211, 238, 0.3);">
-                                    <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 15%;">POS</th>
-                                    <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 55%;">JUGADOR</th>
-                                    <th style="padding: 20px 15px; text-align: right; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 30%;">PUNTOS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${players.map((p, idx) => {
-                                    let posContent = '';
-                                    let rowBg = '';
-                                    let posColor = '';
-                                    
-                                    if (idx === 0) {
-                                        posContent = '🥇';
-                                        rowBg = 'rgba(251, 191, 36, 0.1)';
-                                        posColor = '#fbbf24';
-                                    } else if (idx === 1) {
-                                        posContent = '🥈';
-                                        rowBg = 'rgba(148, 163, 184, 0.1)';
-                                        posColor = '#94a3b8';
-                                    } else if (idx === 2) {
-                                        posContent = '🥉';
-                                        rowBg = 'rgba(217, 119, 6, 0.1)';
-                                        posColor = '#d97706';
-                                    } else {
-                                        posContent = `<span style="color: #94a3b8; font-weight: 700;">#${idx + 1}</span>`;
-                                        rowBg = 'transparent';
-                                        posColor = '#e2e8f0';
-                                    }
-                                    
-                                    const borderColor = idx < players.length - 1 ? 'border-bottom: 1px solid rgba(255,255,255,0.06);' : '';
-                                    
-                                    return `
-                                        <tr style="${borderColor} ${rowBg ? `background: ${rowBg};` : ''} transition: all 0.2s;">
-                                            <td style="padding: 18px 15px; font-size: 20px; font-weight: 900; color: ${posColor};">${posContent}</td>
-                                            <td style="padding: 18px 15px; font-size: 20px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td>
-                                            <td style="padding: 18px 15px; font-size: 24px; font-weight: 900; color: #fbbf24; text-align: right; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);">${p.score}</td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 30px; opacity: 0.6;">
-                        <p style="color: #94a3b8; font-size: 14px; font-weight: 500;">Fase de Grupos - Mundial 2026</p>
-                    </div>
-                `;
-                
-                document.body.appendChild(canvasContainer);
-                
-                // Esperar a que se renderice
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                // Convertir a imagen con html2canvas
-                const canvas = await html2canvas(canvasContainer, {
-                    backgroundColor: null,
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    width: 1080,
-                    height: canvasContainer.offsetHeight
-                });
-                
-                // Mostrar preview
-                const previewDiv = document.getElementById('imagen-preview');
-                const containerDiv = document.getElementById('imagen-container');
-                previewDiv.classList.remove('hidden');
-                containerDiv.innerHTML = '';
-                
-                const previewCanvas = canvas.cloneNode(true);
-                previewCanvas.style.width = '100%';
-                previewCanvas.style.height = 'auto';
-                containerDiv.appendChild(previewCanvas);
-                
-                // Descargar imagen
-                const link = document.createElement('a');
-                link.download = `ranking-trivia-mundial-${Date.now()}.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.95);
-                link.click();
-                
-                // Limpiar
-                document.body.removeChild(canvasContainer);
-                
-                showToast("✅ Imagen profesional generada y descargada", "success");
-                
-            } catch (error) {
-                console.error('Error generando imagen:', error);
-                showToast("❌ Error: " + error.message, "error");
-            }
+            });
+            p.score = score;
         }
+        
+        players.sort((a, b) => b.score - a.score || a.code.localeCompare(b.code));
+        
+        // Crear canvas temporal con diseño profesional
+        const canvasContainer = document.createElement('div');
+        canvasContainer.style.cssText = `
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 1080px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            padding: 60px 40px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        `;
+        
+        // Contenido HTML profesional con bordes mejorados
+        canvasContainer.innerHTML = `
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h1 style="font-size: 56px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px; text-shadow: 0 0 40px rgba(255,255,255,0.3);">
+                    TRIVIA MUNDIAL 2026
+                </h1>
+                <h2 style="font-size: 32px; font-weight: 700; color: white; margin: 10px 0 0 0; letter-spacing: 1px;">
+                    RANKING DE <span style="color: #22d3ee; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">PARTICIPANTES</span>
+                </h2>
+            </div>
+            
+            <div style="
+                background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+                border: 3px solid rgba(255, 255, 255, 0.15);
+                border-radius: 28px;
+                padding: 45px;
+                backdrop-filter: blur(20px);
+                box-shadow: 
+                    0 0 60px rgba(0,0,0,0.6),
+                    inset 0 1px 0 rgba(255,255,255,0.15),
+                    inset 0 -1px 0 rgba(0,0,0,0.3),
+                    inset 20px 0 40px -20px rgba(255,255,255,0.05),
+                    inset -20px 0 40px -20px rgba(255,255,255,0.05),
+                    inset 0 20px 40px -20px rgba(255,255,255,0.05),
+                    inset 0 -20px 40px -20px rgba(0,0,0,0.2);
+                position: relative;
+            ">
+                <!-- Efecto de brillo en los bordes -->
+                <div style="
+                    position: absolute;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    border-radius: 28px;
+                    background: linear-gradient(135deg, 
+                        rgba(255,255,255,0.1) 0%, 
+                        transparent 30%, 
+                        transparent 70%, 
+                        rgba(255,255,255,0.05) 100%);
+                    pointer-events: none;
+                "></div>
+                
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0; position: relative; z-index: 1;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid rgba(34, 211, 238, 0.4);">
+                            <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 15%;">POS</th>
+                            <th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 55%;">JUGADOR</th>
+                            <th style="padding: 20px 15px; text-align: right; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 30%;">PUNTOS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${players.map((p, idx) => {
+                            let posContent = '';
+                            let posColor = '';
+                            
+                            if (idx === 0) {
+                                posContent = '🥇';
+                                posColor = '#fbbf24';
+                            } else if (idx === 1) {
+                                posContent = '🥈';
+                                posColor = '#94a3b8';
+                            } else if (idx === 2) {
+                                posContent = '🥉';
+                                posColor = '#d97706';
+                            } else {
+                                posContent = `<span style="color: #94a3b8; font-weight: 700;">#${idx + 1}</span>`;
+                                posColor = '#e2e8f0';
+                            }
+                            
+                            // Línea que no toca los bordes exteriores
+                            const borderStyle = idx < players.length - 1 ? 
+                                `border-bottom: 1px solid rgba(255,255,255,0.08); margin-left: 15px; margin-right: 15px;` : '';
+                            
+                            return `
+                                <tr style="${borderStyle}">
+                                    <td style="padding: 20px 15px; font-size: 22px; font-weight: 900; color: ${posColor};">${posContent}</td>
+                                    <td style="padding: 20px 15px; font-size: 22px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td>
+                                    <td style="padding: 20px 15px; font-size: 26px; font-weight: 900; color: #fbbf24; text-align: right; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);">${p.score}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; opacity: 0.6;">
+                <p style="color: #94a3b8; font-size: 14px; font-weight: 500;">Fase de Grupos - Mundial 2026</p>
+            </div>
+        `;
+        
+        document.body.appendChild(canvasContainer);
+        
+        // Esperar a que se renderice
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Convertir a imagen con html2canvas
+        const canvas = await html2canvas(canvasContainer, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width: 1080,
+            height: canvasContainer.offsetHeight
+        });
+        
+        // Mostrar preview
+        const previewDiv = document.getElementById('imagen-preview');
+        const containerDiv = document.getElementById('imagen-container');
+        previewDiv.classList.remove('hidden');
+        containerDiv.innerHTML = '';
+        
+        const previewCanvas = canvas.cloneNode(true);
+        previewCanvas.style.width = '100%';
+        previewCanvas.style.height = 'auto';
+        containerDiv.appendChild(previewCanvas);
+        
+        // Descargar imagen
+        const link = document.createElement('a');
+        link.download = `ranking-trivia-mundial-${Date.now()}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 0.95);
+        link.click();
+        
+        // Limpiar
+        document.body.removeChild(canvasContainer);
+        
+        showToast("✅ Imagen profesional generada y descargada", "success");
+        
+    } catch (error) {
+        console.error('Error generando imagen:', error);
+        showToast("❌ Error: " + error.message, "error");
+    }
+}
 
         async function generarPlanillaWeb() {
             showView('view-planilla');
