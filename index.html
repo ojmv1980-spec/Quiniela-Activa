@@ -93,12 +93,6 @@
                 <h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">MONTO: <span class="text-blue-600">Bs.</span> 5.000,00</h3>
             </div>
 
-            <div class="w-full max-w-md">
-                <button onclick="showView('view-leaderboard')" class="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black italic uppercase tracking-wider btn-sporty shadow-lg shadow-purple-600/20">
-                     VER RANKING DE PARTICIPANTES
-                </button>
-            </div>
-
             <!-- 🎯 RANKING EN PANTALLA PRINCIPAL -->
             <div class="w-full max-w-4xl mx-auto mt-4">
                 <h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
@@ -120,23 +114,32 @@
                 </div>
             </div>
 
-            <div class="w-full max-w-md glass p-5 rounded-2xl text-left space-y-3 mt-2">
-                <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
-                <div class="space-y-3 text-xs md:text-sm text-slate-300">
-                    <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
-                    <div>
-                        <span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
-                        <ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
-                            <li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li>
-                            <li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li>
-                            <li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li>
-                            <li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li>
-                        </ul>
+            <!-- 🎯 BOTÓN Y REGLAMENTO MOVIDOS AQUÍ -->
+            <div class="w-full max-w-4xl mx-auto mt-6 space-y-6">
+                <div class="flex justify-center">
+                    <button onclick="generarPlanillaWeb()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
+                        📊 Ver Planilla Completa
+                    </button>
+                </div>
+
+                <div class="w-full max-w-md mx-auto glass p-5 rounded-2xl text-left space-y-3">
+                    <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
+                    <div class="space-y-3 text-xs md:text-sm text-slate-300">
+                        <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
+                        <div>
+                            <span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
+                            <ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
+                                <li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li>
+                                <li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li>
+                                <li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li>
+                                <li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li>
+                            </ul>
+                        </div>
+                        <div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
                     </div>
-                    <div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
                 </div>
             </div>
-            
+
             <div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/30 shadow-lg shadow-yellow-500/20">
                 <h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">💳 PAGO MÓVIL</h3>
                 <div class="space-y-3 text-center">
@@ -687,7 +690,7 @@
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                     const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
                     p.predictions = preds; p.predCount = Object.keys(preds).length;
-                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
+                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded"> Pendiente</span>');
                     let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">️ Eliminar</button>`;
                     html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
                     const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
@@ -730,7 +733,7 @@
 
         async function deletePlayer(playerId, playerName) {
             if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
-            if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
+            if (!confirm(` CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
             try {
                 await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
@@ -745,7 +748,7 @@
                 await db.collection('participants').doc(playerId).update({ deleted: false, deletedAt: firebase.firestore.FieldValue.delete() });
                 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
                 const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
-                await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
+                await batch.commit(); showToast(`️ ${playerName} restaurado`, "success"); loadAdminPlayers();
             } catch (e) { showToast("Error: " + e.message, "error"); }
         }
 
@@ -954,7 +957,7 @@
             const newWindow = window.open('', '_blank');
             if (!newWindow) { showToast("Permite las ventanas emergentes", "error"); return; }
             newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;}.empate{color:#fbbf24;}.visitante{color:#f43f5e;}.sn{position:sticky;left:0;background:#0a0f1e;z-index:5;width:30px;text-align:center;} .sp{position:sticky;left:30px;background:#0a0f1e;z-index:5;text-align:left;padding-left:5px;border-right:1px solid rgba(255,255,255,0.1);}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
-            newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button><div id="loading">Cargando...</div></body></html>');
+            newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1><button class="btn-print" onclick="window.print()">️ Imprimir / Guardar PDF</button><div id="loading">Cargando...</div></body></html>');
             newWindow.document.close();
             try {
                 const pSnap = await db.collection('participants').get();
