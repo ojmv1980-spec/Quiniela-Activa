@@ -131,7 +131,7 @@
             <div id="user-badge" class="hidden flex items-center gap-2 px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-full">
                 <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span id="display-username" class="text-[10px] md:text-xs font-bold text-white"></span>
-                <button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir"></button>
+                <button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir">✕</button>
             </div>
         </div>
     </div>
@@ -292,9 +292,9 @@
             <div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p></div>
             <div class="flex justify-center gap-3 flex-wrap">
                 <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">Cargar Resultados</button>
-                <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
+                <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10"> Gestión de Participantes</button>
                 <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
-                <button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">️ Generar Imagen</button>
+                <button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🖼️ Generar Imagen</button>
                 <button onclick="showAdminTab('reel')" id="tab-reel" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🎰 Cargar Reel</button>
             </div>
             <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
@@ -315,6 +315,14 @@
                             <span>Total: <span id="cobranza-total" class="font-bold text-yellow-400">Bs. 0,00</span></span>
                         </div>
                     </div>
+                    
+                    <!-- 📋 BOTÓN DE REPORTE WHATSAPP -->
+                    <div class="flex justify-center gap-3 mb-4">
+                        <button onclick="generarReporteCobranza()" class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-bold rounded-lg transition flex items-center gap-2">
+                            📋 Generar Reporte WhatsApp
+                        </button>
+                    </div>
+
                     <div id="admin-cobranza-list" class="space-y-2"><div class="text-center text-slate-400 py-8">Cargando datos de cobranza...</div></div>
                 </div>
             </div>
@@ -411,7 +419,7 @@
                 </div>
                 <div class="flex justify-center gap-3 flex-wrap">
                     <button onclick="generarTablaSelecciones()" class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition shadow-lg">Cargar Tabla de Selecciones</button>
-                    <button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver en Ventana Nueva</button>
+                    <button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg"> Ver en Ventana Nueva</button>
                 </div>
                 <div id="tabla-selecciones-loading" class="hidden text-center py-12">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-orange-500 mx-auto mb-4"></div>
@@ -421,7 +429,7 @@
             </div>
         </div>
 
-        <!-- 🎰 MODAL DE EDICIÓN DE RESULTADO -->
+        <!--  MODAL DE EDICIÓN DE RESULTADO -->
         <div id="modalEditarResultado" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="glass rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center mb-4">
@@ -467,6 +475,30 @@
                     </button>
                     <button onclick="guardarEdicionResultado()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">
                         💾 Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📋 MODAL REPORTE COBRANZA -->
+        <div id="modalReporteCobranza" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="glass rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-green-400">📋 Reporte de Cobranza</h3>
+                    <button onclick="cerrarModalReporte()" class="text-slate-400 hover:text-white">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-slate-300 mb-2">Reporte listo para WhatsApp:</label>
+                    <textarea id="reporteTexto" readonly class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs font-mono h-96 resize-none"></textarea>
+                </div>
+                <div class="flex justify-center gap-3">
+                    <button onclick="copiarReporte()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition flex items-center gap-2">
+                        📋 Copiar al Portapapeles
+                    </button>
+                    <button onclick="cerrarModalReporte()" class="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-lg transition">
+                        Cerrar
                     </button>
                 </div>
             </div>
@@ -719,7 +751,7 @@
 
         async function handleSubmit() {
             if (Object.keys(predictions).length < 72) return;
-            if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
+            if (!confirm("️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
             const btn = document.getElementById('btn-submit'); 
             btn.disabled = true; btn.innerHTML = 'Enviando...';
             try {
@@ -883,7 +915,7 @@
                 const dateObj = new Date(fecha + 'T12:00:00');
                 const cargadosEnDia = matchesOfDay.filter(m => m.resultado !== '').length;
                 html += `<div class="glass p-4 rounded-xl mb-4"><div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-                    <h4 class="font-bold text-blue-400 text-sm md:text-base"> ${diasSemana[dateObj.getDay()]}, ${dateObj.getDate()} de ${meses[dateObj.getMonth()]} ${dateObj.getFullYear()}</h4>
+                    <h4 class="font-bold text-blue-400 text-sm md:text-base">📅 ${diasSemana[dateObj.getDay()]}, ${dateObj.getDate()} de ${meses[dateObj.getMonth()]} ${dateObj.getFullYear()}</h4>
                     <span class="text-[10px] font-bold px-2 py-1 rounded ${cargadosEnDia === matchesOfDay.length ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">${cargadosEnDia}/${matchesOfDay.length}</span></div><div class="space-y-2">`;
                 matchesOfDay.forEach(m => {
                     html += `<div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg gap-2">
@@ -925,8 +957,8 @@
                     const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
                     const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
                     p.predictions = preds; p.predCount = Object.keys(preds).length;
-                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
-                    let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
+                    let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
+                    let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
                     html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
                     const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
                     matchIds.forEach((mId, idx) => {
@@ -1019,6 +1051,124 @@
             } catch (error) { showToast("Error: " + error.message, "error"); }
         }
 
+        // 📋 FUNCIONES DE REPORTE DE COBRANZA
+        async function generarReporteCobranza() {
+            try {
+                showToast("📋 Generando reporte...", "success");
+                
+                const pSnap = await db.collection('participants').get();
+                const participants = [];
+                
+                pSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted && data.submitted === true) {
+                        participants.push({
+                            id: doc.id,
+                            name: data.displayName || 'Anónimo',
+                            code: data.userCode || 'N/A',
+                            paid: data.paid || false,
+                            paidAt: data.paidAt ? new Date(data.paidAt.toDate()).toLocaleDateString('es-VE') : null
+                        });
+                    }
+                });
+                
+                if (participants.length === 0) {
+                    showToast("⚠️ No hay participantes para reportar", "error");
+                    return;
+                }
+                
+                // Ordenar: pagados primero, luego por código
+                participants.sort((a, b) => {
+                    if (a.paid === b.paid) return (a.code || '').localeCompare(b.code || '');
+                    return a.paid ? -1 : 1;
+                });
+                
+                const pendientes = participants.filter(p => !p.paid);
+                const pagados = participants.filter(p => p.paid);
+                const totalRecaudado = pagados.length * 5000;
+                const totalPendiente = pendientes.length * 5000;
+                
+                // Construir reporte
+                let reporte = `*🏆 TRIVIA MUNDIAL 2026*\n`;
+                reporte += `* REPORTE DE COBRANZA*\n`;
+                reporte += `📅 ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n\n`;
+                
+                reporte += `*💰 RESUMEN:*\n`;
+                reporte += `✅ Pagados: ${pagados.length}\n`;
+                reporte += ` Pendientes: ${pendientes.length}\n`;
+                reporte += `👥 Total: ${participants.length}\n\n`;
+                
+                reporte += `*💵 RECAUDACIÓN:*\n`;
+                reporte += `✅ Cobrado: Bs. ${totalRecaudado.toLocaleString('es-VE')},00\n`;
+                reporte += `⏳ Pendiente: Bs. ${totalPendiente.toLocaleString('es-VE')},00\n`;
+                reporte += `🎯 Total: Bs. ${(totalRecaudado + totalPendiente).toLocaleString('es-VE')},00\n\n`;
+                
+                if (pagados.length > 0) {
+                    reporte += `━━━━━━━━━━━━━━━━━━━━\n`;
+                    reporte += `*✅ PARTICIPANTES PAGADOS (${pagados.length}):*\n`;
+                    reporte += `━━━━━━━━━━━━━━━━━━━━\n`;
+                    pagados.forEach((p, idx) => {
+                        const fecha = p.paidAt ? ` (${p.paidAt})` : '';
+                        reporte += `${idx + 1}. *${p.name}* [${p.code}]${fecha}\n`;
+                    });
+                }
+                
+                if (pendientes.length > 0) {
+                    reporte += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+                    reporte += `*⏳ PARTICIPANTES PENDIENTES (${pendientes.length}):*\n`;
+                    reporte += `━━━━━━━━━━━━━━━━━━━━\n`;
+                    pendientes.forEach((p, idx) => {
+                        reporte += `${idx + 1}. *${p.name}* [${p.code}]\n`;
+                    });
+                }
+                
+                reporte += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+                reporte += `💳 *PAGO MÓVIL:*\n`;
+                reporte += `Banco: 0102\n`;
+                reporte += `Teléfono: 0412-3538806\n`;
+                reporte += `Cédula: 14841975\n`;
+                reporte += `Monto: Bs. 5.000,00\n`;
+                
+                // Mostrar en modal
+                document.getElementById('reporteTexto').value = reporte;
+                document.getElementById('modalReporteCobranza').classList.remove('hidden');
+                
+                showToast("✅ Reporte generado", "success");
+                
+            } catch (error) {
+                console.error('Error generando reporte:', error);
+                showToast("❌ Error: " + error.message, "error");
+            }
+        }
+
+        function cerrarModalReporte() {
+            document.getElementById('modalReporteCobranza').classList.add('hidden');
+        }
+
+        async function copiarReporte() {
+            const texto = document.getElementById('reporteTexto').value;
+            
+            try {
+                await navigator.clipboard.writeText(texto);
+                showToast("✅ Reporte copiado al portapapeles", "success");
+                
+                // Opcional: abrir WhatsApp directamente
+                setTimeout(() => {
+                    if (confirm("¿Abrir WhatsApp para enviar el reporte?")) {
+                        const textoCodificado = encodeURIComponent(texto);
+                        window.open(`https://wa.me/?text=${textoCodificado}`, '_blank');
+                    }
+                }, 500);
+                
+            } catch (error) {
+                // Fallback para navegadores antiguos
+                const textarea = document.getElementById('reporteTexto');
+                textarea.select();
+                document.execCommand('copy');
+                showToast("✅ Reporte copiado", "success");
+            }
+        }
+
         async function generarImagenRanking() {
             try {
                 showToast("📸 Generando imagen profesional...", "success");
@@ -1062,7 +1212,7 @@
                                     else if (idx === 1) { posContent = svgSilver; posColor = '#94a3b8'; }
                                     else if (idx === 2) { posContent = svgBronze; posColor = '#d97706'; }
                                     else { posContent = `<span style="color: #ffffff; font-weight: 700;">${idx + 1}</span>`; posColor = '#e2e8f0'; }
-                                    const borderStyle = idx < players.length - 1 ? `border-bottom: 1px solid rgba(255,255,255,0.08); margin-left: 15px; margin-right: 15px;` : '';
+                                    const borderStyle = idx < players.length - 1 ? `border-bottom: 1px solid rgba(34, 211, 238, 0.3); margin-left: 15px; margin-right: 15px;` : '';
                                     return `<tr style="${borderStyle}"><td style="padding: 20px 15px; font-size: 22px; font-weight: 900; color: ${posColor};">${posContent}</td><td style="padding: 20px 15px; font-size: 22px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td><td style="padding: 20px 15px; font-size: 26px; font-weight: 900; color: #fbbf24; text-align: right;">${p.score}</td></tr>`;
                                 }).join('')}
                             </tbody>
@@ -1189,7 +1339,7 @@
             const estadoBadge = resultado.estado === 'En Vivo' 
                 ? '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">🔴 EN VIVO</span>'
                 : resultado.estado === 'Pospuesto'
-                ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">️ POSPUESTO</span>'
+                ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
                 : '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
             card.innerHTML = `
                 <div class="flex items-center justify-between gap-2">
@@ -1247,7 +1397,7 @@
             const estado = document.getElementById('reel-estado').value;
 
             if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
-                showToast("️ Completa todos los campos obligatorios", "error");
+                showToast("⚠️ Completa todos los campos obligatorios", "error");
                 return;
             }
 
@@ -1319,7 +1469,7 @@
             if (!confirm('¿Eliminar este resultado del reel?')) return;
             try {
                 await db.collection('resultados').doc(id).delete();
-                showToast("️ Resultado eliminado", "success");
+                showToast("🗑️ Resultado eliminado", "success");
                 cargarListaResultadosReel();
             } catch (error) {
                 showToast("❌ Error: " + error.message, "error");
@@ -1575,7 +1725,7 @@
                 });
                 document.getElementById('planilla-body').innerHTML = tbodyHTML;
                 if (loadingDiv) loadingDiv.classList.add('hidden');
-            } catch (error) { if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`; }
+            } catch (error) { if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2"> Error</p><p class="text-sm">${error.message}</p></div>`; }
         }
 
         async function generarPlanillaDigital() {
@@ -1631,7 +1781,7 @@
                 const newWindow = window.open('', '_blank');
                 if (newWindow) { newWindow.document.write(fullHTML); newWindow.document.close(); }
                 else { showToast("Permite las ventanas emergentes", "error"); }
-            } catch (error) { showToast("❌ Error: " + error.message, "error"); }
+            } catch (error) { showToast(" Error: " + error.message, "error"); }
         }
 
         async function generarTablaSelecciones() {
@@ -1757,7 +1907,7 @@
 
         // 🔄 FUNCIÓN DE PRECARGA AUTOMÁTICA
         async function verificarYPrecargarPartidos() {
-            console.log(' Verificando partidos para precarga...');
+            console.log('🔄 Verificando partidos para precarga...');
             const ahora = new Date();
             
             // Obtener resultados existentes para evitar duplicados
@@ -1820,7 +1970,7 @@
                     console.log('✅ Reel de resultados iniciado');
                 }
                 
-                //  Iniciar precarga automática y revisión periódica
+                // 🔄 Iniciar precarga automática y revisión periódica
                 if (typeof verificarYPrecargarPartidos === 'function') {
                     verificarYPrecargarPartidos(); // Ejecutar al cargar
                     setInterval(verificarYPrecargarPartidos, 5 * 60 * 1000); // Revisar cada 5 minutos
@@ -1857,7 +2007,7 @@
                                         }
                                     }
                                 } catch (dbError) {
-                                    console.error('❌ Error cargando datos del usuario:', dbError);
+                                    console.error(' Error cargando datos del usuario:', dbError);
                                     showView('view-home');
                                 }
                             } else {
