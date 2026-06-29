@@ -170,16 +170,16 @@ color: #64748b;
 opacity: 0.6;
 }
 @keyframes advanceGlow {
-0% {
-transform: scale(1);
+0% { 
+transform: scale(1); 
 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
 }
-50% {
-transform: scale(1.02);
+50% { 
+transform: scale(1.02); 
 box-shadow: 0 0 30px 15px rgba(16, 185, 129, 0.5);
 }
-100% {
-transform: scale(1);
+100% { 
+transform: scale(1); 
 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
 }
 }
@@ -330,7 +330,12 @@ Semis (2)
 </div>
 </div>
 </div>
-<!-- REEL DE RESULTADOS - SIEMPRE VISIBLE -->
+<div class="flex justify-center">
+<button onclick="togglePlanillaInline()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
+📊 Ver Planilla Completa
+</button>
+</div>
+<!--  REEL DE RESULTADOS - SIEMPRE VISIBLE -->
 <div id="reelResultados" class="w-full max-w-md mx-auto mt-6">
 <div class="flex items-center justify-center mb-3">
 <span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
@@ -351,6 +356,28 @@ Semis (2)
 <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
 Actualizando en tiempo real
 </p>
+</div>
+<!-- 📊 PLANILLA INLINE (se muestra al hacer clic en Ver Planilla Completa) -->
+<div id="planilla-inline-container" class="w-full max-w-4xl mx-auto mt-6 hidden">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase text-blue-400">
+📊 Planilla Completa - Resultados Partido a Partido
+</h3>
+<button onclick="cerrarPlanillaInline()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition">
+✕ Cerrar
+</button>
+</div>
+<div id="planilla-inline-loading" class="text-center py-8">
+<div class="animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500 mx-auto mb-3"></div>
+<p class="text-blue-400 font-bold">Cargando planilla...</p>
+</div>
+<div id="planilla-inline-content" class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto hidden">
+<table id="planilla-inline-table" class="w-full text-sm text-left" style="min-width: 2000px;">
+<thead class="text-xs uppercase bg-[#161b2c] text-blue-400"></thead>
+<tbody id="planilla-inline-body" class="text-slate-300"></tbody>
+</table>
+</div>
+<p class="text-center text-[10px] text-slate-500 mt-2">* Desliza horizontalmente para ver todos los partidos</p>
 </div>
 <div class="w-full max-w-md mx-auto glass p-5 rounded-2xl text-left space-y-3">
 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
@@ -1918,9 +1945,9 @@ ${statusBadge}
 <span class="text-2xl">🏳️</span>
 <span class="${team1Class} text-sm font-medium">${team1Name}</span>
 </div>
-<input
-type="number"
-min="0"
+<input 
+type="number" 
+min="0" 
 max="99"
 class="bracket-score-input rounded-lg"
 value="${score1Value}"
@@ -1934,9 +1961,9 @@ onchange="updateBracketScore('${match.id}', 'score1', this.value)"
 <span class="text-2xl">🏳️</span>
 <span class="${team2Class} text-sm font-medium">${team2Name}</span>
 </div>
-<input
-type="number"
-min="0"
+<input 
+type="number" 
+min="0" 
 max="99"
 class="bracket-score-input rounded-lg"
 value="${score2Value}"
@@ -1948,14 +1975,14 @@ onchange="updateBracketScore('${match.id}', 'score2', this.value)"
 ${penaltiesInfo}
 ${canEdit && !isLocked ? `
 <div class="flex gap-2 mt-4">
-<button
+<button 
 onclick="saveBracketMatchResult('${match.id}')"
 class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all"
 >
 💾 Guardar
 </button>
 ${isFinished ? `
-<button
+<button 
 onclick="resetBracketMatch('${match.id}')"
 class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all"
 title="Resetear resultado"
@@ -2101,10 +2128,12 @@ console.log('✅ Listener de ranking iniciado');
 if (typeof calcularYGuardarPuntajes === 'function') {
 calcularYGuardarPuntajes();
 }
+// 🎰 Iniciar el reel automáticamente
 if (typeof cargarResultadosReel === 'function') {
 cargarResultadosReel();
 console.log('✅ Reel de resultados iniciado');
 }
+// 🏆 Iniciar el bracket automáticamente
 if (typeof loadKnockoutMatches === 'function') {
 loadKnockoutMatches();
 console.log('✅ Bracket eliminatorio iniciado');
