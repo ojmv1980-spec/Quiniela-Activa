@@ -453,6 +453,7 @@ Actualizando en tiempo real
 <button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
 <button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🖼️ Generar Imagen</button>
 <button onclick="showAdminTab('reel')" id="tab-reel" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🎰 Cargar Reel</button>
+<button onclick="showAdminTab('bracket')" id="tab-bracket" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🏆 Bracket Eliminatorio</button>
 </div>
 <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
 <div id="admin-tab-players" class="hidden">
@@ -530,6 +531,23 @@ Actualizando en tiempo real
 </button>
 </div>
 <div id="reel-admin-list" class="mt-6 space-y-2"></div>
+</div>
+</div>
+<div id="admin-tab-bracket" class="hidden">
+<div class="glass p-4 rounded-xl mb-4">
+<h4 class="font-bold text-blue-400 mb-2">🏆 Bracket Eliminatorio - Cargar Resultados</h4>
+<p class="text-xs text-slate-400 mb-4">Ingresa los goles y guarda. El sistema avanza al ganador automáticamente. Si hay empate, se piden penales.</p>
+<div class="flex overflow-x-auto gap-2 mb-4 pb-2">
+<button onclick="switchAdminBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R32">32vos (16)</button>
+<button onclick="switchAdminBracketRound('R16')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R16">Octavos (8)</button>
+<button onclick="switchAdminBracketRound('QF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="QF">Cuartos (4)</button>
+<button onclick="switchAdminBracketRound('SF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="SF">Semis (2)</button>
+<button onclick="switchAdminBracketRound('F')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="F">🏆 Final</button>
+<button onclick="switchAdminBracketRound('3RD')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="3RD">3er Puesto</button>
+</div>
+<div id="admin-bracket-matches-container" class="space-y-3">
+<div class="text-center text-slate-400 py-8">Cargando partidos...</div>
+</div>
 </div>
 </div>
 <div class="text-center"><button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button></div>
@@ -639,6 +657,7 @@ let isSubmitted = false;
 let currentBracketRound = 'R32';
 let knockoutMatches = [];
 let isAdmin = false;
+let adminBracketRound = 'R32';
 function abreviarPais(nombre) {
 const abreviaciones = {
 'Bosnia y Herzegovina': 'Bos y Herz',
@@ -977,16 +996,19 @@ document.getElementById('admin-tab-players').classList.add('hidden');
 document.getElementById('admin-tab-cobranza').classList.add('hidden');
 document.getElementById('admin-tab-imagen').classList.add('hidden');
 document.getElementById('admin-tab-reel').classList.add('hidden');
+document.getElementById('admin-tab-bracket').classList.add('hidden');
 document.getElementById('tab-results').classList.remove('bg-blue-600'); document.getElementById('tab-results').classList.add('bg-white/10');
 document.getElementById('tab-players').classList.remove('bg-blue-600'); document.getElementById('tab-players').classList.add('bg-white/10');
 document.getElementById('tab-cobranza').classList.remove('bg-blue-600'); document.getElementById('tab-cobranza').classList.add('bg-white/10');
 document.getElementById('tab-imagen').classList.remove('bg-blue-600'); document.getElementById('tab-imagen').classList.add('bg-white/10');
 document.getElementById('tab-reel').classList.remove('bg-blue-600'); document.getElementById('tab-reel').classList.add('bg-white/10');
+document.getElementById('tab-bracket').classList.remove('bg-blue-600'); document.getElementById('tab-bracket').classList.add('bg-white/10');
 document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
 document.getElementById(`tab-${tab}`).classList.remove('bg-white/10'); document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
 if (tab === 'players') loadAdminPlayers();
 if (tab === 'cobranza') loadAdminCobranza();
 if (tab === 'reel') cargarListaResultadosReel();
+if (tab === 'bracket') renderAdminBracket();
 }
 async function renderAdminMatches() {
 const container = document.getElementById('admin-matches-container');
@@ -2117,6 +2139,100 @@ document.body.appendChild(anim);
 setTimeout(() => {
 anim.remove();
 }, 1500);
+}
+// 🏆 FUNCIONES DEL BRACKET - PANEL ADMIN
+function switchAdminBracketRound(round) {
+adminBracketRound = round;
+document.querySelectorAll('.bracket-round-tab[data-admin-round]').forEach(tab => {
+tab.classList.remove('active');
+if (tab.dataset.adminRound === round) tab.classList.add('active');
+});
+renderAdminBracket();
+}
+
+function renderAdminBracket() {
+const container = document.getElementById('admin-bracket-matches-container');
+if (!container) return;
+const roundMatches = knockoutMatches.filter(m => m.round === adminBracketRound);
+if (roundMatches.length === 0) {
+container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
+return;
+}
+const matchesHTML = roundMatches.map(match => renderAdminBracketCard(match)).join('');
+container.innerHTML = matchesHTML;
+}
+
+function renderAdminBracketCard(match) {
+const isLocked = match.status === 'locked';
+const isFinished = match.status === 'finished' || match.status === 'finished_penalties';
+const hasPenalties = match.status === 'finished_penalties';
+let cardClass = 'bracket-match-card glass rounded-xl p-4';
+if (isLocked) cardClass += ' locked';
+if (isFinished && !hasPenalties) cardClass += ' finished';
+if (hasPenalties) cardClass += ' finished-penalties';
+let team1Class = '', team2Class = '';
+if (isFinished && match.score1 !== null && match.score2 !== null) {
+if (match.score1 > match.score2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
+else if (match.score2 > match.score1) { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
+else if (hasPenalties) {
+if (match.penalties1 > match.penalties2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
+else { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
+}
+}
+let statusBadge = '';
+if (isLocked) statusBadge = '<span class="text-xs bg-slate-600 text-slate-300 px-2 py-1 rounded-full">🔒 Bloqueado</span>';
+else if (hasPenalties) statusBadge = '<span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full">⚡ Penales</span>';
+else if (isFinished) statusBadge = '<span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Finalizado</span>';
+else statusBadge = '<span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">⏳ Pendiente</span>';
+const team1Name = match.team1 || '<span class="text-slate-500 italic">Por definir</span>';
+const team2Name = match.team2 || '<span class="text-slate-500 italic">Por definir</span>';
+const score1Value = match.score1 !== null && match.score1 !== undefined ? match.score1 : '';
+const score2Value = match.score2 !== null && match.score2 !== undefined ? match.score2 : '';
+const penaltiesInfo = hasPenalties ? `
+<div class="mt-3 pt-3 border-t border-dashed border-orange-500/30 text-xs text-center">
+<span class="penalties-badge">PENALES</span>
+<div class="mt-2 flex justify-center gap-4">
+<span class="font-bold text-white">${match.team1}: <span class="text-orange-400">${match.penalties1}</span></span>
+<span class="text-slate-500">-</span>
+<span class="font-bold text-white">${match.team2}: <span class="text-orange-400">${match.penalties2}</span></span>
+</div>
+</div>
+` : '';
+return `
+<div class="${cardClass}" data-match-id="${match.id}">
+<div class="flex items-center justify-between mb-3">
+<div class="text-xs text-slate-400">
+${match.date ? new Date(match.date).toLocaleDateString('es-VE', { day: '2-digit', month: 'short' }) : ''}
+${match.venue ? ` • ${match.venue}` : ''}
+</div>
+${statusBadge}
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 flex-1">
+<span class="text-2xl">🏳️</span>
+<span class="${team1Class} text-sm font-medium">${team1Name}</span>
+</div>
+<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${isLocked ? 'disabled' : ''} onchange="updateBracketScore('${match.id}', 'score1', this.value)">
+</div>
+<div class="border-t border-white/10"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 flex-1">
+<span class="text-2xl">🏳️</span>
+<span class="${team2Class} text-sm font-medium">${team2Name}</span>
+</div>
+<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${isLocked ? 'disabled' : ''} onchange="updateBracketScore('${match.id}', 'score2', this.value)">
+</div>
+</div>
+${penaltiesInfo}
+${!isLocked ? `
+<div class="flex gap-2 mt-4">
+<button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>
+${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}
+</div>
+` : ''}
+</div>
+`;
 }
 document.addEventListener('DOMContentLoaded', () => {
 try {
