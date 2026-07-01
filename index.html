@@ -63,6 +63,7 @@ tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name, tr.rank-2 .col-fixed-num, t
 .live-badge { animation: pulseRed 1.5s infinite; }
 @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
 .score-badge { background: linear-gradient(135deg, #059669, #10b981); color: #fef3c7; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+/* 🏆 ESTILOS DEL BRACKET ELIMINATORIO */
 .bracket-round-tab { background-color: rgba(255, 255, 255, 0.05); color: #94a3b8; transition: all 0.3s ease; }
 .bracket-round-tab.active { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
 .bracket-round-tab:hover:not(.active) { background-color: rgba(255, 255, 255, 0.1); }
@@ -142,12 +143,8 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <!-- 🏆 LLAVE DEL MUNDIAL - BRACKET ELIMINATORIO -->
 <div id="bracket-container" class="glass rounded-3xl p-6">
 <div class="flex items-center justify-between mb-6">
-<h3 class="text-xl md:text-2xl italic-black tracking-tighter uppercase text-blue-400">
-🏆 LLAVE DEL MUNDIAL
-</h3>
-<div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge">
-🔴 LIVE
-</div>
+<h3 class="text-xl md:text-2xl italic-black tracking-tighter uppercase text-blue-400">🏆 LLAVE DEL MUNDIAL</h3>
+<div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge">🔴 LIVE</div>
 </div>
 <div class="flex overflow-x-auto gap-2 mb-6 pb-2">
 <button onclick="switchBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R32">32vos (16)</button>
@@ -172,16 +169,12 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 </div>
 </div>
 <div class="flex justify-center">
-<button onclick="togglePlanillaInline()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">
-📊 Ver Planilla Completa
-</button>
+<button onclick="togglePlanillaInline()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
 </div>
 <!-- REEL DE RESULTADOS -->
 <div id="reelResultados" class="w-full max-w-md mx-auto mt-6">
 <div class="flex items-center justify-center mb-3">
-<span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
-⚽ RESULTADOS OFICIALES
-</span>
+<span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">⚽ RESULTADOS OFICIALES</span>
 </div>
 <div class="reel-container h-[520px]">
 <div id="listaResultadosReel" class="relative w-full"></div>
@@ -268,7 +261,7 @@ Actualizando en tiempo real
 </table>
 </div>
 <div class="flex justify-center gap-4 mt-6 flex-wrap">
-<button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10"> Ver Planilla Completa</button>
+<button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
 </div>
 <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
@@ -292,7 +285,7 @@ Actualizando en tiempo real
 <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
 <div id="admin-tab-players" class="hidden">
 <div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-blue-400 mb-2"> Lista de Participantes</h4>
+<h4 class="font-bold text-blue-400 mb-2">📋 Lista de Participantes</h4>
 <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
 <div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
 </div>
@@ -430,12 +423,6 @@ Actualizando en tiempo real
 </div>
 </main>
 <div id="toast-container"></div>
-<!-- 🌱 BOTÓN TEMPORAL PARA SEMBRAR BRACKET -->
-<div id="temp-seed-button" style="position:fixed;bottom:100px;right:10px;z-index:9999;">
-<button onclick="seedKnockoutBracket()" style="background:#ef4444;color:white;padding:15px 20px;border-radius:10px;font-weight:bold;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-size:14px;">
-🌱 SEMBRAR BRACKET
-</button>
-</div>
 <script>
 const firebaseConfig = {
 apiKey: "AIzaSyDeAbrwz31kQ4ODablfJK0SBzwuZ_jw_6s",
@@ -456,10 +443,12 @@ let currentBracketRound = 'R32';
 let adminBracketRound = 'R32';
 let knockoutMatches = [];
 let isAdmin = false;
+
 function abreviarPais(nombre) {
 const abreviaciones = { 'Bosnia y Herzegovina': 'Bos y Herz', 'Costa de Marfil': 'C. de Marfil', 'Estados Unidos': 'USA', 'Corea del Sur': 'Cor del Sur', 'Nueva Zelanda': 'Nv. Zelanda', 'Arabia Saudita': 'Ara Saudita' };
 return abreviaciones[nombre] || nombre;
 }
+
 const matchSchedule = {
 'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
 'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
@@ -534,6 +523,7 @@ const matchSchedule = {
 'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
 'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' }
 };
+
 const groupsData = {
 A: ['México', 'Sudáfrica', 'Corea del Sur', 'Chequia'],
 B: ['Canadá', 'Bosnia y Herzegovina', 'Qatar', 'Suiza'],
@@ -548,10 +538,12 @@ J: ['Argentina', 'Argelia', 'Austria', 'Jordania'],
 K: ['Portugal', 'RD Congo', 'Uzbekistán', 'Colombia'],
 L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
 };
+
 function lockPredictionsUI() {
 document.getElementById('btn-submit')?.classList.add('hidden');
 document.querySelectorAll('.btn-option').forEach(btn => { btn.disabled = true; btn.classList.add('opacity-40', 'cursor-not-allowed'); });
 }
+
 function renderMatches() {
 const container = document.getElementById('matches-container');
 container.innerHTML = '';
@@ -568,6 +560,7 @@ groupHtml += `</div></div>`;
 container.innerHTML += groupHtml;
 });
 }
+
 function select(matchId, value) {
 if (isSubmitted) return;
 predictions[matchId] = value;
@@ -576,6 +569,7 @@ document.getElementById(`btn-${matchId}-${value}`)?.classList.add('selected');
 updateProgress();
 if (currentUser) { clearTimeout(window._saveTimeout); window._saveTimeout = setTimeout(() => autoSave(), 800); }
 }
+
 function updateProgress() {
 const count = Object.keys(predictions).length;
 const pct = Math.round((count / 72) * 100);
@@ -584,6 +578,7 @@ document.getElementById('progress-text').innerText = pct + '%';
 document.getElementById('completed-count').innerText = count;
 document.getElementById('btn-submit').disabled = count < 72 || isSubmitted;
 }
+
 async function autoSave() {
 if (!currentUser || isSubmitted) return;
 try {
@@ -594,6 +589,37 @@ Object.entries(predictions).forEach(([matchId, value]) => { batch.set(userRef.co
 await batch.commit();
 } catch (e) { console.error('Auto-save error:', e); }
 }
+
+async function handleLogin() {
+const name = document.getElementById('username-input').value.trim();
+if (!name || name.length < 3) return showToast("Ingresa un apodo de al menos 3 caracteres", "error");
+try {
+const cred = await auth.signInAnonymously();
+const uid = cred.user.uid;
+const nicknameQuery = db.collection('participants').where('displayName', '==', name);
+const nicknameSnapshot = await nicknameQuery.get();
+if (!nicknameSnapshot.empty) {
+let isSameUser = false;
+nicknameSnapshot.forEach(doc => { if (doc.id === uid) isSameUser = true; });
+if (!isSameUser) { await auth.signOut(); showToast("❌ Ese apodo ya está registrado. Elige otro.", "error"); return; }
+}
+const userDoc = await db.collection('participants').doc(uid).get();
+let userCode = userDoc.data()?.userCode;
+if (!userCode) { await db.collection('participants').doc(uid).set({ displayName: name, createdAt: new Date(), submitted: false, paid: false }, { merge: true }); }
+else { await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true }); }
+currentUser = { uid, displayName: name, userCode };
+await loadPredictions(uid);
+document.getElementById('view-home').classList.add('hidden');
+document.getElementById('user-badge').classList.remove('hidden');
+document.getElementById('display-username').innerText = name;
+if (isSubmitted) showView('view-leaderboard');
+else showView('view-predictions');
+renderMatches();
+const codigoMsg = userCode ? ` (${userCode})` : '';
+showToast(`¡Bienvenido, ${name}!${codigoMsg}`, "success");
+} catch (err) { showToast("Error: " + err.message, "error"); }
+}
+
 async function loadPredictions(uid) {
 try {
 const snapshot = await db.collection('participants').doc(uid).collection('predictions').get();
@@ -602,6 +628,7 @@ const userDoc = await db.collection('participants').doc(uid).get();
 if (userDoc.data()?.submitted) isSubmitted = true;
 } catch (e) { console.error(e); }
 }
+
 async function handleSubmit() {
 if (Object.keys(predictions).length < 72) return;
 if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
@@ -630,6 +657,7 @@ showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
 setTimeout(() => showView('view-leaderboard'), 1500);
 } catch (err) { showToast("Error: " + err.message, "error"); btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES'; }
 }
+
 let unsubscribeLB = null;
 function startLeaderboardListener() {
 if (unsubscribeLB) unsubscribeLB();
@@ -641,6 +669,7 @@ renderLeaderboard(players);
 });
 unsubscribeLB = unsub;
 }
+
 async function calcularYGuardarPuntajes() {
 try {
 console.log('🔄 Calculando puntajes...');
@@ -658,6 +687,7 @@ console.log(`✅ ${data.displayName}: ${score} puntos`);
 console.log('✅ Puntajes calculados y guardados');
 } catch (error) { console.error('❌ Error calculando puntajes:', error); }
 }
+
 function renderLeaderboard(players) {
 const homeTbody = document.getElementById('home-leaderboard-body');
 const mainTbody = document.getElementById('leaderboard-body');
@@ -673,6 +703,7 @@ return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${
 if (homeTbody) homeTbody.innerHTML = html;
 if (mainTbody) mainTbody.innerHTML = html;
 }
+
 async function promptAdmin() {
 const pin = prompt("🔐 Ingresa el PIN de administrador:");
 if (pin === ADMIN_PIN) {
@@ -687,6 +718,7 @@ showToast("✅ Acceso de administrador concedido", "success");
 } catch (error) { showToast("Error al autenticar: " + error.message, "error"); }
 } else if (pin !== null) { showToast("PIN incorrecto", "error"); }
 }
+
 function showAdminTab(tab) {
 ['results','players','cobranza','imagen','reel','bracket'].forEach(t => {
 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
@@ -701,6 +733,7 @@ if (tab === 'cobranza') loadAdminCobranza();
 if (tab === 'reel') cargarListaResultadosReel();
 if (tab === 'bracket') renderAdminBracket();
 }
+
 async function renderAdminMatches() {
 const container = document.getElementById('admin-matches-container');
 container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
@@ -727,6 +760,7 @@ html += `</div></div>`;
 });
 container.innerHTML = html;
 }
+
 async function setResult(matchId, result, clickedBtn) {
 if (!confirm(`¿Confirmar resultado: ${result} para ${matchId}?`)) return;
 try {
@@ -739,6 +773,7 @@ setTimeout(() => renderAdminMatches(), 500);
 await calcularYGuardarPuntajes();
 } catch (e) { showToast("Error: " + e.message, "error"); }
 }
+
 async function loadAdminPlayers() {
 const container = document.getElementById('admin-players-list');
 container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
@@ -768,7 +803,9 @@ html += `</div></div></div></div>`;
 container.innerHTML = html;
 } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
 }
+
 function togglePlayerPreds(playerId) { document.getElementById(`preds-${playerId}`).classList.toggle('hidden'); }
+
 async function adminSetPred(playerId, matchId, value, clickedBtn) {
 try {
 await db.collection('participants').doc(playerId).collection('predictions').doc(matchId).set({ value, updatedAt: new Date(), adminModified: true }, { merge: true });
@@ -780,9 +817,10 @@ else if (value === 'Empate') clickedBtn.classList.add('active-X');
 else if (value === 'Visitante') clickedBtn.classList.add('active-2');
 } catch (e) { showToast("Error: " + e.message, "error"); }
 }
+
 async function deletePlayer(playerId, playerName) {
 if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
-if (!confirm(` CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
+if (!confirm(`⚠️ CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
 try {
 await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
@@ -790,6 +828,7 @@ const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { delete
 await batch.commit(); showToast(`🗑️ ${playerName} eliminado`, "success"); loadAdminPlayers();
 } catch (e) { showToast("Error: " + e.message, "error"); }
 }
+
 async function restorePlayer(playerId, playerName) {
 if (!confirm(`♻️ ¿Restaurar a "${playerName}"?`)) return;
 try {
@@ -799,6 +838,7 @@ const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { delete
 await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
 } catch (e) { showToast("Error: " + e.message, "error"); }
 }
+
 async function loadAdminCobranza() {
 const container = document.getElementById('admin-cobranza-list');
 container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos...</div>';
@@ -821,6 +861,7 @@ html += `<div class="glass p-3 rounded-lg flex justify-between items-center ${p.
 container.innerHTML = html;
 } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
 }
+
 async function markAsPaid(participantId, participantName) {
 if (!confirm(`¿Confirmar pago de ${participantName}?`)) return;
 if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
@@ -829,6 +870,7 @@ await db.collection('participants').doc(participantId).update({ paid: true, paid
 showToast(`✅ Pago de ${participantName} registrado`, "success"); loadAdminCobranza();
 } catch (error) { showToast("Error: " + error.message, "error"); }
 }
+
 async function generarImagenRanking() {
 try {
 showToast("📸 Generando imagen profesional...", "success");
@@ -858,21 +900,25 @@ document.body.removeChild(canvasContainer);
 showToast("✅ Imagen profesional generada y descargada", "success");
 } catch (error) { console.error('Error generando imagen:', error); showToast("❌ Error: " + error.message, "error"); }
 }
+
 const MAX_RESULTADOS_REEL = 6;
 let resultadosReel = [];
 let reelScrollIndex = 0;
 let reelAutoScrollInterval;
 let reelUnsubscribe = null;
+
 function toggleReel() {
 const reel = document.getElementById('reelResultados');
 reel.classList.toggle('hidden');
 if (!reel.classList.contains('hidden')) { inicializarReelResultados(); setTimeout(() => { reel.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100); }
 else { detenerAutoScrollReel(); }
 }
+
 function inicializarReelResultados() {
 if (resultadosReel.length === 0) { cargarResultadosReel(); }
 else { renderizarReel('listaResultadosReel'); if (resultadosReel.length > MAX_RESULTADOS_REEL) { iniciarAutoScrollReel(); } }
 }
+
 function cargarResultadosReel() {
 if (reelUnsubscribe) reelUnsubscribe();
 db.collection('resultados').orderBy('fechaHora', 'desc').limit(15).onSnapshot(snapshot => {
@@ -889,6 +935,7 @@ if (resultadosReel.length > MAX_RESULTADOS_REEL) { iniciarAutoScrollReel(); } el
 });
 });
 }
+
 function renderizarReel(containerId) {
 const container = document.getElementById(containerId);
 if (!container) return;
@@ -896,6 +943,7 @@ container.innerHTML = '';
 const visible = resultadosReel.slice(0, MAX_RESULTADOS_REEL);
 visible.forEach((resultado, index) => { const card = crearTarjetaReel(resultado, index); container.appendChild(card); });
 }
+
 function crearTarjetaReel(resultado, index) {
 const card = document.createElement('div');
 const cardClass = index === 0 ? 'reel-card newest' : 'reel-card older';
@@ -911,6 +959,7 @@ const estadoBadge = resultado.estado === 'En Vivo' ? '<span class="bg-red-600 te
 card.innerHTML = `<div class="flex items-center justify-between gap-2"><div class="flex items-center gap-2 flex-1 min-w-0"><div class="flex-1 text-right truncate"><p class="text-white font-bold text-sm">${resultado.equipoLocal || 'Local'}</p></div><div class="score-badge px-3 py-1 rounded-lg text-lg min-w-[60px] text-center">${resultado.golesLocal ?? 0} - ${resultado.golesVisitante ?? 0}</div><div class="flex-1 truncate"><p class="text-white font-bold text-sm">${resultado.equipoVisitante || 'Visitante'}</p></div></div></div><div class="flex items-center justify-between mt-1"><span class="text-xs text-slate-400">${resultado.fecha || ''}</span>${estadoBadge}</div>`;
 return card;
 }
+
 function iniciarAutoScrollReel() {
 detenerAutoScrollReel();
 reelAutoScrollInterval = setInterval(() => {
@@ -923,9 +972,11 @@ const visible = resultadosReel.slice(reelScrollIndex, reelScrollIndex + MAX_RESU
 visible.forEach((resultado, index) => { const card = crearTarjetaReel(resultado, index); container.appendChild(card); });
 }, 3500);
 }
+
 function detenerAutoScrollReel() {
 if (reelAutoScrollInterval) { clearInterval(reelAutoScrollInterval); reelAutoScrollInterval = null; }
 }
+
 async function guardarResultadoReel() {
 const equipoLocal = document.getElementById('reel-equipoLocal').value.trim();
 const golesLocal = parseInt(document.getElementById('reel-golesLocal').value);
@@ -945,6 +996,7 @@ document.getElementById('reel-fecha').value = '';
 cargarListaResultadosReel();
 } catch (error) { console.error('Error guardando resultado:', error); showToast("❌ Error: " + error.message, "error"); }
 }
+
 async function cargarListaResultadosReel() {
 const container = document.getElementById('reel-admin-list');
 if (!container) return;
@@ -962,11 +1014,13 @@ container.innerHTML = html;
 lucide.createIcons();
 } catch (error) { console.error('Error cargando resultados:', error); container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
 }
+
 async function eliminarResultadoReel(id) {
 if (!confirm('¿Eliminar este resultado del reel?')) return;
 try { await db.collection('resultados').doc(id).delete(); showToast("🗑️ Resultado eliminado", "success"); cargarListaResultadosReel(); }
 catch (error) { showToast("❌ Error: " + error.message, "error"); }
 }
+
 function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado) {
 document.getElementById('edit-id').value = id;
 document.getElementById('edit-equipoLocal').value = equipoLocal;
@@ -978,7 +1032,9 @@ document.getElementById('edit-estado').value = estado;
 document.getElementById('modalEditarResultado').classList.remove('hidden');
 lucide.createIcons();
 }
+
 function cerrarModalEditar() { document.getElementById('modalEditarResultado').classList.add('hidden'); }
+
 async function guardarEdicionResultado() {
 const id = document.getElementById('edit-id').value;
 const equipoLocal = document.getElementById('edit-equipoLocal').value.trim();
@@ -995,6 +1051,7 @@ cerrarModalEditar();
 cargarListaResultadosReel();
 } catch (error) { console.error('Error actualizando resultado:', error); showToast("❌ Error: " + error.message, "error"); }
 }
+
 function togglePlanillaInline() {
 const container = document.getElementById('planilla-inline-container');
 const loading = document.getElementById('planilla-inline-loading');
@@ -1002,7 +1059,9 @@ const content = document.getElementById('planilla-inline-content');
 if (container.classList.contains('hidden')) { container.classList.remove('hidden'); loading.classList.remove('hidden'); content.classList.add('hidden'); setTimeout(() => { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); cargarPlanillaInline(); }
 else { cerrarPlanillaInline(); }
 }
+
 function cerrarPlanillaInline() { document.getElementById('planilla-inline-container').classList.add('hidden'); }
+
 async function cargarPlanillaInline() {
 const loading = document.getElementById('planilla-inline-loading');
 const content = document.getElementById('planilla-inline-content');
@@ -1056,8 +1115,9 @@ tbodyHTML += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p
 tbody.innerHTML = tbodyHTML;
 loading.classList.add('hidden');
 content.classList.remove('hidden');
-} catch (error) { loading.innerHTML = `<div class="text-red-400 font-bold"><p class="text-lg mb-2"> Error</p><p class="text-sm">${error.message}</p></div>`; }
+} catch (error) { loading.innerHTML = `<div class="text-red-400 font-bold"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`; }
 }
+
 async function generarPlanillaWeb() {
 showView('view-planilla');
 const loadingDiv = document.getElementById('planilla-loading');
@@ -1087,6 +1147,7 @@ document.getElementById('planilla-body').innerHTML = tbodyHTML;
 if (loadingDiv) loadingDiv.classList.add('hidden');
 } catch (error) { if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`; }
 }
+
 async function generarPlanillaDigital() {
 showToast("⏳ Generando planilla digital...", "success");
 try {
@@ -1113,6 +1174,7 @@ if (newWindow) { newWindow.document.write(fullHTML); newWindow.document.close();
 else { showToast("Permite las ventanas emergentes", "error"); }
 } catch (error) { showToast("❌ Error: " + error.message, "error"); }
 }
+
 async function generarTablaSelecciones() {
 const loadingDiv = document.getElementById('tabla-selecciones-loading');
 const container = document.getElementById('tabla-selecciones-container');
@@ -1138,6 +1200,7 @@ container.innerHTML = html;
 } catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
 finally { if (loadingDiv) loadingDiv.classList.add('hidden'); }
 }
+
 async function generarTablaSeleccionesDigital() {
 const newWindow = window.open('', '_blank');
 if (!newWindow) { showToast("Permite las ventanas emergentes", "error"); return; }
@@ -1161,11 +1224,13 @@ tableHTML += '</tbody></table>';
 newWindow.document.getElementById('loading').outerHTML = tableHTML;
 } catch (error) { newWindow.document.body.innerHTML += `<p style="color:red">Error: ${error.message}</p>`; }
 }
+
 function logout() {
 if (!confirm("¿Seguro que quieres salir?")) return;
 sessionStorage.removeItem('ultimaPantalla');
 auth.signOut().then(() => { window.location.reload(); }).catch((error) => { showToast("Error: " + error.message, "error"); });
 }
+
 function showView(viewId) {
 ['view-home', 'view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
 const targetEl = document.getElementById(viewId);
@@ -1175,22 +1240,26 @@ if (submitBar) { if (viewId === 'view-predictions') submitBar.classList.remove('
 if (viewId === 'view-leaderboard') startLeaderboardListener();
 sessionStorage.setItem('ultimaPantalla', viewId);
 }
+
 function showToast(msg, type = 'success') {
 const c = document.getElementById('toast-container');
 const t = document.createElement('div'); t.className = `toast ${type}`; t.innerText = msg; c.appendChild(t);
 setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
 }
+
 // 🏆 FUNCIONES DEL BRACKET
 function switchBracketRound(round) {
 currentBracketRound = round;
 document.querySelectorAll('.bracket-round-tab[data-round]').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.round === round) tab.classList.add('active'); });
 renderBracket();
 }
+
 function switchAdminBracketRound(round) {
 adminBracketRound = round;
 document.querySelectorAll('.bracket-round-tab[data-admin-round]').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.adminRound === round) tab.classList.add('active'); });
 renderAdminBracket();
 }
+
 async function loadKnockoutMatches() {
 try {
 const snapshot = await db.collection('knockout_matches').orderBy('matchNumber').get();
@@ -1199,8 +1268,9 @@ console.log('✅ Partidos eliminatorios cargados:', knockoutMatches.length);
 renderBracket();
 renderAdminBracket();
 db.collection('knockout_matches').onSnapshot(() => { loadKnockoutMatches(); });
-} catch (error) { console.error(' Error cargando bracket:', error); }
+} catch (error) { console.error('❌ Error cargando bracket:', error); }
 }
+
 function renderBracket() {
 const container = document.getElementById('bracket-matches-container');
 if (!container) return;
@@ -1208,6 +1278,7 @@ const roundMatches = knockoutMatches.filter(m => m.round === currentBracketRound
 if (roundMatches.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>'; return; }
 container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, false)).join('');
 }
+
 function renderAdminBracket() {
 const container = document.getElementById('admin-bracket-matches-container');
 if (!container) return;
@@ -1215,6 +1286,7 @@ const roundMatches = knockoutMatches.filter(m => m.round === adminBracketRound);
 if (roundMatches.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>'; return; }
 container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, true)).join('');
 }
+
 function renderBracketMatchCard(match, isAdminView) {
 const isLocked = match.status === 'locked';
 const isFinished = match.status === 'finished' || match.status === 'finished_penalties';
@@ -1244,12 +1316,14 @@ const disabledAttr = canEdit ? '' : 'disabled';
 const score1Value = match.score1 !== null && match.score1 !== undefined ? match.score1 : '';
 const score2Value = match.score2 !== null && match.score2 !== undefined ? match.score2 : '';
 const penaltiesInfo = hasPenalties ? `<div class="mt-3 pt-3 border-t border-dashed border-orange-500/30 text-xs text-center"><span class="penalties-badge">PENALES</span><div class="mt-2 flex justify-center gap-4"><span class="font-bold text-white">${match.team1}: <span class="text-orange-400">${match.penalties1}</span></span><span class="text-slate-500">-</span><span class="font-bold text-white">${match.team2}: <span class="text-orange-400">${match.penalties2}</span></span></div></div>` : '';
-return `<div class="${cardClass}" data-match-id="${match.id}"><div class="flex items-center justify-between mb-3"><div class="text-xs text-slate-400">${match.date ? new Date(match.date).toLocaleDateString('es-VE', { day: '2-digit', month: 'short' }) : ''}${match.venue ? ` • ${match.venue}` : ''}</div>${statusBadge}</div><div class="space-y-3"><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team1Class} text-sm font-medium">${team1Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score1', this.value)"></div><div class="border-t border-white/10"></div><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team2Class} text-sm font-medium">${team2Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score2', this.value)"></div></div>${penaltiesInfo}${canEdit && !isLocked ? `<div class="flex gap-2 mt-4"><button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}</div>` : ''}</div>`;
+return `<div class="${cardClass}" data-match-id="${match.id}"><div class="flex items-center justify-between mb-3"><div class="text-xs text-slate-400">${match.date ? new Date(match.date).toLocaleDateString('es-VE', { day: '2-digit', month: 'short' }) : ''}${match.venue ? ` • ${match.venue}` : ''}</div>${statusBadge}</div><div class="space-y-3"><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team1Class} text-sm font-medium">${team1Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${disabledAttr} oninput="updateBracketScore('${match.id}', 'score1', this.value)"></div><div class="border-t border-white/10"></div><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team2Class} text-sm font-medium">${team2Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${disabledAttr} oninput="updateBracketScore('${match.id}', 'score2', this.value)"></div></div>${penaltiesInfo}${canEdit && !isLocked ? `<div class="flex gap-2 mt-4"><button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}</div>` : ''}</div>`;
 }
+
 function updateBracketScore(matchId, field, value) {
 const match = knockoutMatches.find(m => m.id === matchId);
 if (match) match[field] = value === '' ? null : parseInt(value);
 }
+
 async function saveBracketMatchResult(matchId) {
 const match = knockoutMatches.find(m => m.id === matchId);
 if (!match) { showToast('❌ Partido no encontrado', 'error'); return; }
@@ -1278,6 +1352,7 @@ showToast('✅ Resultado guardado', 'success');
 loadKnockoutMatches();
 } catch (error) { console.error('❌ Error:', error); showToast('❌ Error: ' + error.message, 'error'); }
 }
+
 async function advanceBracketWinner(nextMatchId, slot, winnerTeam) {
 try {
 const updateData = {};
@@ -1290,8 +1365,9 @@ await db.collection('knockout_matches').doc(nextMatchId).update(updateData);
 console.log(`✅ Ganador ${winnerTeam} avanzado a ${nextMatchId}`);
 } catch (error) { console.error('❌ Error al avanzar:', error); }
 }
+
 async function resetBracketMatch(matchId) {
-if (!confirm('️ ¿Resetear este partido?')) return;
+if (!confirm('⚠️ ¿Resetear este partido?')) return;
 try {
 const match = knockoutMatches.find(m => m.id === matchId);
 let currentWinner = null;
@@ -1311,6 +1387,7 @@ showToast('✅ Partido reseteado', 'success');
 loadKnockoutMatches();
 } catch (error) { console.error('❌ Error:', error); showToast('❌ Error: ' + error.message, 'error'); }
 }
+
 function showBracketSuccessAnimation() {
 const anim = document.createElement('div');
 anim.className = 'bracket-success-animation';
@@ -1318,50 +1395,7 @@ anim.innerHTML = '✅ ¡Resultado Guardado!';
 document.body.appendChild(anim);
 setTimeout(() => { anim.remove(); }, 1500);
 }
-async function seedKnockoutBracket() {
-if (!confirm('⚠️ ¿Ejecutar script de siembra del bracket?')) return;
-const matches = [
-{ id: 'R32-M01', round: 'R32', matchNumber: 1, team1: 'Sudáfrica', team2: 'Canadá', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M01', nextMatchSlot: 1, date: '2026-06-28', venue: 'Los Ángeles' },
-{ id: 'R32-M02', round: 'R32', matchNumber: 2, team1: 'Brasil', team2: 'Japón', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M01', nextMatchSlot: 2, date: '2026-06-29', venue: 'Houston' },
-{ id: 'R32-M03', round: 'R32', matchNumber: 3, team1: 'Alemania', team2: 'Paraguay', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M02', nextMatchSlot: 1, date: '2026-06-29', venue: 'Boston' },
-{ id: 'R32-M04', round: 'R32', matchNumber: 4, team1: 'Países Bajos', team2: 'Marruecos', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M02', nextMatchSlot: 2, date: '2026-06-29', venue: 'Monterrey' },
-{ id: 'R32-M05', round: 'R32', matchNumber: 5, team1: 'Costa de Marfil', team2: 'Noruega', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M03', nextMatchSlot: 1, date: '2026-06-30', venue: 'Dallas' },
-{ id: 'R32-M06', round: 'R32', matchNumber: 6, team1: 'Francia', team2: 'Suecia', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M03', nextMatchSlot: 2, date: '2026-06-30', venue: 'Nueva Jersey' },
-{ id: 'R32-M07', round: 'R32', matchNumber: 7, team1: 'México', team2: 'Ecuador', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M04', nextMatchSlot: 1, date: '2026-06-30', venue: 'Ciudad de México' },
-{ id: 'R32-M08', round: 'R32', matchNumber: 8, team1: 'Inglaterra', team2: 'RD del Congo', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M04', nextMatchSlot: 2, date: '2026-07-01', venue: 'Atlanta' },
-{ id: 'R32-M09', round: 'R32', matchNumber: 9, team1: 'Bélgica', team2: 'Senegal', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M05', nextMatchSlot: 1, date: '2026-07-01', venue: 'Seattle' },
-{ id: 'R32-M10', round: 'R32', matchNumber: 10, team1: 'Estados Unidos', team2: 'Bosnia-Herzegovina', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M05', nextMatchSlot: 2, date: '2026-07-01', venue: 'San Francisco' },
-{ id: 'R32-M11', round: 'R32', matchNumber: 11, team1: 'España', team2: 'Austria', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M06', nextMatchSlot: 1, date: '2026-07-02', venue: 'Los Ángeles' },
-{ id: 'R32-M12', round: 'R32', matchNumber: 12, team1: 'Portugal', team2: 'Croacia', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M06', nextMatchSlot: 2, date: '2026-07-02', venue: 'Toronto' },
-{ id: 'R32-M13', round: 'R32', matchNumber: 13, team1: 'Suiza', team2: 'Argelia', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M07', nextMatchSlot: 1, date: '2026-07-02', venue: 'Vancouver' },
-{ id: 'R32-M14', round: 'R32', matchNumber: 14, team1: 'Australia', team2: 'Egipto', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M07', nextMatchSlot: 2, date: '2026-07-03', venue: 'Dallas' },
-{ id: 'R32-M15', round: 'R32', matchNumber: 15, team1: 'Argentina', team2: 'Cabo Verde', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M08', nextMatchSlot: 1, date: '2026-07-03', venue: 'Miami' },
-{ id: 'R32-M16', round: 'R32', matchNumber: 16, team1: 'Colombia', team2: 'Ghana', score1: null, score2: null, status: 'pending', nextMatchId: 'R16-M08', nextMatchSlot: 2, date: '2026-07-03', venue: 'Kansas City' },
-{ id: 'R16-M01', round: 'R16', matchNumber: 1, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M01', nextMatchSlot: 1 },
-{ id: 'R16-M02', round: 'R16', matchNumber: 2, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M01', nextMatchSlot: 2 },
-{ id: 'R16-M03', round: 'R16', matchNumber: 3, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M02', nextMatchSlot: 1 },
-{ id: 'R16-M04', round: 'R16', matchNumber: 4, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M02', nextMatchSlot: 2 },
-{ id: 'R16-M05', round: 'R16', matchNumber: 5, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M03', nextMatchSlot: 1 },
-{ id: 'R16-M06', round: 'R16', matchNumber: 6, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M03', nextMatchSlot: 2 },
-{ id: 'R16-M07', round: 'R16', matchNumber: 7, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M04', nextMatchSlot: 1 },
-{ id: 'R16-M08', round: 'R16', matchNumber: 8, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'QF-M04', nextMatchSlot: 2 },
-{ id: 'QF-M01', round: 'QF', matchNumber: 1, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'SF-M01', nextMatchSlot: 1 },
-{ id: 'QF-M02', round: 'QF', matchNumber: 2, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'SF-M01', nextMatchSlot: 2 },
-{ id: 'QF-M03', round: 'QF', matchNumber: 3, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'SF-M02', nextMatchSlot: 1 },
-{ id: 'QF-M04', round: 'QF', matchNumber: 4, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'SF-M02', nextMatchSlot: 2 },
-{ id: 'SF-M01', round: 'SF', matchNumber: 1, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'F-M01', nextMatchSlot: 1 },
-{ id: 'SF-M02', round: 'SF', matchNumber: 2, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: 'F-M01', nextMatchSlot: 2 },
-{ id: 'F-M01', round: 'F', matchNumber: 1, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: null, nextMatchSlot: null, date: '2026-07-19', venue: 'Nueva Jersey' },
-{ id: '3RD-M01', round: '3RD', matchNumber: 1, team1: null, team2: null, score1: null, score2: null, status: 'locked', nextMatchId: null, nextMatchSlot: null, date: '2026-07-18', venue: 'Miami' }
-];
-try {
-const batch = db.batch();
-matches.forEach(m => { batch.set(db.collection('knockout_matches').doc(m.id), m); });
-await batch.commit();
-alert('✅ ¡Bracket sembrado exitosamente! Recarga la página.');
-document.getElementById('temp-seed-button').style.display = 'none';
-} catch (error) { alert('❌ Error: ' + error.message); }
-}
+
 document.addEventListener('DOMContentLoaded', () => {
 try {
 console.log('📱 Página cargada, iniciando aplicación...');
