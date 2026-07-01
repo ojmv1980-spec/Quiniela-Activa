@@ -710,6 +710,7 @@ if (pin === ADMIN_PIN) {
 try {
 if (!auth.currentUser) await auth.signInAnonymously();
 isAdmin = true;
+sessionStorage.setItem('isAdmin', 'true');
 showView('view-admin');
 renderAdminMatches();
 cargarListaResultadosReel();
@@ -1228,6 +1229,8 @@ newWindow.document.getElementById('loading').outerHTML = tableHTML;
 function logout() {
 if (!confirm("¿Seguro que quieres salir?")) return;
 sessionStorage.removeItem('ultimaPantalla');
+sessionStorage.removeItem('isAdmin');
+isAdmin = false;
 auth.signOut().then(() => { window.location.reload(); }).catch((error) => { showToast("Error: " + error.message, "error"); });
 }
 
@@ -1398,6 +1401,11 @@ setTimeout(() => { anim.remove(); }, 1500);
 
 document.addEventListener('DOMContentLoaded', () => {
 try {
+// Recuperar estado de admin de la sesión
+if (sessionStorage.getItem('isAdmin') === 'true') {
+isAdmin = true;
+console.log('✅ Estado de admin recuperado de la sesión');
+}
 console.log('📱 Página cargada, iniciando aplicación...');
 if (typeof startLeaderboardListener === 'function') { startLeaderboardListener(); console.log('✅ Listener de ranking iniciado'); }
 if (typeof calcularYGuardarPuntajes === 'function') { calcularYGuardarPuntajes(); }
