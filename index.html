@@ -53,162 +53,38 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 .col-fixed-num { position: sticky; left: 0; background: #0a0f1e; z-index: 11; width: 40px; text-align: center; font-weight: 900; }
 .col-fixed-name { position: sticky; left: 40px; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; text-align: left; padding-left: 8px; }
 tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name, tr.rank-2 .col-fixed-num, tr.rank-2 .col-fixed-name, tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name { background: rgba(51, 153, 204, 0.2) !important; }
-/* 🎰 ESTILOS DEL REEL/SLOT */
-.reel-container {
-position: relative;
-overflow: hidden;
-border-radius: 1.5rem;
-background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-border: 4px solid rgba(234, 179, 8, 0.6);
-box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(234, 179, 8, 0.1);
-}
-.reel-card {
-position: absolute;
-width: calc(100% - 1.5rem);
-left: 0.75rem;
-transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-background: linear-gradient(135deg, #1e293b, #334155);
-border: 2px solid;
-border-radius: 1rem;
-padding: 0.75rem;
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-.reel-card.newest {
-border-color: #eab308;
-animation: cardEnter 0.6s ease-out;
-}
-.reel-card.older {
-border-color: #475569;
-}
-@keyframes cardEnter {
-0% { transform: translateY(-50px) scale(0.9); opacity: 0; }
-100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-.reel-overlay-top {
-background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
-}
-.reel-overlay-bottom {
-background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-}
-.live-badge {
-animation: pulseRed 1.5s infinite;
-}
-@keyframes pulseRed {
-0%, 100% { opacity: 1; transform: scale(1); }
-50% { opacity: 0.7; transform: scale(1.05); }
-}
-.score-badge {
-background: linear-gradient(135deg, #059669, #10b981);
-color: #fef3c7;
-font-weight: 800;
-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-/* 🏆 ESTILOS DEL BRACKET */
-.bracket-round-tab { 
-background-color: rgba(255, 255, 255, 0.05); 
-color: #94a3b8; 
-transition: all 0.3s ease; 
-cursor: pointer;
-}
-.bracket-round-tab.active { 
-background: linear-gradient(135deg, #2563eb, #1e40af); 
-color: white; 
-box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); 
-}
-.bracket-round-tab:hover:not(.active) { 
-background-color: rgba(255, 255, 255, 0.1); 
-}
-.bracket-match-card { 
-transition: all 0.3s ease; 
-}
-.bracket-match-card:hover { 
-transform: translateY(-2px); 
-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); 
-}
-.bracket-match-card.locked { 
-opacity: 0.5; 
-background-color: rgba(15, 23, 42, 0.5); 
-}
-.bracket-match-card.finished { 
-border-left: 4px solid #10b981; 
-}
-.bracket-match-card.live { 
-border-left: 4px solid #ef4444; 
-animation: pulse-border-bracket 2s infinite; 
-}
-.bracket-match-card.finished-penalties { 
-border-left: 4px solid #f59e0b; 
-}
-@keyframes pulse-border-bracket { 
-0%, 100% { border-left-color: #ef4444; } 
-50% { border-left-color: #fca5a5; } 
-}
-.bracket-score-input { 
-width: 60px; 
-text-align: center; 
-font-size: 1.25rem; 
-font-weight: bold; 
-background: rgba(255, 255, 255, 0.05); 
-border: 2px solid rgba(255, 255, 255, 0.1); 
-color: white; 
-border-radius: 8px; 
-padding: 4px; 
-}
-.bracket-score-input:focus { 
-border-color: #2563eb; 
-outline: none; 
-}
-.bracket-score-input:disabled { 
-background-color: rgba(15, 23, 42, 0.5); 
-cursor: not-allowed; 
-opacity: 0.6; 
-}
-.bracket-winner { 
-font-weight: bold; 
-color: #10b981; 
-text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); 
-}
-.bracket-loser { 
-color: #64748b; 
-opacity: 0.6; 
-}
-@keyframes advanceGlow { 
-0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 
-50% { transform: scale(1.02); box-shadow: 0 0 30px 15px rgba(16, 185, 129, 0.5); } 
-100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } 
-}
-.bracket-match-card.just-advanced { 
-animation: advanceGlow 1.5s ease-out; 
-}
-@keyframes successPulse { 
-0% { transform: scale(1); } 
-50% { transform: scale(1.1); } 
-100% { transform: scale(1); } 
-}
-.bracket-success-animation { 
-position: fixed; 
-top: 50%; 
-left: 50%; 
-transform: translate(-50%, -50%); 
-background: linear-gradient(135deg, #10b981, #059669); 
-color: white; 
-padding: 24px 48px; 
-border-radius: 16px; 
-font-size: 1.5rem; 
-font-weight: bold; 
-z-index: 9999; 
-animation: successPulse 0.5s ease-out; 
-box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5); 
-}
-.penalties-badge { 
-background: linear-gradient(135deg, #f59e0b, #d97706); 
-color: white; 
-font-size: 0.7rem; 
-padding: 3px 8px; 
-border-radius: 6px; 
-font-weight: bold; 
-display: inline-block; 
-}
+.reel-container { position: relative; overflow: hidden; border-radius: 1.5rem; background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); border: 4px solid rgba(234, 179, 8, 0.6); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(234, 179, 8, 0.1); }
+.reel-card { position: absolute; width: calc(100% - 1.5rem); left: 0.75rem; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid; border-radius: 1rem; padding: 0.75rem; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
+.reel-card.newest { border-color: #eab308; animation: cardEnter 0.6s ease-out; }
+.reel-card.older { border-color: #475569; }
+@keyframes cardEnter { 0% { transform: translateY(-50px) scale(0.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+.reel-overlay-top { background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent); }
+.reel-overlay-bottom { background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent); }
+.live-badge { animation: pulseRed 1.5s infinite; }
+@keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
+.score-badge { background: linear-gradient(135deg, #059669, #10b981); color: #fef3c7; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+
+/* 🏆 ESTILOS DEL BRACKET ELIMINATORIO */
+.bracket-round-tab { background-color: rgba(255, 255, 255, 0.05); color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
+.bracket-round-tab.active { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
+.bracket-round-tab:hover:not(.active) { background-color: rgba(255, 255, 255, 0.1); }
+.bracket-match-card { transition: all 0.3s ease; }
+.bracket-match-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+.bracket-match-card.locked { opacity: 0.5; background-color: rgba(15, 23, 42, 0.5); }
+.bracket-match-card.finished { border-left: 4px solid #10b981; }
+.bracket-match-card.live { border-left: 4px solid #ef4444; animation: pulse-border-bracket 2s infinite; }
+.bracket-match-card.finished-penalties { border-left: 4px solid #f59e0b; }
+@keyframes pulse-border-bracket { 0%, 100% { border-left-color: #ef4444; } 50% { border-left-color: #fca5a5; } }
+.bracket-score-input { width: 60px; text-align: center; font-size: 1.25rem; font-weight: bold; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 8px; padding: 4px; }
+.bracket-score-input:focus { border-color: #2563eb; outline: none; }
+.bracket-score-input:disabled { background-color: rgba(15, 23, 42, 0.5); cursor: not-allowed; opacity: 0.6; }
+.bracket-winner { font-weight: bold; color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+.bracket-loser { color: #64748b; opacity: 0.6; }
+@keyframes advanceGlow { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 50% { transform: scale(1.02); box-shadow: 0 0 30px 15px rgba(16, 185, 129, 0.5); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+.bracket-match-card.just-advanced { animation: advanceGlow 1.5s ease-out; }
+@keyframes successPulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.bracket-success-animation { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 24px 48px; border-radius: 16px; font-size: 1.5rem; font-weight: bold; z-index: 9999; animation: successPulse 0.5s ease-out; box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5); }
+.penalties-badge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; display: inline-block; }
 </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -272,7 +148,7 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge">🔴 LIVE</div>
 </div>
 <div class="flex overflow-x-auto gap-2 mb-6 pb-2">
-<button onclick="switchBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R32">32vos (16)</button>
+<button onclick="switchBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R32">16avos (16)</button>
 <button onclick="switchBracketRound('R16')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R16">Octavos (8)</button>
 <button onclick="switchBracketRound('QF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="QF">Cuartos (4)</button>
 <button onclick="switchBracketRound('SF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="SF">Semis (2)</button>
@@ -296,21 +172,17 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <div class="flex justify-center">
 <button onclick="togglePlanillaInline()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
 </div>
-<!--  REEL DE RESULTADOS - SIEMPRE VISIBLE -->
+<!-- REEL DE RESULTADOS -->
 <div id="reelResultados" class="w-full max-w-md mx-auto mt-6">
 <div class="flex items-center justify-center mb-3">
-<span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
-⚽ RESULTADOS OFICIALES
-</span>
+<span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">⚽ RESULTADOS OFICIALES</span>
 </div>
 <div class="reel-container h-[520px]">
 <div id="listaResultadosReel" class="relative w-full"></div>
 <div class="reel-overlay-top absolute top-0 left-0 right-0 h-24 pointer-events-none z-10"></div>
 <div class="reel-overlay-bottom absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-10"></div>
 <div class="absolute top-2 right-2 z-20">
-<div class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full live-badge">
-🔴 LIVE
-</div>
+<div class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full live-badge">🔴 LIVE</div>
 </div>
 </div>
 <p class="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-2">
@@ -318,15 +190,11 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 Actualizando en tiempo real
 </p>
 </div>
-<!-- 📊 PLANILLA INLINE (se muestra al hacer clic en Ver Planilla Completa) -->
+<!-- PLANILLA INLINE -->
 <div id="planilla-inline-container" class="w-full max-w-4xl mx-auto mt-6 hidden">
 <div class="flex items-center justify-between mb-3">
-<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase text-blue-400">
-📊 Planilla Completa - Resultados Partido a Partido
-</h3>
-<button onclick="cerrarPlanillaInline()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition">
-✕ Cerrar
-</button>
+<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase text-blue-400">📊 Planilla Completa - Resultados Partido a Partido</h3>
+<button onclick="cerrarPlanillaInline()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition">✕ Cerrar</button>
 </div>
 <div id="planilla-inline-loading" class="text-center py-8">
 <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500 mx-auto mb-3"></div>
@@ -344,8 +212,7 @@ Actualizando en tiempo real
 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
 <div class="space-y-3 text-xs md:text-sm text-slate-300">
 <div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
-<div>
-<span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
+<div><span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
 <ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
 <li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li>
 <li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li>
@@ -395,7 +262,7 @@ Actualizando en tiempo real
 </table>
 </div>
 <div class="flex justify-center gap-4 mt-6 flex-wrap">
-<button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10"> Ver Planilla Completa</button>
+<button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
 </div>
 <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
@@ -419,7 +286,7 @@ Actualizando en tiempo real
 <div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
 <div id="admin-tab-players" class="hidden">
 <div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-blue-400 mb-2"> Lista de Participantes</h4>
+<h4 class="font-bold text-blue-400 mb-2">📋 Lista de Participantes</h4>
 <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
 <div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
 </div>
@@ -442,9 +309,7 @@ Actualizando en tiempo real
 <h4 class="font-bold text-purple-400 mb-2">🖼️ Generar Imagen del Ranking</h4>
 <p class="text-xs text-slate-400 mb-4">Genera una imagen JPG profesional del ranking actual para compartir en redes sociales.</p>
 <div class="flex justify-center gap-4">
-<button onclick="generarImagenRanking()" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition shadow-lg">
-📸 Generar y Descargar Imagen
-</button>
+<button onclick="generarImagenRanking()" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition shadow-lg">📸 Generar y Descargar Imagen</button>
 </div>
 <div id="imagen-preview" class="mt-6 hidden">
 <p class="text-sm text-slate-400 mb-2">Vista previa:</p>
@@ -457,28 +322,12 @@ Actualizando en tiempo real
 <h4 class="font-bold text-amber-400 mb-2">🎰 Cargar Resultado en el Reel</h4>
 <p class="text-xs text-slate-400 mb-4">Agrega resultados oficiales que aparecerán en el feed animado de la página principal.</p>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label>
-<input type="text" id="reel-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: Argentina">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label>
-<input type="number" id="reel-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label>
-<input type="text" id="reel-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: México">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label>
-<input type="number" id="reel-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label>
-<input type="date" id="reel-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="reel-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: Argentina"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label><input type="number" id="reel-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="reel-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: México"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label><input type="number" id="reel-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="reel-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
 <select id="reel-estado" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
 <option value="Finalizado" class="bg-slate-800">Finalizado</option>
 <option value="En Vivo" class="bg-slate-800">En Vivo</option>
@@ -487,9 +336,7 @@ Actualizando en tiempo real
 </div>
 </div>
 <div class="flex justify-center gap-4 mt-4">
-<button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg">
-💾 Guardar Resultado
-</button>
+<button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg">💾 Guardar Resultado</button>
 </div>
 <div id="reel-admin-list" class="mt-6 space-y-2"></div>
 </div>
@@ -500,7 +347,7 @@ Actualizando en tiempo real
 <h4 class="font-bold text-blue-400 mb-2">🏆 Bracket Eliminatorio - Cargar Resultados</h4>
 <p class="text-xs text-slate-400 mb-4">Ingresa los goles y guarda. El sistema avanza al ganador automáticamente. Si hay empate, se piden penales.</p>
 <div class="flex overflow-x-auto gap-2 mb-4 pb-2">
-<button onclick="switchAdminBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R32">32vos (16)</button>
+<button onclick="switchAdminBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R32">16avos (16)</button>
 <button onclick="switchAdminBracketRound('R16')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R16">Octavos (8)</button>
 <button onclick="switchAdminBracketRound('QF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="QF">Cuartos (4)</button>
 <button onclick="switchAdminBracketRound('SF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="SF">Semis (2)</button>
@@ -547,39 +394,21 @@ Actualizando en tiempo real
 <div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl overflow-x-auto"></div>
 </div>
 </div>
-<!-- 🎰 MODAL DE EDICIÓN DE RESULTADO -->
+<!-- MODAL DE EDICIÓN -->
 <div id="modalEditarResultado" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
 <div class="flex justify-between items-center mb-4">
 <h3 class="text-lg font-bold text-amber-400">✏️ Editar Resultado</h3>
-<button onclick="cerrarModalEditar()" class="text-slate-400 hover:text-white">
-<i data-lucide="x" class="w-5 h-5"></i>
-</button>
+<button onclick="cerrarModalEditar()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
 </div>
 <input type="hidden" id="edit-id">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label>
-<input type="text" id="edit-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label>
-<input type="number" id="edit-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label>
-<input type="text" id="edit-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label>
-<input type="number" id="edit-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label>
-<input type="date" id="edit-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-</div>
-<div>
-<label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="edit-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label><input type="number" id="edit-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="edit-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label><input type="number" id="edit-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="edit-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
 <select id="edit-estado" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
 <option value="Finalizado" class="bg-slate-800">Finalizado</option>
 <option value="En Vivo" class="bg-slate-800">En Vivo</option>
@@ -588,12 +417,8 @@ Actualizando en tiempo real
 </div>
 </div>
 <div class="flex justify-center gap-4 mt-6">
-<button onclick="cerrarModalEditar()" class="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-lg transition">
-Cancelar
-</button>
-<button onclick="guardarEdicionResultado()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">
-💾 Guardar Cambios
-</button>
+<button onclick="cerrarModalEditar()" class="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-lg transition">Cancelar</button>
+<button onclick="guardarEdicionResultado()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">💾 Guardar Cambios</button>
 </div>
 </div>
 </div>
@@ -619,6 +444,41 @@ let currentBracketRound = 'R32';
 let adminBracketRound = 'R32';
 let knockoutMatches = [];
 let isAdmin = false;
+
+// 🏆 FUNCIÓN PARA OBTENER BANDERA DE UN PAÍS
+function getBandera(nombreEquipo) {
+  const banderas = {
+    'Canadá': 'ca', 'Marruecos': 'ma', 'Paraguay': 'py', 'Francia': 'fr',
+    'Brasil': 'br', 'Noruega': 'no', 'México': 'mx', 'Inglaterra': 'gb-eng',
+    'Bélgica': 'be', 'Senegal': 'sn', 'Estados Unidos': 'us', 'Bosnia-Herzegovina': 'ba',
+    'Bosnia y Herzegovina': 'ba', 'España': 'es', 'Austria': 'at', 'Portugal': 'pt',
+    'Croacia': 'hr', 'Suiza': 'ch', 'Argelia': 'dz', 'Colombia': 'co',
+    'Ghana': 'gh', 'Australia': 'au', 'Egipto': 'eg', 'Argentina': 'ar',
+    'Cabo Verde': 'cv', 'Sudáfrica': 'za', 'Países Bajos': 'nl', 'Alemania': 'de',
+    'Japón': 'jp', 'Costa de Marfil': 'ci', 'Ecuador': 'ec', 'RD Congo': 'cd',
+    'Suecia': 'se', 'Chequia': 'cz', 'Qatar': 'qa', 'Haití': 'ht', 'Escocia': 'gb-sct',
+    'Curazao': 'cw', 'Túnez': 'tn', 'Irán': 'ir', 'Nueva Zelanda': 'nz',
+    'Irak': 'iq', 'Jordania': 'jo', 'Uzbekistán': 'uz', 'Panamá': 'pa',
+    'RD del Congo': 'cd', 'Bosnia y Herzegovina': 'ba'
+  };
+  const codigo = banderas[nombreEquipo] || 'un';
+  return `https://flagcdn.com/w40/${codigo}.png`;
+}
+
+// 🏆 FUNCIÓN PARA FORMATEAR HORA DE VENEZUELA
+function formatHoraVenezuela(fechaISO) {
+  if (!fechaISO) return '';
+  const date = new Date(fechaISO);
+  return date.toLocaleString('es-VE', {
+    timeZone: 'America/Caracas',
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+}
 
 function abreviarPais(nombre) {
 const abreviaciones = {
@@ -969,20 +829,14 @@ showToast("✅ Acceso de administrador concedido", "success");
 }
 
 function showAdminTab(tab) {
-document.getElementById('admin-tab-results').classList.add('hidden');
-document.getElementById('admin-tab-players').classList.add('hidden');
-document.getElementById('admin-tab-cobranza').classList.add('hidden');
-document.getElementById('admin-tab-imagen').classList.add('hidden');
-document.getElementById('admin-tab-reel').classList.add('hidden');
-document.getElementById('admin-tab-bracket').classList.add('hidden');
-document.getElementById('tab-results').classList.remove('bg-blue-600'); document.getElementById('tab-results').classList.add('bg-white/10');
-document.getElementById('tab-players').classList.remove('bg-blue-600'); document.getElementById('tab-players').classList.add('bg-white/10');
-document.getElementById('tab-cobranza').classList.remove('bg-blue-600'); document.getElementById('tab-cobranza').classList.add('bg-white/10');
-document.getElementById('tab-imagen').classList.remove('bg-blue-600'); document.getElementById('tab-imagen').classList.add('bg-white/10');
-document.getElementById('tab-reel').classList.remove('bg-blue-600'); document.getElementById('tab-reel').classList.add('bg-white/10');
-document.getElementById('tab-bracket').classList.remove('bg-blue-600'); document.getElementById('tab-bracket').classList.add('bg-white/10');
+['results','players','cobranza','imagen','reel','bracket'].forEach(t => {
+document.getElementById(`admin-tab-${t}`).classList.add('hidden');
+document.getElementById(`tab-${t}`).classList.remove('bg-blue-600');
+document.getElementById(`tab-${t}`).classList.add('bg-white/10');
+});
 document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-document.getElementById(`tab-${tab}`).classList.remove('bg-white/10'); document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
+document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
+document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
 if (tab === 'players') loadAdminPlayers();
 if (tab === 'cobranza') loadAdminCobranza();
 if (tab === 'reel') cargarListaResultadosReel();
@@ -1095,7 +949,7 @@ else if (value === 'Visitante') clickedBtn.classList.add('active-2');
 
 async function deletePlayer(playerId, playerName) {
 if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
-if (!confirm(` CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
+if (!confirm(`⚠️ CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
 try {
 await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
 const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
@@ -1165,7 +1019,7 @@ canvasContainer.innerHTML = `
 <h1 style="font-size: 56px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px; text-shadow: 0 0 40px rgba(255,255,255,0.3);">TRIVIA MUNDIAL 2026</h1>
 <h2 style="font-size: 32px; font-weight: 700; color: white; margin: 10px 0 0 0; letter-spacing: 1px;">RANKING DE <span style="color: #22d3ee; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">PARTICIPANTES</span></h2>
 </div>
-<div style="background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 28px; padding: 45px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3), inset 20px 0 40px -20px rgba(255,255,255,0.05), inset -20px 0 40px -20px rgba(255,255,255,0.05), inset 0 20px 40px -20px rgba(255,255,255,0.05), inset 0 -20px 40px -20px rgba(0,0,0,0.2); position: relative;">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 28px; padding: 45px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,0,0,0.6); position: relative;">
 <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 28px; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.05) 100%); pointer-events: none;"></div>
 <table style="width: 100%; border-collapse: separate; border-spacing: 0; position: relative; z-index: 1;">
 <thead>
@@ -1179,10 +1033,10 @@ canvasContainer.innerHTML = `
 ${players.map((p, idx) => {
 let posContent = '';
 let posColor = '';
-if (idx === 0) { posContent = ''; posColor = '#fbbf24'; }
+if (idx === 0) { posContent = '🥇'; posColor = '#fbbf24'; }
 else if (idx === 1) { posContent = '🥈'; posColor = '#94a3b8'; }
 else if (idx === 2) { posContent = '🥉'; posColor = '#d97706'; }
-else { posContent = `<span style="color: #94a3b8; font-weight: 700;">#${idx + 1}</span>`; posColor = '#e2e8f0'; }
+else { posContent = `#${idx + 1}`; posColor = '#e2e8f0'; }
 const borderStyle = idx < players.length - 1 ? `border-bottom: 1px solid rgba(255,255,255,0.08); margin-left: 15px; margin-right: 15px;` : '';
 return `<tr style="${borderStyle}"><td style="padding: 20px 15px; font-size: 22px; font-weight: 900; color: ${posColor};">${posContent}</td><td style="padding: 20px 15px; font-size: 22px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td><td style="padding: 20px 15px; font-size: 26px; font-weight: 900; color: #fbbf24; text-align: right; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);">${p.score}</td></tr>`;
 }).join('')}
@@ -1491,7 +1345,6 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
-// 📊 FUNCIONES DE PLANILLA INLINE
 function togglePlanillaInline() {
 const container = document.getElementById('planilla-inline-container');
 const loading = document.getElementById('planilla-inline-loading');
@@ -1613,7 +1466,7 @@ tbody.innerHTML = tbodyHTML;
 loading.classList.add('hidden');
 content.classList.remove('hidden');
 } catch (error) {
-loading.innerHTML = `<div class="text-red-400 font-bold"><p class="text-lg mb-2"> Error</p><p class="text-sm">${error.message}</p></div>`;
+loading.innerHTML = `<div class="text-red-400 font-bold"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`;
 }
 }
 
@@ -1861,16 +1714,22 @@ const t = document.createElement('div'); t.className = `toast ${type}`; t.innerT
 setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
 }
 
-// 🏆 FUNCIONES DEL BRACKET
+// 🏆 FUNCIONES DEL BRACKET ELIMINATORIO
 function switchBracketRound(round) {
 currentBracketRound = round;
-document.querySelectorAll('.bracket-round-tab[data-round]').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.round === round) tab.classList.add('active'); });
+document.querySelectorAll('.bracket-round-tab[data-round]').forEach(tab => {
+tab.classList.remove('active');
+if (tab.dataset.round === round) tab.classList.add('active');
+});
 renderBracket();
 }
 
 function switchAdminBracketRound(round) {
 adminBracketRound = round;
-document.querySelectorAll('.bracket-round-tab[data-admin-round]').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.adminRound === round) tab.classList.add('active'); });
+document.querySelectorAll('.bracket-round-tab[data-admin-round]').forEach(tab => {
+tab.classList.remove('active');
+if (tab.dataset.adminRound === round) tab.classList.add('active');
+});
 renderAdminBracket();
 }
 
@@ -1882,14 +1741,11 @@ console.log('✅ Partidos eliminatorios cargados:', knockoutMatches.length);
 renderBracket();
 renderAdminBracket();
 
-// Escuchar cambios PERO sin re-renderizar si hay un input enfocado
 db.collection('knockout_matches').onSnapshot(snapshot => {
-// Verificar si hay un input enfocado
 const focusedElement = document.activeElement;
 const isInputFocused = focusedElement && focusedElement.tagName === 'INPUT' && focusedElement.classList.contains('bracket-score-input');
 
 if (!isInputFocused) {
-// Solo actualizar si no hay un input enfocado
 snapshot.forEach(doc => {
 const matchData = doc.data();
 const matchIndex = knockoutMatches.findIndex(m => m.id === doc.id);
@@ -1908,7 +1764,10 @@ function renderBracket() {
 const container = document.getElementById('bracket-matches-container');
 if (!container) return;
 const roundMatches = knockoutMatches.filter(m => m.round === currentBracketRound);
-if (roundMatches.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>'; return; }
+if (roundMatches.length === 0) {
+container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
+return;
+}
 container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, false)).join('');
 }
 
@@ -1916,7 +1775,10 @@ function renderAdminBracket() {
 const container = document.getElementById('admin-bracket-matches-container');
 if (!container) return;
 const roundMatches = knockoutMatches.filter(m => m.round === adminBracketRound);
-if (roundMatches.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>'; return; }
+if (roundMatches.length === 0) {
+container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
+return;
+}
 container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, true)).join('');
 }
 
@@ -1924,9 +1786,6 @@ function updateBracketScore(matchId, field, value) {
 const match = knockoutMatches.find(m => m.id === matchId);
 if (match) {
 match[field] = value === '' ? null : parseInt(value);
-// Actualizar inmediatamente en Firestore sin esperar a guardar
-db.collection('knockout_matches').doc(matchId).update({ [field]: match[field] })
-.catch(err => console.error('Error actualizando:', err));
 }
 }
 
@@ -1935,42 +1794,97 @@ const isLocked = match.status === 'locked';
 const isFinished = match.status === 'finished' || match.status === 'finished_penalties';
 const isLive = match.status === 'live';
 const hasPenalties = match.status === 'finished_penalties';
+
 let cardClass = 'bracket-match-card glass rounded-xl p-4';
 if (isLocked) cardClass += ' locked';
 if (isFinished && !hasPenalties) cardClass += ' finished';
 if (isLive) cardClass += ' live';
 if (hasPenalties) cardClass += ' finished-penalties';
+
 let team1Class = '', team2Class = '';
 if (isFinished && match.score1 !== null && match.score2 !== null) {
 if (match.score1 > match.score2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
 else if (match.score2 > match.score1) { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
-else if (hasPenalties) { if (match.penalties1 > match.penalties2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; } else { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; } }
+else if (hasPenalties) {
+if (match.penalties1 > match.penalties2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
+else { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
 }
+}
+
 let statusBadge = '';
 if (isLocked) statusBadge = '<span class="text-xs bg-slate-600 text-slate-300 px-2 py-1 rounded-full">🔒 Bloqueado</span>';
 else if (isLive) statusBadge = '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full animate-pulse">🔴 EN VIVO</span>';
 else if (hasPenalties) statusBadge = '<span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full">⚡ Penales</span>';
 else if (isFinished) statusBadge = '<span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Finalizado</span>';
 else statusBadge = '<span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">⏳ Pendiente</span>';
+
+const fechaFormateada = match.date ? formatHoraVenezuela(match.date) : '';
+
 const team1Name = match.team1 || '<span class="text-slate-500 italic">Por definir</span>';
 const team2Name = match.team2 || '<span class="text-slate-500 italic">Por definir</span>';
+
+const bandera1 = match.team1 ? `<img src="${getBandera(match.team1)}" alt="${match.team1}" class="w-6 h-4 inline-block mr-2 rounded shadow" onerror="this.style.display='none'">` : '';
+const bandera2 = match.team2 ? `<img src="${getBandera(match.team2)}" alt="${match.team2}" class="w-6 h-4 inline-block mr-2 rounded shadow" onerror="this.style.display='none'">` : '';
+
 const canEdit = isAdmin && !isLocked;
 const disabledAttr = canEdit ? '' : 'disabled';
 const score1Value = match.score1 !== null && match.score1 !== undefined ? match.score1 : '';
 const score2Value = match.score2 !== null && match.score2 !== undefined ? match.score2 : '';
-const penaltiesInfo = hasPenalties ? `<div class="mt-3 pt-3 border-t border-dashed border-orange-500/30 text-xs text-center"><span class="penalties-badge">PENALES</span><div class="mt-2 flex justify-center gap-4"><span class="font-bold text-white">${match.team1}: <span class="text-orange-400">${match.penalties1}</span></span><span class="text-slate-500">-</span><span class="font-bold text-white">${match.team2}: <span class="text-orange-400">${match.penalties2}</span></span></div></div>` : '';
-return `<div class="${cardClass}" data-match-id="${match.id}"><div class="flex items-center justify-between mb-3"><div class="text-xs text-slate-400">${match.date ? new Date(match.date).toLocaleDateString('es-VE', { day: '2-digit', month: 'short' }) : ''}${match.venue ? ` • ${match.venue}` : ''}</div>${statusBadge}</div><div class="space-y-3"><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team1Class} text-sm font-medium">${team1Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score1', this.value)"></div><div class="border-t border-white/10"></div><div class="flex items-center justify-between"><div class="flex items-center gap-2 flex-1"><span class="text-2xl">🏳️</span><span class="${team2Class} text-sm font-medium">${team2Name}</span></div><input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${disabledAttr} oninput="updateBracketScore('${match.id}', 'score2', this.value)"></div></div>${penaltiesInfo}${canEdit && !isLocked ? `<div class="flex gap-2 mt-4"><button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}</div>` : ''}</div>`;
-}
 
-function updateBracketScore(matchId, field, value) {
-const match = knockoutMatches.find(m => m.id === matchId);
-if (match) match[field] = value === '' ? null : parseInt(value);
+const penaltiesInfo = hasPenalties ? `
+<div class="mt-3 pt-3 border-t border-dashed border-orange-500/30 text-xs text-center">
+<span class="penalties-badge">PENALES</span>
+<div class="mt-2 flex justify-center gap-4">
+<span class="font-bold text-white">${match.team1}: <span class="text-orange-400">${match.penalties1}</span></span>
+<span class="text-slate-500">-</span>
+<span class="font-bold text-white">${match.team2}: <span class="text-orange-400">${match.penalties2}</span></span>
+</div>
+</div>
+` : '';
+
+return `
+<div class="${cardClass}" data-match-id="${match.id}">
+<div class="flex items-center justify-between mb-3">
+<div class="text-xs text-slate-400">
+${fechaFormateada}
+${match.venue ? ` • ${match.venue}` : ''}
+</div>
+${statusBadge}
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 flex-1">
+${bandera1}
+<span class="${team1Class} text-sm font-medium">${team1Name}</span>
+</div>
+<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score1', this.value)">
+</div>
+<div class="border-t border-white/10"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 flex-1">
+${bandera2}
+<span class="${team2Class} text-sm font-medium">${team2Name}</span>
+</div>
+<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score2', this.value)">
+</div>
+</div>
+${penaltiesInfo}
+${canEdit && !isLocked ? `
+<div class="flex gap-2 mt-4">
+<button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>
+${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}
+</div>
+` : ''}
+</div>
+`;
 }
 
 async function saveBracketMatchResult(matchId) {
 const match = knockoutMatches.find(m => m.id === matchId);
 if (!match) { showToast('❌ Partido no encontrado', 'error'); return; }
-if (match.score1 === null || match.score2 === null || match.score1 === undefined || match.score2 === undefined) { showToast('⚠️ Ingresa los goles de ambos equipos', 'error'); return; }
+if (match.score1 === null || match.score2 === null || match.score1 === undefined || match.score2 === undefined) {
+showToast('⚠️ Ingresa los goles de ambos equipos', 'error'); return;
+}
 try {
 let status = 'finished';
 let winner = null;
@@ -1988,8 +1902,12 @@ status = 'finished_penalties';
 } else {
 winner = match.score1 > match.score2 ? match.team1 : match.team2;
 }
-await db.collection('knockout_matches').doc(matchId).update({ score1: match.score1, score2: match.score2, status: status, ...penaltiesData });
-if (winner && match.nextMatchId) { await advanceBracketWinner(match.nextMatchId, match.nextMatchSlot, winner); }
+await db.collection('knockout_matches').doc(matchId).update({
+score1: match.score1, score2: match.score2, status: status, ...penaltiesData
+});
+if (winner && match.nextMatchId) {
+await advanceBracketWinner(match.nextMatchId, match.nextMatchSlot, winner);
+}
 showBracketSuccessAnimation();
 showToast('✅ Resultado guardado', 'success');
 loadKnockoutMatches();
@@ -2003,7 +1921,9 @@ if (slot === 1) updateData.team1 = winnerTeam;
 else if (slot === 2) updateData.team2 = winnerTeam;
 const nextMatchDoc = await db.collection('knockout_matches').doc(nextMatchId).get();
 const nextMatch = nextMatchDoc.data();
-if ((slot === 1 && nextMatch.team2) || (slot === 2 && nextMatch.team1)) { updateData.status = 'pending'; }
+if ((slot === 1 && nextMatch.team2) || (slot === 2 && nextMatch.team1)) {
+updateData.status = 'pending';
+}
 await db.collection('knockout_matches').doc(nextMatchId).update(updateData);
 console.log(`✅ Ganador ${winnerTeam} avanzado a ${nextMatchId}`);
 } catch (error) { console.error('❌ Error al avanzar:', error); }
@@ -2017,7 +1937,10 @@ let currentWinner = null;
 if (match.status === 'finished_penalties') currentWinner = match.winnerByPenalties;
 else if (match.score1 > match.score2) currentWinner = match.team1;
 else if (match.score2 > match.score1) currentWinner = match.team2;
-await db.collection('knockout_matches').doc(matchId).update({ score1: null, score2: null, penalties1: null, penalties2: null, winnerByPenalties: null, status: 'pending' });
+await db.collection('knockout_matches').doc(matchId).update({
+score1: null, score2: null, penalties1: null, penalties2: null,
+winnerByPenalties: null, status: 'pending'
+});
 if (currentWinner && match.nextMatchId) {
 const nextMatchDoc = await db.collection('knockout_matches').doc(match.nextMatchId).get();
 const nextMatch = nextMatchDoc.data();
@@ -2041,7 +1964,6 @@ setTimeout(() => { anim.remove(); }, 1500);
 
 document.addEventListener('DOMContentLoaded', () => {
 try {
-// Recuperar estado de admin de la sesión
 if (sessionStorage.getItem('isAdmin') === 'true') {
 isAdmin = true;
 console.log('✅ Estado de admin recuperado de la sesión');
@@ -2054,12 +1976,10 @@ console.log('✅ Listener de ranking iniciado');
 if (typeof calcularYGuardarPuntajes === 'function') {
 calcularYGuardarPuntajes();
 }
-// 🎰 Iniciar el reel automáticamente
 if (typeof cargarResultadosReel === 'function') {
 cargarResultadosReel();
 console.log('✅ Reel de resultados iniciado');
 }
-// 🏆 Iniciar el bracket automáticamente
 if (typeof loadKnockoutMatches === 'function') {
 loadKnockoutMatches();
 console.log('✅ Bracket eliminatorio iniciado');
