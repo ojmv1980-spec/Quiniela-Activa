@@ -9,8 +9,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white; }
@@ -27,32 +25,7 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 #sticky-progress { position: sticky; top: 80px; z-index: 30; transition: all 0.3s ease; }
-#planilla-table th, #planilla-table td { padding: 8px 4px; border: 1px solid rgba(255,255,255,0.1); text-align: center; white-space: nowrap; }
-#planilla-table th { font-weight: 900; background: #161b2c; }
-#planilla-table tbody tr:hover { background: rgba(37, 99, 235, 0.1); }
-.col-fixed-left { position: sticky; left: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; }
-.col-fixed-right { position: sticky; right: 0; background: #0a0f1e; z-index: 10; font-weight: 900; border-left: 2px solid #2563eb; }
-.rank-1 { background: rgba(51, 153, 204, 0.2) !important; }
-.rank-2 { background: rgba(51, 153, 204, 0.2) !important; }
-.rank-3 { background: rgba(51, 153, 204, 0.2) !important; }
-#planilla-table td:nth-child(4n+6), #planilla-table th:nth-child(4n+6) { background: rgba(255, 255, 255, 0.08); font-weight: 900; }
-#planilla-table th.text-yellow-400 { background: rgba(234, 179, 8, 0.25) !important; color: #fbbf24; font-weight: 900; }
-.btn-result-1.selected { background: #2563eb !important; color: white !important; }
-.btn-result-X.selected { background: #eab308 !important; color: white !important; }
-.btn-result-2.selected { background: #dc2626 !important; color: white !important; }
-.player-card { transition: all 0.2s ease; }
-.player-card:hover { background: rgba(37, 99, 235, 0.1); }
-.player-card.deleted { opacity: 0.5; border: 1px dashed #dc2626 !important; }
-.pred-btn { transition: all 0.2s ease; }
-.pred-btn.active-1 { background: #2563eb !important; color: white !important; }
-.pred-btn.active-X { background: #eab308 !important; color: white !important; }
-.pred-btn.active-2 { background: #dc2626 !important; color: white !important; }
-@media (max-width: 768px) { #planilla-table { font-size: 0.65rem; } #planilla-table th, #planilla-table td { padding: 4px 2px; } }
-@media print { .glass { box-shadow: none; border: 1px solid #000; } #planilla-table { font-size: 8pt; } }
-#admin-progress-bar { position: sticky; top: 80px; z-index: 40; transition: all 0.3s ease; }
-.col-fixed-num { position: sticky; left: 0; background: #0a0f1e; z-index: 11; width: 40px; text-align: center; font-weight: 900; }
-.col-fixed-name { position: sticky; left: 40px; background: #0a0f1e; z-index: 10; font-weight: 900; border-right: 2px solid #2563eb; text-align: left; padding-left: 8px; }
-tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name, tr.rank-2 .col-fixed-num, tr.rank-2 .col-fixed-name, tr.rank-3 .col-fixed-num, tr.rank-3 .col-fixed-name { background: rgba(51, 153, 204, 0.2) !important; }
+@media print { .glass { box-shadow: none; border: 1px solid #000; } }
 .reel-container { position: relative; overflow: hidden; border-radius: 1.5rem; background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); border: 4px solid rgba(234, 179, 8, 0.6); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(234, 179, 8, 0.1); }
 .reel-card { position: absolute; width: calc(100% - 1.5rem); left: 0.75rem; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid; border-radius: 1rem; padding: 0.75rem; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
 .reel-card.newest { border-color: #eab308; animation: cardEnter 0.6s ease-out; }
@@ -116,31 +89,7 @@ tr.rank-1 .col-fixed-num, tr.rank-1 .col-fixed-name, tr.rank-2 .col-fixed-num, t
 </header>
 <main class="max-w-5xl mx-auto px-4 py-8">
 <div id="view-home" class="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6">
-<div class="text-center space-y-1">
-<h2 class="text-2xl md:text-4xl italic-black tracking-tighter leading-none uppercase">JUEGA TU <span class="text-blue-600">QUINIELA ACTIVA</span></h2>
-<p class="max-w-xl text-slate-400 text-sm md:text-base mt-2">y conviértete en el campeón de la Fase de Grupos.</p>
-<h3 class="text-xl md:text-3xl italic-black tracking-tighter leading-none uppercase text-slate-300 mt-1">MONTO: <span class="text-blue-600">Bs.</span> 5.000,00</h3>
-</div>
-<div class="w-full max-w-4xl mx-auto mt-4">
-<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
-Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
-</h3>
-<div class="glass rounded-3xl overflow-hidden">
-<table class="w-full text-left">
-<thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-<tr>
-<th class="p-4 w-16 text-center">Pos</th>
-<th class="p-4">Jugador</th>
-<th class="p-4 text-center">Puntos</th>
-</tr>
-</thead>
-<tbody id="home-leaderboard-body">
-<tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="w-full max-w-4xl mx-auto mt-6 space-y-6">
+<div class="w-full max-w-4xl mx-auto space-y-6">
 <!-- 🏆 LLAVE DEL MUNDIAL - BRACKET ELIMINATORIO -->
 <div id="bracket-container" class="glass rounded-3xl p-6">
 <div class="flex items-center justify-between mb-6">
@@ -170,7 +119,7 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 </div>
 </div>
 <!-- REEL DE RESULTADOS -->
-<div id="reelResultados" class="w-full max-w-md mx-auto mt-6">
+<div id="reelResultados" class="w-full max-w-md mx-auto">
 <div class="flex items-center justify-center mb-3">
 <span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">⚽ RESULTADOS OFICIALES</span>
 </div>
@@ -186,6 +135,26 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
 Actualizando en tiempo real
 </p>
+</div>
+<!-- 🏆 RANKING DE PARTICIPANTES (movido debajo del bracket) -->
+<div class="w-full max-w-4xl mx-auto">
+<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
+Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
+</h3>
+<div class="glass rounded-3xl overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+<tr>
+<th class="p-4 w-16 text-center">Pos</th>
+<th class="p-4">Jugador</th>
+<th class="p-4 text-center">Puntos</th>
+</tr>
+</thead>
+<tbody id="home-leaderboard-body">
+<tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -226,20 +195,10 @@ Actualizando en tiempo real
 </div>
 </div>
 <div id="view-admin" class="hidden space-y-8 py-8">
-<div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Sube los resultados oficiales. Los puntos se calculan automáticamente.</p></div>
+<div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Gestiona el reel y el bracket eliminatorio.</p></div>
 <div class="flex justify-center gap-3 flex-wrap">
-<button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">Cargar Resultados</button>
-<button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
 <button onclick="showAdminTab('reel')" id="tab-reel" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🎰 Cargar Reel</button>
 <button onclick="showAdminTab('bracket')" id="tab-bracket" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🏆 Bracket Eliminatorio</button>
-</div>
-<div id="admin-tab-results"><div id="admin-matches-container" class="space-y-6"></div></div>
-<div id="admin-tab-players" class="hidden">
-<div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-blue-400 mb-2">📋 Lista de Participantes</h4>
-<p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
-<div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
-</div>
 </div>
 <div id="admin-tab-reel" class="hidden">
 <div class="glass p-4 rounded-xl mb-4">
@@ -473,14 +432,6 @@ K: ['Portugal', 'RD Congo', 'Uzbekistán', 'Colombia'],
 L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
 };
 
-function lockPredictionsUI() {
-document.getElementById('btn-submit')?.classList.add('hidden');
-document.querySelectorAll('.btn-option').forEach(btn => {
-btn.disabled = true;
-btn.classList.add('opacity-40', 'cursor-not-allowed');
-});
-}
-
 function renderMatches() {
 const container = document.getElementById('matches-container');
 container.innerHTML = '';
@@ -541,43 +492,6 @@ batch.set(userRef.collection('predictions').doc(matchId), { value, updatedAt: ne
 });
 await batch.commit();
 } catch (e) { console.error('Auto-save error:', e); }
-}
-
-async function handleLogin() {
-const name = document.getElementById('username-input').value.trim();
-if (!name || name.length < 3) return showToast("Ingresa un apodo de al menos 3 caracteres", "error");
-try {
-const cred = await auth.signInAnonymously();
-const uid = cred.user.uid;
-const nicknameQuery = db.collection('participants').where('displayName', '==', name);
-const nicknameSnapshot = await nicknameQuery.get();
-if (!nicknameSnapshot.empty) {
-let isSameUser = false;
-nicknameSnapshot.forEach(doc => { if (doc.id === uid) isSameUser = true; });
-if (!isSameUser) {
-await auth.signOut();
-showToast("❌ Ese apodo ya está registrado. Elige otro.", "error");
-return;
-}
-}
-const userDoc = await db.collection('participants').doc(uid).get();
-let userCode = userDoc.data()?.userCode;
-if (!userCode) {
-await db.collection('participants').doc(uid).set({ displayName: name, createdAt: new Date(), submitted: false, paid: false }, { merge: true });
-} else {
-await db.collection('participants').doc(uid).set({ displayName: name }, { merge: true });
-}
-currentUser = { uid, displayName: name, userCode };
-await loadPredictions(uid);
-document.getElementById('view-home').classList.add('hidden');
-document.getElementById('user-badge').classList.remove('hidden');
-document.getElementById('display-username').innerText = name;
-if (isSubmitted) showView('view-leaderboard');
-else showView('view-predictions');
-renderMatches();
-const codigoMsg = userCode ? ` (${userCode})` : '';
-showToast(`¡Bienvenido, ${name}!${codigoMsg}`, "success");
-} catch (err) { showToast("Error: " + err.message, "error"); }
 }
 
 async function loadPredictions(uid) {
@@ -711,7 +625,6 @@ if (!auth.currentUser) await auth.signInAnonymously();
 isAdmin = true;
 sessionStorage.setItem('isAdmin', 'true');
 showView('view-admin');
-renderAdminMatches();
 cargarListaResultadosReel();
 loadKnockoutMatches();
 showToast("✅ Acceso de administrador concedido", "success");
@@ -720,7 +633,7 @@ showToast("✅ Acceso de administrador concedido", "success");
 }
 
 function showAdminTab(tab) {
-['results','players','reel','bracket'].forEach(t => {
+['reel','bracket'].forEach(t => {
 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
 document.getElementById(`tab-${t}`).classList.remove('bg-blue-600');
 document.getElementById(`tab-${t}`).classList.add('bg-white/10');
@@ -728,134 +641,8 @@ document.getElementById(`tab-${t}`).classList.add('bg-white/10');
 document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
 document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
 document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
-if (tab === 'players') loadAdminPlayers();
 if (tab === 'reel') cargarListaResultadosReel();
 if (tab === 'bracket') renderAdminBracket();
-}
-
-async function renderAdminMatches() {
-const container = document.getElementById('admin-matches-container');
-container.innerHTML = '<div class="text-center text-blue-400 font-bold">Cargando resultados...</div>';
-const rSnap = await db.collection('matches').get();
-const existingResults = {}; rSnap.forEach(doc => existingResults[doc.id] = doc.data().result);
-const allMatches = Object.entries(matchSchedule).map(([id, sched]) => ({ id, fecha: sched.fecha, hora: sched.hora, local: sched.local, visitante: sched.visitante, resultado: existingResults[id] || '' }));
-allMatches.sort((a, b) => (a.fecha + ' ' + a.hora).localeCompare(b.fecha + ' ' + b.hora));
-const matchesByDay = {}; allMatches.forEach(m => { if (!matchesByDay[m.fecha]) matchesByDay[m.fecha] = []; matchesByDay[m.fecha].push(m); });
-const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-container.innerHTML = '';
-const totalCargados = allMatches.filter(m => m.resultado !== '').length;
-const progreso = Math.round((totalCargados / 72) * 100);
-let html = `<div id="admin-progress-bar" class="glass p-4 rounded-xl mb-4 border-l-4 border-green-500">
-<div class="flex justify-between items-center mb-2"><span class="text-sm font-bold text-green-400">📊 Progreso de carga</span><span class="text-sm font-bold text-white">${totalCargados} / 72 partidos (${progreso}%)</span></div>
-<div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-green-500 transition-all" style="width: ${progreso}%"></div></div></div>`;
-Object.keys(matchesByDay).sort().forEach(fecha => {
-const matchesOfDay = matchesByDay[fecha];
-const dateObj = new Date(fecha + 'T12:00:00');
-const cargadosEnDia = matchesOfDay.filter(m => m.resultado !== '').length;
-html += `<div class="glass p-4 rounded-xl mb-4"><div class="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-<h4 class="font-bold text-blue-400 text-sm md:text-base">📅 ${diasSemana[dateObj.getDay()]}, ${dateObj.getDate()} de ${meses[dateObj.getMonth()]} ${dateObj.getFullYear()}</h4>
-<span class="text-[10px] font-bold px-2 py-1 rounded ${cargadosEnDia === matchesOfDay.length ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">${cargadosEnDia}/${matchesOfDay.length}</span></div><div class="space-y-2">`;
-matchesOfDay.forEach(m => {
-html += `<div class="flex items-center justify-between bg-[#161b2c] p-3 rounded-lg gap-2">
-<div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-[10px] font-bold text-green-400 whitespace-nowrap">${m.hora}</span><span class="text-xs md:text-sm font-bold truncate">${m.local} vs ${m.visitante}</span><span class="text-xs">${m.resultado ? '✅' : ''}</span></div>
-<div class="flex gap-1 md:gap-2 flex-shrink-0">
-<button onclick="setResult('${m.id}', 'Local', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-blue-600 rounded text-xs font-bold transition ${m.resultado === 'Local' ? 'btn-result-1 selected' : 'btn-result-1'}">1</button>
-<button onclick="setResult('${m.id}', 'Empate', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-yellow-600 rounded text-xs font-bold transition ${m.resultado === 'Empate' ? 'btn-result-X selected' : 'btn-result-X'}">X</button>
-<button onclick="setResult('${m.id}', 'Visitante', this)" class="px-2 md:px-3 py-1 bg-white/10 hover:bg-red-600 rounded text-xs font-bold transition ${m.resultado === 'Visitante' ? 'btn-result-2 selected' : 'btn-result-2'}">2</button>
-</div></div>`;
-});
-html += `</div></div>`;
-});
-container.innerHTML = html;
-}
-
-async function setResult(matchId, result, clickedBtn) {
-if (!confirm(`¿Confirmar resultado: ${result} para ${matchId}?`)) return;
-try {
-await db.collection('matches').doc(matchId).set({ result, updatedAt: new Date() }, { merge: true });
-showToast(`✅ Resultado guardado: ${matchId} → ${result}`, "success");
-const parentDiv = clickedBtn.parentElement;
-parentDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
-clickedBtn.classList.add('selected');
-setTimeout(() => renderAdminMatches(), 500);
-await calcularYGuardarPuntajes();
-} catch (e) { showToast("Error: " + e.message, "error"); }
-}
-
-async function loadAdminPlayers() {
-const container = document.getElementById('admin-players-list');
-container.innerHTML = '<div class="text-center text-blue-400 font-bold py-4">Cargando participantes...</div>';
-try {
-const pSnap = await db.collection('participants').get();
-const players = []; pSnap.forEach(doc => players.push({ id: doc.id, ...doc.data() }));
-if (players.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes registrados.</div>'; return; }
-players.sort((a, b) => (a.deleted ? 1 : 0) - (b.deleted ? 1 : 0));
-let html = '';
-for (const p of players) {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {}; predSnap.forEach(doc => preds[doc.id] = doc.data().value);
-p.predictions = preds; p.predCount = Object.keys(preds).length;
-let statusBadge = p.deleted ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] font-bold rounded">🗑️ Eliminado</span>' : (p.submitted ? '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold rounded">✓ Enviado</span>' : '<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded">⏳ Pendiente</span>');
-let actionButtons = p.deleted ? `<button onclick="restorePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded transition">♻️ Restaurar</button>` : `<button onclick="togglePlayerPreds('${p.id}')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded transition">✏️ Editar</button><button onclick="deletePlayer('${p.id}', '${p.displayName}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition">🗑️ Eliminar</button>`;
-html += `<div class="${p.deleted ? 'player-card deleted' : 'player-card'} glass p-4 rounded-xl"><div class="flex justify-between items-center mb-3 flex-wrap gap-2"><div><span class="font-bold text-white">${p.displayName || 'Anónimo'}</span><span class="text-xs text-slate-400 ml-2">(${p.userCode || 'N/A'})</span>${statusBadge}</div><div class="flex items-center gap-3"><span class="text-xs text-slate-400">${p.predCount}/72 predicciones</span>${actionButtons}</div></div><div id="preds-${p.id}" class="hidden"><div class="border-t border-white/10 pt-3 mt-3"><p class="text-xs text-slate-400 mb-3">Haz clic en 1, X o 2 para cambiar la predicción.</p><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-96 overflow-y-auto">`;
-const matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-matchIds.forEach((mId, idx) => {
-const match = mId.match(/^g([a-l])m(\d+)$/);
-let matchLabel = mId;
-if (match) {
-const g = match[1].toUpperCase(); const num = parseInt(match[2]); const teams = groupsData[g];
-if (teams && num >= 1 && num <= 6) {
-const matchPairs = [[teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]];
-const [local, visitante] = matchPairs[num-1];
-matchLabel = `${abreviarPais(local).substring(0,3)} vs ${abreviarPais(visitante).substring(0,3)}`;
-}
-}
-const currentPred = preds[mId] || '';
-html += `<div class="bg-[#161b2c] p-2 rounded-lg flex items-center justify-between gap-2"><span class="text-[10px] text-slate-300 truncate flex-1">${idx+1}. ${matchLabel}</span><div class="flex gap-1">
-<button onclick="adminSetPred('${p.id}', '${mId}', 'Local', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-blue-600 rounded text-[10px] font-bold ${currentPred === 'Local' ? 'active-1' : ''}">1</button>
-<button onclick="adminSetPred('${p.id}', '${mId}', 'Empate', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-yellow-600 rounded text-[10px] font-bold ${currentPred === 'Empate' ? 'active-X' : ''}">X</button>
-<button onclick="adminSetPred('${p.id}', '${mId}', 'Visitante', this)" class="pred-btn px-2 py-1 bg-white/10 hover:bg-red-600 rounded text-[10px] font-bold ${currentPred === 'Visitante' ? 'active-2' : ''}">2</button></div></div>`;
-});
-html += `</div></div></div></div>`;
-}
-container.innerHTML = html;
-} catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
-}
-
-function togglePlayerPreds(playerId) { document.getElementById(`preds-${playerId}`).classList.toggle('hidden'); }
-
-async function adminSetPred(playerId, matchId, value, clickedBtn) {
-try {
-await db.collection('participants').doc(playerId).collection('predictions').doc(matchId).set({ value, updatedAt: new Date(), adminModified: true }, { merge: true });
-showToast(`✅ Predicción actualizada`, "success");
-const parentDiv = clickedBtn.parentElement;
-parentDiv.querySelectorAll('.pred-btn').forEach(btn => btn.classList.remove('active-1', 'active-X', 'active-2'));
-if (value === 'Local') clickedBtn.classList.add('active-1');
-else if (value === 'Empate') clickedBtn.classList.add('active-X');
-else if (value === 'Visitante') clickedBtn.classList.add('active-2');
-} catch (e) { showToast("Error: " + e.message, "error"); }
-}
-
-async function deletePlayer(playerId, playerName) {
-if (!confirm(`⚠️ ¿Eliminar a "${playerName}"?`)) return;
-if (!confirm(`⚠️ CONFIRMACIÓN FINAL: ¿Seguro?`)) return;
-try {
-await db.collection('participants').doc(playerId).update({ deleted: true, deletedAt: new Date() });
-const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
-const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: true }));
-await batch.commit(); showToast(`🗑️ ${playerName} eliminado`, "success"); loadAdminPlayers();
-} catch (e) { showToast("Error: " + e.message, "error"); }
-}
-
-async function restorePlayer(playerId, playerName) {
-if (!confirm(`♻️ ¿Restaurar a "${playerName}"?`)) return;
-try {
-await db.collection('participants').doc(playerId).update({ deleted: false, deletedAt: firebase.firestore.FieldValue.delete() });
-const predSnap = await db.collection('participants').doc(playerId).collection('predictions').get();
-const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
-await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
-} catch (e) { showToast("Error: " + e.message, "error"); }
 }
 
 const MAX_RESULTADOS_REEL = 6;
@@ -863,30 +650,6 @@ let resultadosReel = [];
 let reelScrollIndex = 0;
 let reelAutoScrollInterval;
 let reelUnsubscribe = null;
-
-function toggleReel() {
-const reel = document.getElementById('reelResultados');
-reel.classList.toggle('hidden');
-if (!reel.classList.contains('hidden')) {
-inicializarReelResultados();
-setTimeout(() => {
-reel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}, 100);
-} else {
-detenerAutoScrollReel();
-}
-}
-
-function inicializarReelResultados() {
-if (resultadosReel.length === 0) {
-cargarResultadosReel();
-} else {
-renderizarReel('listaResultadosReel');
-if (resultadosReel.length > MAX_RESULTADOS_REEL) {
-iniciarAutoScrollReel();
-}
-}
-}
 
 function cargarResultadosReel() {
 if (reelUnsubscribe) reelUnsubscribe();
@@ -1165,6 +928,21 @@ const t = document.createElement('div'); t.className = `toast ${type}`; t.innerT
 setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
 }
 
+// 🏆 FUNCIÓN HELPER: ORDENAR PARTIDOS (PENDIENTES PRIMERO, FINALIZADOS AL FINAL)
+function ordenarPartidosBracket(partidos) {
+  const pendientes = partidos.filter(m => m.status === 'locked' || m.status === 'pending' || m.status === 'live');
+  const finalizados = partidos.filter(m => m.status === 'finished' || m.status === 'finished_penalties');
+  
+  // Ordenar cada grupo por fecha
+  const ordenarPorFecha = (arr) => arr.sort((a, b) => {
+    const fechaA = a.date ? new Date(a.date).getTime() : 0;
+    const fechaB = b.date ? new Date(b.date).getTime() : 0;
+    return fechaA - fechaB;
+  });
+  
+  return [...ordenarPorFecha(pendientes), ...ordenarPorFecha(finalizados)];
+}
+
 // 🏆 FUNCIONES DEL BRACKET ELIMINATORIO
 function switchBracketRound(round) {
 currentBracketRound = round;
@@ -1219,7 +997,9 @@ if (roundMatches.length === 0) {
 container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
 return;
 }
-container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, false)).join('');
+// 🏆 APLICAR ORDENAMIENTO: PENDIENTES PRIMERO, FINALIZADOS AL FINAL
+const partidosOrdenados = ordenarPartidosBracket(roundMatches);
+container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, false)).join('');
 }
 
 function renderAdminBracket() {
@@ -1230,7 +1010,9 @@ if (roundMatches.length === 0) {
 container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
 return;
 }
-container.innerHTML = roundMatches.map(match => renderBracketMatchCard(match, true)).join('');
+// 🏆 APLICAR ORDENAMIENTO: PENDIENTES PRIMERO, FINALIZADOS AL FINAL
+const partidosOrdenados = ordenarPartidosBracket(roundMatches);
+container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, true)).join('');
 }
 
 function updateBracketScore(matchId, field, value) {
@@ -1424,9 +1206,6 @@ if (typeof startLeaderboardListener === 'function') {
 startLeaderboardListener();
 console.log('✅ Listener de ranking iniciado');
 }
-if (typeof calcularYGuardarPuntajes === 'function') {
-calcularYGuardarPuntajes();
-}
 if (typeof cargarResultadosReel === 'function') {
 cargarResultadosReel();
 console.log('✅ Reel de resultados iniciado');
@@ -1457,8 +1236,8 @@ if (pantallaGuardada) {
 console.log('📍 Restaurando vista:', pantallaGuardada);
 showView(pantallaGuardada);
 if (pantallaGuardada === 'view-predictions') renderMatches();
-else if (pantallaGuardada === 'view-admin') renderAdminMatches();
-} else {
+} 
+else {
 if (data.submitted) { showView('view-leaderboard'); }
 else { showView('view-predictions'); renderMatches(); }
 }
@@ -1482,7 +1261,7 @@ showView('view-home');
 }
 } catch (error) {
 console.error('❌ Error crítico en inicialización:', error);
-const allViews = ['view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'];
+const allViews = ['view-predictions', 'view-leaderboard', 'view-admin'];
 allViews.forEach(id => {
 const el = document.getElementById(id);
 if (el) el.classList.add('hidden');
