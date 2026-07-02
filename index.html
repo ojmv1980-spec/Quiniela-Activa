@@ -169,9 +169,6 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500"></span><span>Penales</span></div>
 </div>
 </div>
-<div class="flex justify-center">
-<button onclick="togglePlanillaInline()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
-</div>
 <!-- REEL DE RESULTADOS -->
 <div id="reelResultados" class="w-full max-w-md mx-auto mt-6">
 <div class="flex items-center justify-center mb-3">
@@ -189,48 +186,6 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
 Actualizando en tiempo real
 </p>
-</div>
-<!-- PLANILLA INLINE -->
-<div id="planilla-inline-container" class="w-full max-w-4xl mx-auto mt-6 hidden">
-<div class="flex items-center justify-between mb-3">
-<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase text-blue-400">📊 Planilla Completa - Resultados Partido a Partido</h3>
-<button onclick="cerrarPlanillaInline()" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition">✕ Cerrar</button>
-</div>
-<div id="planilla-inline-loading" class="text-center py-8">
-<div class="animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500 mx-auto mb-3"></div>
-<p class="text-blue-400 font-bold">Cargando planilla...</p>
-</div>
-<div id="planilla-inline-content" class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto hidden">
-<table id="planilla-inline-table" class="w-full text-sm text-left" style="min-width: 2000px;">
-<thead class="text-xs uppercase bg-[#161b2c] text-blue-400"></thead>
-<tbody id="planilla-inline-body" class="text-slate-300"></tbody>
-</table>
-</div>
-<p class="text-center text-[10px] text-slate-500 mt-2">* Desliza horizontalmente para ver todos los partidos</p>
-</div>
-<div class="w-full max-w-md mx-auto glass p-5 rounded-2xl text-left space-y-3">
-<h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
-<div class="space-y-3 text-xs md:text-sm text-slate-300">
-<div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
-<div><span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span>
-<ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30">
-<li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li>
-<li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li>
-<li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li>
-<li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li>
-</ul>
-</div>
-<div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
-</div>
-</div>
-</div>
-<div class="w-full max-w-md mt-6 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/30 shadow-lg shadow-yellow-500/20">
-<h3 class="text-center text-lg font-black text-yellow-400 uppercase tracking-wider mb-4 italic">💳 PAGO MÓVIL</h3>
-<div class="space-y-3 text-center">
-<div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Banco de Venezuela</p><p class="text-white font-mono font-bold text-base">0102</p></div>
-<div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Teléfono</p><p class="text-white font-mono font-bold text-base">0412-3538806</p></div>
-<div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Cédula</p><p class="text-white font-mono font-bold text-base">14841975</p></div>
-<div class="bg-white/5 px-4 py-2 rounded-lg"><p class="text-slate-300 font-bold text-sm">Costo</p><p class="text-white font-mono font-bold text-base">Bs. 5.000,00</p></div>
 </div>
 </div>
 </div>
@@ -261,9 +216,6 @@ Actualizando en tiempo real
 <tbody id="leaderboard-body"><tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr></tbody>
 </table>
 </div>
-<div class="flex justify-center gap-4 mt-6 flex-wrap">
-<button onclick="generarPlanillaWeb()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">📊 Ver Planilla Completa</button>
-</div>
 <div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
 <h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
 <div class="space-y-3 text-xs md:text-sm text-slate-300">
@@ -278,8 +230,6 @@ Actualizando en tiempo real
 <div class="flex justify-center gap-3 flex-wrap">
 <button onclick="showAdminTab('results')" id="tab-results" class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-lg transition">Cargar Resultados</button>
 <button onclick="showAdminTab('players')" id="tab-players" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">👥 Gestión de Participantes</button>
-<button onclick="showAdminTab('cobranza')" id="tab-cobranza" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">💰 Cobranza</button>
-<button onclick="showAdminTab('imagen')" id="tab-imagen" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🖼️ Generar Imagen</button>
 <button onclick="showAdminTab('reel')" id="tab-reel" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🎰 Cargar Reel</button>
 <button onclick="showAdminTab('bracket')" id="tab-bracket" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🏆 Bracket Eliminatorio</button>
 </div>
@@ -289,32 +239,6 @@ Actualizando en tiempo real
 <h4 class="font-bold text-blue-400 mb-2">📋 Lista de Participantes</h4>
 <p class="text-xs text-slate-400 mb-4">Edita predicciones o elimina participantes. Los cambios se guardan automáticamente.</p>
 <div id="admin-players-list" class="space-y-3"><div class="text-center text-slate-400 py-4">Cargando participantes...</div></div>
-</div>
-</div>
-<div id="admin-tab-cobranza" class="hidden">
-<div class="glass p-4 rounded-xl mb-4">
-<div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-<h4 class="font-bold text-orange-400 text-lg">💰 CONTROL DE PAGOS</h4>
-<div class="text-xs text-slate-300 flex gap-3 flex-wrap">
-<span>Pendientes: <span id="cobranza-pendientes" class="font-bold text-red-400">0</span></span>
-<span>Pagados: <span id="cobranza-pagados" class="font-bold text-green-400">0</span></span>
-<span>Total: <span id="cobranza-total" class="font-bold text-yellow-400">Bs. 0,00</span></span>
-</div>
-</div>
-<div id="admin-cobranza-list" class="space-y-2"><div class="text-center text-slate-400 py-8">Cargando datos de cobranza...</div></div>
-</div>
-</div>
-<div id="admin-tab-imagen" class="hidden">
-<div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-purple-400 mb-2">🖼️ Generar Imagen del Ranking</h4>
-<p class="text-xs text-slate-400 mb-4">Genera una imagen JPG profesional del ranking actual para compartir en redes sociales.</p>
-<div class="flex justify-center gap-4">
-<button onclick="generarImagenRanking()" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition shadow-lg">📸 Generar y Descargar Imagen</button>
-</div>
-<div id="imagen-preview" class="mt-6 hidden">
-<p class="text-sm text-slate-400 mb-2">Vista previa:</p>
-<div id="imagen-container" class="border-2 border-purple-500/30 rounded-lg overflow-hidden"></div>
-</div>
 </div>
 </div>
 <div id="admin-tab-reel" class="hidden">
@@ -360,39 +284,6 @@ Actualizando en tiempo real
 </div>
 </div>
 <div class="text-center"><button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button></div>
-</div>
-<div id="view-planilla" class="hidden space-y-6 py-8">
-<div class="text-center space-y-2"><h2 class="text-2xl md:text-3xl italic-black uppercase text-blue-400">Resultados Partido a Partido</h2></div>
-<div class="flex justify-center gap-3 flex-wrap">
-<button onclick="showView('view-leaderboard')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg transition">← Volver al Ranking</button>
-<button onclick="generarPlanillaDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver Planilla Digital</button>
-</div>
-<div id="planilla-loading" class="text-center py-12">
-<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div>
-<p class="text-blue-400 font-bold">Cargando 72 partidos × <span id="total-users">0</span> participantes...</p>
-</div>
-<div class="glass rounded-2xl overflow-hidden shadow-2xl overflow-x-auto">
-<table id="planilla-table" class="w-full text-sm text-left" style="min-width: 2000px;">
-<thead class="text-xs uppercase bg-[#161b2c] text-blue-400"></thead>
-<tbody id="planilla-body" class="text-slate-300"></tbody>
-</table>
-</div>
-<p class="text-center text-[10px] text-slate-500">* Desliza horizontalmente para ver todos los partidos. Los 3 primeros lugares están resaltados.</p>
-<div class="mt-12 space-y-6">
-<div class="text-center space-y-2">
-<h2 class="text-2xl md:text-3xl italic-black uppercase text-orange-400">Selecciones por Nombre</h2>
-<p class="text-xs text-slate-400">Vista detallada con los nombres de los equipos seleccionados</p>
-</div>
-<div class="flex justify-center gap-3 flex-wrap">
-<button onclick="generarTablaSelecciones()" class="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition shadow-lg">Cargar Tabla de Selecciones</button>
-<button onclick="generarTablaSeleccionesDigital()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold rounded-lg transition shadow-lg">📱 Ver en Ventana Nueva</button>
-</div>
-<div id="tabla-selecciones-loading" class="hidden text-center py-12">
-<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-orange-500 mx-auto mb-4"></div>
-<p class="text-orange-400 font-bold">Cargando selecciones...</p>
-</div>
-<div id="tabla-selecciones-container" class="glass rounded-2xl shadow-2xl overflow-x-auto"></div>
-</div>
 </div>
 <!-- MODAL DE EDICIÓN -->
 <div id="modalEditarResultado" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -829,7 +720,7 @@ showToast("✅ Acceso de administrador concedido", "success");
 }
 
 function showAdminTab(tab) {
-['results','players','cobranza','imagen','reel','bracket'].forEach(t => {
+['results','players','reel','bracket'].forEach(t => {
 document.getElementById(`admin-tab-${t}`).classList.add('hidden');
 document.getElementById(`tab-${t}`).classList.remove('bg-blue-600');
 document.getElementById(`tab-${t}`).classList.add('bg-white/10');
@@ -838,7 +729,6 @@ document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
 document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
 document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
 if (tab === 'players') loadAdminPlayers();
-if (tab === 'cobranza') loadAdminCobranza();
 if (tab === 'reel') cargarListaResultadosReel();
 if (tab === 'bracket') renderAdminBracket();
 }
@@ -966,106 +856,6 @@ const predSnap = await db.collection('participants').doc(playerId).collection('p
 const batch = db.batch(); predSnap.forEach(doc => batch.update(doc.ref, { deleted: false }));
 await batch.commit(); showToast(`♻️ ${playerName} restaurado`, "success"); loadAdminPlayers();
 } catch (e) { showToast("Error: " + e.message, "error"); }
-}
-
-async function loadAdminCobranza() {
-const container = document.getElementById('admin-cobranza-list');
-container.innerHTML = '<div class="text-center text-orange-400 font-bold py-4">Cargando datos...</div>';
-try {
-const pSnap = await db.collection('participants').get();
-const participants = [];
-pSnap.forEach(doc => { const data = doc.data(); if (!data.deleted && data.submitted === true) participants.push({ id: doc.id, ...data, paid: data.paid || false }); });
-if (participants.length === 0) { container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay participantes.</div>'; return; }
-participants.sort((a, b) => { if (a.paid === b.paid) return (a.userCode || '').localeCompare(b.userCode || ''); return a.paid ? 1 : -1; });
-const pendientes = participants.filter(p => !p.paid).length;
-const pagados = participants.filter(p => p.paid).length;
-document.getElementById('cobranza-pendientes').innerText = pendientes;
-document.getElementById('cobranza-pagados').innerText = pagados;
-document.getElementById('cobranza-total').innerText = `Bs. ${(pagados * 5000).toLocaleString('es-VE')},00`;
-let html = '';
-participants.forEach(p => {
-const statusHtml = p.paid ? '<span class="text-2xl text-green-400">✅</span>' : `<button onclick="markAsPaid('${p.id}', '${(p.displayName || 'Anónimo').replace(/'/g, "\\'")}')" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-orange-500/30">PAGADO</button>`;
-html += `<div class="glass p-3 rounded-lg flex justify-between items-center ${p.paid ? 'opacity-60' : ''}"><div class="flex items-center gap-3"><span class="text-xs font-bold text-slate-400">${p.userCode || 'N/A'}</span><span class="text-sm font-bold text-white">${p.displayName || 'Anónimo'}</span></div><div>${statusHtml}</div></div>`;
-});
-container.innerHTML = html;
-} catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
-}
-
-async function markAsPaid(participantId, participantName) {
-if (!confirm(`¿Confirmar pago de ${participantName}?`)) return;
-if (!confirm(`🔴 CONFIRMACIÓN FINAL: ¿Estás seguro?`)) return;
-try {
-await db.collection('participants').doc(participantId).update({ paid: true, paidAt: new Date() });
-showToast(`✅ Pago de ${participantName} registrado`, "success"); loadAdminCobranza();
-} catch (error) { showToast("Error: " + error.message, "error"); }
-}
-
-async function generarImagenRanking() {
-try {
-showToast("📸 Generando imagen profesional...", "success");
-const pSnap = await db.collection('participants').get();
-const players = [];
-pSnap.forEach(doc => {
-const data = doc.data();
-if (data.deleted) return;
-if (!data.submitted) return;
-players.push({ id: doc.id, name: data.displayName || 'Anónimo', code: data.userCode || 'QA0000', score: data.score || 0 });
-});
-players.sort((a, b) => b.score - a.score || a.code.localeCompare(b.code));
-const canvasContainer = document.createElement('div');
-canvasContainer.style.cssText = `position: fixed; left: -9999px; top: 0; width: 1080px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); padding: 60px 40px; font-family: 'Inter', system-ui, -apple-system, sans-serif;`;
-canvasContainer.innerHTML = `
-<div style="text-align: center; margin-bottom: 40px;">
-<h1 style="font-size: 56px; font-weight: 900; font-style: italic; color: white; margin: 0; letter-spacing: -2px; text-shadow: 0 0 40px rgba(255,255,255,0.3);">TRIVIA MUNDIAL 2026</h1>
-<h2 style="font-size: 32px; font-weight: 700; color: white; margin: 10px 0 0 0; letter-spacing: 1px;">RANKING DE <span style="color: #22d3ee; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px;">PARTICIPANTES</span></h2>
-</div>
-<div style="background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 28px; padding: 45px; backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,0,0,0.6); position: relative;">
-<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 28px; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.05) 100%); pointer-events: none;"></div>
-<table style="width: 100%; border-collapse: separate; border-spacing: 0; position: relative; z-index: 1;">
-<thead>
-<tr style="border-bottom: 2px solid rgba(34, 211, 238, 0.4);">
-<th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 15%;">POS</th>
-<th style="padding: 20px 15px; text-align: left; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 55%;">JUGADOR</th>
-<th style="padding: 20px 15px; text-align: right; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #22d3ee; width: 30%;">PUNTOS</th>
-</tr>
-</thead>
-<tbody>
-${players.map((p, idx) => {
-let posContent = '';
-let posColor = '';
-if (idx === 0) { posContent = '🥇'; posColor = '#fbbf24'; }
-else if (idx === 1) { posContent = '🥈'; posColor = '#94a3b8'; }
-else if (idx === 2) { posContent = '🥉'; posColor = '#d97706'; }
-else { posContent = `#${idx + 1}`; posColor = '#e2e8f0'; }
-const borderStyle = idx < players.length - 1 ? `border-bottom: 1px solid rgba(255,255,255,0.08); margin-left: 15px; margin-right: 15px;` : '';
-return `<tr style="${borderStyle}"><td style="padding: 20px 15px; font-size: 22px; font-weight: 900; color: ${posColor};">${posContent}</td><td style="padding: 20px 15px; font-size: 22px; font-weight: 700; color: white; letter-spacing: 0.5px;">${p.name}</td><td style="padding: 20px 15px; font-size: 26px; font-weight: 900; color: #fbbf24; text-align: right; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);">${p.score}</td></tr>`;
-}).join('')}
-</tbody>
-</table>
-</div>
-<div style="text-align: center; margin-top: 30px; opacity: 0.6;"><p style="color: #94a3b8; font-size: 14px; font-weight: 500;">Fase de Grupos - Mundial 2026</p></div>
-`;
-document.body.appendChild(canvasContainer);
-await new Promise(resolve => setTimeout(resolve, 100));
-const canvas = await html2canvas(canvasContainer, { backgroundColor: null, scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1080, height: canvasContainer.offsetHeight });
-const previewDiv = document.getElementById('imagen-preview');
-const containerDiv = document.getElementById('imagen-container');
-previewDiv.classList.remove('hidden');
-containerDiv.innerHTML = '';
-const previewCanvas = canvas.cloneNode(true);
-previewCanvas.style.width = '100%';
-previewCanvas.style.height = 'auto';
-containerDiv.appendChild(previewCanvas);
-const link = document.createElement('a');
-link.download = `ranking-trivia-mundial-${Date.now()}.jpg`;
-link.href = canvas.toDataURL('image/jpeg', 0.95);
-link.click();
-document.body.removeChild(canvasContainer);
-showToast("✅ Imagen profesional generada y descargada", "success");
-} catch (error) {
-console.error('Error generando imagen:', error);
-showToast("❌ Error: " + error.message, "error");
-}
 }
 
 const MAX_RESULTADOS_REEL = 6;
@@ -1345,345 +1135,6 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
-function togglePlanillaInline() {
-const container = document.getElementById('planilla-inline-container');
-const loading = document.getElementById('planilla-inline-loading');
-const content = document.getElementById('planilla-inline-content');
-if (container.classList.contains('hidden')) {
-container.classList.remove('hidden');
-loading.classList.remove('hidden');
-content.classList.add('hidden');
-setTimeout(() => {
-container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}, 100);
-cargarPlanillaInline();
-} else {
-cerrarPlanillaInline();
-}
-}
-
-function cerrarPlanillaInline() {
-const container = document.getElementById('planilla-inline-container');
-container.classList.add('hidden');
-}
-
-async function cargarPlanillaInline() {
-const loading = document.getElementById('planilla-inline-loading');
-const content = document.getElementById('planilla-inline-content');
-const thead = document.querySelector('#planilla-inline-table thead');
-const tbody = document.getElementById('planilla-inline-body');
-try {
-const pSnap = await db.collection('participants').get();
-const players = [];
-pSnap.forEach(doc => {
-const data = doc.data();
-if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data });
-});
-if (players.length === 0) {
-loading.innerHTML = '<p class="text-yellow-400 font-bold">Aún no hay participantes.</p>';
-return;
-}
-const rSnap = await db.collection('matches').get();
-const results = {};
-rSnap.forEach(d => results[d.id] = d.data().result);
-let matchIds = [];
-'ABCDEFGHIJKL'.split('').forEach(g => {
-for (let i = 1; i <= 6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`);
-});
-matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
-for (const p of players) {
-try {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {};
-predSnap.forEach(d => preds[d.id] = d.data().value);
-p.predictions = preds;
-let total = 0;
-matchIds.forEach(mId => {
-const pred = preds[mId];
-const res = results[mId];
-let pts = 0;
-if (res) {
-if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-else pts = (pred === res) ? 3 : 0;
-}
-total += pts;
-});
-p.total = total;
-} catch (err) {
-p.predictions = {};
-p.total = 0;
-}
-}
-players.sort((a, b) => b.total - a.total);
-let theadHTML = '<tr><th rowspan="4" class="col-fixed-left">#</th><th rowspan="4" class="col-fixed-left">PARTICIPANTE</th>';
-matchIds.forEach((m, i) => {
-theadHTML += `<th colspan="3" class="text-blue-300">Partido ${i+1}</th><th></th>`;
-});
-theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th></tr><tr>';
-matchIds.forEach(m => {
-const sched = matchSchedule[m];
-let fechaHora = '', equipos = '';
-if (sched) {
-fechaHora = `${sched.fecha.substring(8, 10)}/${sched.fecha.substring(5, 7)} ${sched.hora}`;
-equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
-}
-theadHTML += `<th colspan="3" class="text-[10px]"><div class="text-green-400 text-[8px] font-bold">${fechaHora}</div><div>${equipos}</div></th><th></th>`;
-});
-theadHTML += '</tr><tr>';
-matchIds.forEach(() => { theadHTML += '<th>1</th><th>X</th><th>2</th><th></th>'; });
-theadHTML += '</tr><tr>';
-matchIds.forEach(mId => {
-const result = results[mId];
-let resultText = 'RESULTADO', resultClass = 'text-[10px] text-center text-slate-400', resultStyle = '';
-if (result === 'Local') { resultText = 'LOCAL'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #3b82f6 !important;'; }
-else if (result === 'Empate') { resultText = 'EMPATE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #7c3aed !important;'; }
-else if (result === 'Visitante') { resultText = 'VISITANTE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #dc2626 !important;'; }
-theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th><th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>`;
-});
-theadHTML += '</tr>';
-thead.innerHTML = theadHTML;
-let tbodyHTML = '';
-players.forEach((p, idx) => {
-const rankClass = idx < 3 ? `rank-${idx+1}` : '';
-tbodyHTML += `<tr class="${rankClass}"><td class="col-fixed-left font-bold text-lg">${String(idx+1).padStart(2,'0')}</td><td class="col-fixed-left font-bold">${p.displayName || 'Anónimo'}</td>`;
-matchIds.forEach(mId => {
-const pred = p.predictions[mId] || '';
-const res = results[mId] || '';
-let pts = 0;
-if (res) {
-if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1;
-else pts = (pred === res) ? 3 : 0;
-}
-const val1 = pred === 'Local' ? '<span class="text-white font-bold">1</span>' : '';
-const valX = pred === 'Empate' ? '<span class="text-white font-bold">X</span>' : '';
-const val2 = pred === 'Visitante' ? '<span class="text-white font-bold">2</span>' : '';
-const ptsClass = pts > 0 ? 'text-green-400 font-bold' : 'text-slate-600';
-tbodyHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="${ptsClass}">${pts}</td>`;
-});
-tbodyHTML += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td></tr>`;
-});
-tbody.innerHTML = tbodyHTML;
-loading.classList.add('hidden');
-content.classList.remove('hidden');
-} catch (error) {
-loading.innerHTML = `<div class="text-red-400 font-bold"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`;
-}
-}
-
-async function generarPlanillaWeb() {
-showView('view-planilla');
-const loadingDiv = document.getElementById('planilla-loading');
-if (loadingDiv) { loadingDiv.classList.remove('hidden'); loadingDiv.innerHTML = '<div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mx-auto mb-4"></div><p class="text-blue-400 font-bold">Cargando datos...</p>'; }
-try {
-const pSnap = await db.collection('participants').get();
-const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
-if (players.length === 0) { if (loadingDiv) loadingDiv.innerHTML = '<p class="text-yellow-400 font-bold p-4">Aún no hay participantes.</p>'; return; }
-const rSnap = await db.collection('matches').get();
-const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
-let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
-for (const p of players) {
-try {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
-let total = 0;
-matchIds.forEach(mId => {
-const pred = preds[mId]; const res = results[mId]; let pts = 0;
-if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
-total += pts;
-});
-p.total = total;
-} catch (err) { p.predictions = {}; p.total = 0; }
-}
-players.sort((a, b) => b.total - a.total);
-const totalUsersSpan = document.getElementById('total-users'); if (totalUsersSpan) totalUsersSpan.innerText = players.length;
-let theadHTML = '<tr><th rowspan="4" class="col-fixed-left">#</th><th rowspan="4" class="col-fixed-left">PARTICIPANTE</th>';
-matchIds.forEach((m, i) => { theadHTML += `<th colspan="3" class="text-blue-300">Partido ${i+1}</th><th></th>`; });
-theadHTML += '<th rowspan="4" class="col-fixed-right">TOTAL</th></tr><tr>';
-matchIds.forEach(m => {
-const sched = matchSchedule[m]; let fechaHora = '', equipos = '';
-if (sched) { fechaHora = `${sched.fecha.substring(8, 10)}/${sched.fecha.substring(5, 7)} ${sched.hora}`; equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`; }
-theadHTML += `<th colspan="3" class="text-[10px]"><div class="text-green-400 text-[8px] font-bold">${fechaHora}</div><div>${equipos}</div></th><th></th>`;
-});
-theadHTML += '</tr><tr>'; matchIds.forEach(() => { theadHTML += '<th>1</th><th>X</th><th>2</th><th></th>'; }); theadHTML += '</tr><tr>';
-matchIds.forEach(mId => {
-const result = results[mId]; let resultText = 'RESULTADO', resultClass = 'text-[10px] text-center text-slate-400', resultStyle = '';
-if (result === 'Local') { resultText = 'LOCAL'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #3b82f6 !important;'; }
-else if (result === 'Empate') { resultText = 'EMPATE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #7c3aed !important;'; }
-else if (result === 'Visitante') { resultText = 'VISITANTE'; resultClass = 'text-[10px] text-center font-bold'; resultStyle = 'color: #dc2626 !important;'; }
-theadHTML += `<th colspan="3" class="${resultClass}" style="background: #161b2c !important; ${resultStyle}">${resultText}</th><th class="text-yellow-400" style="background: #161b2c !important;">PTOS</th>`;
-});
-theadHTML += '</tr>';
-document.querySelector('#planilla-table thead').innerHTML = theadHTML;
-let tbodyHTML = '';
-players.forEach((p, idx) => {
-const rankClass = idx < 3 ? `rank-${idx+1}` : '';
-tbodyHTML += `<tr class="${rankClass}"><td class="col-fixed-left font-bold text-lg">${String(idx+1).padStart(2,'0')}</td><td class="col-fixed-left font-bold">${p.displayName || 'Anónimo'}</td>`;
-matchIds.forEach(mId => {
-const pred = p.predictions[mId] || ''; const res = results[mId] || ''; let pts = 0;
-if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
-const val1 = pred === 'Local' ? '<span class="text-white font-bold">1</span>' : '';
-const valX = pred === 'Empate' ? '<span class="text-white font-bold">X</span>' : '';
-const val2 = pred === 'Visitante' ? '<span class="text-white font-bold">2</span>' : '';
-const ptsClass = pts > 0 ? 'text-green-400 font-bold' : 'text-slate-600';
-tbodyHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="${ptsClass}">${pts}</td>`;
-});
-tbodyHTML += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td></tr>`;
-});
-document.getElementById('planilla-body').innerHTML = tbodyHTML;
-if (loadingDiv) loadingDiv.classList.add('hidden');
-} catch (error) { if (loadingDiv) loadingDiv.innerHTML = `<div class="text-red-400 font-bold p-4"><p class="text-lg mb-2">❌ Error</p><p class="text-sm">${error.message}</p></div>`; }
-}
-
-async function generarPlanillaDigital() {
-showToast("⏳ Generando planilla digital...", "success");
-try {
-const pSnap = await db.collection('participants').get();
-const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
-const rSnap = await db.collection('matches').get();
-const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
-let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
-for (const p of players) {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
-let total = 0;
-matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
-p.total = total;
-}
-players.sort((a, b) => b.total - a.total);
-let tableHTML = `<table><thead><tr><th rowspan="4" class="sticky-col">#</th><th rowspan="4" class="sticky-col">PARTICIPANTE</th>`;
-matchIds.forEach((m, i) => { tableHTML += `<th colspan="3" class="bg-blue-800 text-white">Partido ${i+1}</th><th class="bg-gray-200"></th>`; });
-tableHTML += `<th rowspan="4" class="sticky-col-right bg-yellow-400 text-black">TOTAL</th></tr><tr>`;
-matchIds.forEach(m => {
-const sched = matchSchedule[m]; let fechaHora = '', equipos = '';
-if (sched) { fechaHora = `${sched.fecha.substring(8, 10)}/${sched.fecha.substring(5, 7)} ${sched.hora}`; equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`; }
-tableHTML += `<th colspan="3" class="bg-blue-600 text-white text-[10px]"><div style="color: #90EE90; font-size: 7pt;">${fechaHora}</div><div>${equipos}</div></th><th class="bg-gray-200"></th>`;
-});
-tableHTML += `</tr><tr>`; matchIds.forEach(() => { tableHTML += `<th class="bg-blue-400 text-white">1</th><th class="bg-blue-400 text-white">X</th><th class="bg-blue-400 text-white">2</th><th class="bg-gray-200"></th>`; }); tableHTML += `</tr><tr>`;
-matchIds.forEach(mId => {
-const result = results[mId]; let resultText = 'RESULTADO', resultStyle = 'background: #f0f0f0; color: #999; font-weight: bold;';
-if (result === 'Local') { resultText = 'LOCAL'; resultStyle = 'background: #f0f0f0; color: #2563eb; font-weight: bold;'; }
-else if (result === 'Empate') { resultText = 'EMPATE'; resultStyle = 'background: #f0f0f0; color: #eab308; font-weight: bold;'; }
-else if (result === 'Visitante') { resultText = 'VISITANTE'; resultStyle = 'background: #f0f0f0; color: #dc2626; font-weight: bold;'; }
-tableHTML += `<th colspan="3" style="${resultStyle}">${resultText}</th><th class="bg-yellow-200 text-black font-bold">PTOS</th>`;
-});
-tableHTML += `</tr></thead><tbody>`;
-players.forEach((p, idx) => {
-const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
-tableHTML += `<tr class="${rankClass}"><td class="sticky-col font-bold">${String(idx+1).padStart(2,'0')}</td><td class="sticky-col font-bold text-left pl-2">${p.displayName || 'Anónimo'}</td>`;
-matchIds.forEach(mId => {
-const pred = p.predictions[mId] || ''; const res = results[mId] || ''; let pts = 0;
-if (res) { if (res === 'Empate') pts = (pred === 'Empate') ? 5 : 1; else pts = (pred === res) ? 3 : 0; }
-const val1 = pred === 'Local' ? '<span style="color:#000;font-weight:bold">1</span>' : '';
-const valX = pred === 'Empate' ? '<span style="color:#000;font-weight:bold">X</span>' : '';
-const val2 = pred === 'Visitante' ? '<span style="color:#000;font-weight:bold">2</span>' : '';
-const ptsStyle = pts > 0 ? 'style="color:#000;font-weight:bold"' : 'style="color:#999"';
-tableHTML += `<td>${val1}</td><td>${valX}</td><td>${val2}</td><td class="bg-yellow-50" ${ptsStyle}>${pts}</td>`;
-});
-tableHTML += `<td class="sticky-col-right bg-yellow-200 font-black text-lg border-l-2 border-gray-400">${p.total}</td></tr>`;
-});
-tableHTML += `</tbody></table>`;
-const fullHTML = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Planilla Digital</title><script src="https://cdn.tailwindcss.com"><\/script><style>@page { size: landscape; margin: 0.5cm; } body { font-family: 'Inter', sans-serif; background: white; padding: 10px; } table { border-collapse: collapse; width: 100%; font-size: 8pt; } th, td { border: 1px solid #333; padding: 2px 4px; text-align: center; white-space: nowrap; } .sticky-col { position: sticky; left: 0; background: #e0e7ff; z-index: 10; border-right: 2px solid #4f46e5; color: #1e293b; } .sticky-col-right { position: sticky; right: 0; background: #fef3c7; z-index: 10; border-left: 2px solid #d97706; color: #1e293b; } .rank-1, .rank-2, .rank-3 { background-color: rgba(51, 153, 204, 0.4) !important; color: #000 !important; } .rank-1 td, .rank-2 td, .rank-3 td { color: white; border-color: #fff; } .rank-1 .sticky-col, .rank-2 .sticky-col, .rank-3 .sticky-col { background: inherit; } .rank-1 .sticky-col-right, .rank-2 .sticky-col-right, .rank-3 .sticky-col-right { background: inherit; } h1 { text-align: center; font-size: 16pt; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; } .btn-print { display: block; margin: 10px auto; padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; } @media print { .btn-print { display: none; } body { padding: 0; } }</style></head><body><h1>Quiniela Activa Mundialista - Planilla Digital</h1><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>${tableHTML}</body></html>`;
-const newWindow = window.open('', '_blank');
-if (newWindow) { newWindow.document.write(fullHTML); newWindow.document.close(); }
-else { showToast("Permite las ventanas emergentes", "error"); }
-} catch (error) { showToast("❌ Error: " + error.message, "error"); }
-}
-
-async function generarTablaSelecciones() {
-const loadingDiv = document.getElementById('tabla-selecciones-loading');
-const container = document.getElementById('tabla-selecciones-container');
-if (loadingDiv) loadingDiv.classList.remove('hidden');
-container.innerHTML = '';
-try {
-const pSnap = await db.collection('participants').get();
-const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
-if (players.length === 0) { container.innerHTML = '<p class="text-yellow-400 font-bold p-4 text-center">Aún no hay participantes.</p>'; return; }
-const rSnap = await db.collection('matches').get();
-const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
-let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
-for (const p of players) {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
-let total = 0;
-matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
-p.total = total;
-}
-players.sort((a, b) => b.total - a.total);
-let html = '<table class="w-full text-sm text-left" style="min-width: 2000px;"><thead class="text-xs uppercase bg-[#161b2c] text-orange-400"><tr>';
-html += '<th rowspan="2" class="col-fixed-num">#</th><th rowspan="2" class="col-fixed-name">PARTICIPANTE</th>';
-matchIds.forEach((m, i) => {
-const sched = matchSchedule[m]; let equipos = '';
-if (sched) equipos = `${abreviarPais(sched.local).substring(0,3).toUpperCase()} vs ${abreviarPais(sched.visitante).substring(0,3).toUpperCase()}`;
-html += `<th class="text-[10px]">${i+1}<br><span class="text-slate-400">${equipos}</span></th>`;
-});
-html += '<th rowspan="2" class="col-fixed-right text-yellow-400">TOTAL</th></tr></thead><tbody class="text-slate-300">';
-players.forEach((p, idx) => {
-const rankClass = idx < 3 ? `rank-${idx+1}` : '';
-html += `<tr class="${rankClass}"><td class="col-fixed-num font-bold text-lg">${String(idx+1).padStart(2,'0')}</td><td class="col-fixed-name font-bold">${p.displayName || 'Anónimo'}</td>`;
-matchIds.forEach(mId => {
-const pred = p.predictions[mId] || ''; const sched = matchSchedule[mId];
-let cellContent = '', cellClass = 'text-slate-600';
-if (pred === 'Local' && sched) { cellContent = abreviarPais(sched.local); cellClass = 'text-cyan-400'; }
-else if (pred === 'Empate') { cellContent = 'Empate'; cellClass = 'text-amber-400'; }
-else if (pred === 'Visitante' && sched) { cellContent = abreviarPais(sched.visitante); cellClass = 'text-rose-500'; }
-html += `<td class="${cellClass} text-[10px]">${cellContent}</td>`;
-});
-html += `<td class="col-fixed-right text-yellow-400 font-black text-xl">${p.total}</td></tr>`;
-});
-html += '</tbody></table>';
-container.innerHTML = html;
-} catch (error) { container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`; }
-finally { if (loadingDiv) loadingDiv.classList.add('hidden'); }
-}
-
-async function generarTablaSeleccionesDigital() {
-const newWindow = window.open('', '_blank');
-if (!newWindow) { showToast("Permite las ventanas emergentes", "error"); return; }
-newWindow.document.write('<html><head><title>Selecciones por Nombre</title><style>html,body{height:100%;overflow:auto;}body{font-family:Arial,sans-serif;padding:20px;background:#0a0f1e;color:white;margin:0;}table{border-collapse:collapse;width:100%;font-size:8pt;}th,td{border:1px solid rgba(255,255,255,0.1);padding:4px;text-align:center;white-space:nowrap;}th{background:#161b2c;color:#f97316;font-weight:bold;position:sticky;top:0;z-index:5;}.local{color:#22d3ee;}.empate{color:#fbbf24;}.visitante{color:#f43f5e;}.sn{position:sticky;left:0;background:#0a0f1e;z-index:5;width:30px;text-align:center;} .sp{position:sticky;left:30px;background:#0a0f1e;z-index:5;text-align:left;padding-left:5px;border-right:1px solid rgba(255,255,255,0.1);}h1{text-align:center;color:#f97316;}.btn-print{display:block;margin:10px auto;padding:8px 16px;background:#f97316;color:white;border:none;border-radius:4px;font-weight:bold;cursor:pointer;}@media print{.btn-print{display:none;}}</style></head><body>');
-newWindow.document.write('<h1>TRIVIA MUNDIAL 2026 - Selecciones por Nombre</h1><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button><div id="loading">Cargando...</div></body></html>');
-newWindow.document.close();
-try {
-const pSnap = await db.collection('participants').get();
-const players = []; pSnap.forEach(doc => { const data = doc.data(); if (data.submitted === true && !data.deleted) players.push({ id: doc.id, ...data }); });
-const rSnap = await db.collection('matches').get();
-const results = {}; rSnap.forEach(d => results[d.id] = d.data().result);
-let matchIds = []; 'ABCDEFGHIJKL'.split('').forEach(g => { for(let i=1; i<=6; i++) matchIds.push(`g${g.toLowerCase()}m${i}`); });
-matchIds.sort((a, b) => (matchSchedule[a].fecha + ' ' + matchSchedule[a].hora).localeCompare(matchSchedule[b].fecha + ' ' + matchSchedule[b].hora));
-for (const p of players) {
-const predSnap = await db.collection('participants').doc(p.id).collection('predictions').get();
-const preds = {}; predSnap.forEach(d => preds[d.id] = d.data().value); p.predictions = preds;
-let total = 0;
-matchIds.forEach(mId => { const pred = preds[mId]; const res = results[mId]; if (res) { if (res === 'Empate') total += (pred === 'Empate') ? 5 : 1; else total += (pred === res) ? 3 : 0; } });
-p.total = total;
-}
-players.sort((a, b) => b.total - a.total);
-let tableHTML = '<table><thead><tr><th class="sn">#</th><th class="sp">PARTICIPANTE</th>';
-matchIds.forEach((m, i) => {
-const sched = matchSchedule[m]; let equipos = '';
-if (sched) equipos = `${abreviarPais(sched.local).substring(0,3)} vs ${abreviarPais(sched.visitante).substring(0,3)}`;
-tableHTML += `<th>${i+1}<br><small>${equipos}</small></th>`;
-});
-tableHTML += '<th>TOTAL</th></tr></thead><tbody>';
-players.forEach((p, idx) => {
-tableHTML += `<tr><td class="sn">${String(idx+1).padStart(2,'0')}</td><td class="sp">${p.displayName || 'Anónimo'}</td>`;
-matchIds.forEach(mId => {
-const pred = p.predictions[mId] || ''; const sched = matchSchedule[mId];
-let cellContent = '', cellClass = '';
-if (pred === 'Local' && sched) { cellContent = abreviarPais(sched.local); cellClass = 'local'; }
-else if (pred === 'Empate') { cellContent = 'Empate'; cellClass = 'empate'; }
-else if (pred === 'Visitante' && sched) { cellContent = abreviarPais(sched.visitante); cellClass = 'visitante'; }
-tableHTML += `<td class="${cellClass}">${cellContent}</td>`;
-});
-tableHTML += `<td>${p.total}</td></tr>`;
-});
-tableHTML += '</tbody></table>';
-newWindow.document.getElementById('loading').outerHTML = tableHTML;
-} catch (error) { newWindow.document.body.innerHTML += `<p style="color:red">Error: ${error.message}</p>`; }
-}
-
 function logout() {
 if (!confirm("¿Seguro que quieres salir?")) return;
 sessionStorage.removeItem('ultimaPantalla');
@@ -1693,7 +1144,7 @@ auth.signOut().then(() => { window.location.reload(); }).catch((error) => { show
 }
 
 function showView(viewId) {
-['view-home', 'view-predictions', 'view-leaderboard', 'view-admin', 'view-planilla'].forEach(id => {
+['view-home', 'view-predictions', 'view-leaderboard', 'view-admin'].forEach(id => {
 const el = document.getElementById(id);
 if (el) el.classList.add('hidden');
 });
@@ -2007,7 +1458,6 @@ console.log('📍 Restaurando vista:', pantallaGuardada);
 showView(pantallaGuardada);
 if (pantallaGuardada === 'view-predictions') renderMatches();
 else if (pantallaGuardada === 'view-admin') renderAdminMatches();
-else if (pantallaGuardada === 'view-planilla') generarPlanillaWeb();
 } else {
 if (data.submitted) { showView('view-leaderboard'); }
 else { showView('view-predictions'); renderMatches(); }
