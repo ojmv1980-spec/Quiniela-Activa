@@ -42,6 +42,7 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 .tipo-prorroga { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; }
 .tipo-penales { background: linear-gradient(135deg, #ea580c, #f97316); color: white; }
 .tipo-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 6px; }
+.penales-score { background: rgba(234, 88, 12, 0.2); border: 1px solid #ea580c; color: #f97316; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 6px; }
 
 /* 🏆 ESTILOS DEL BRACKET ELIMINATORIO */
 .bracket-round-tab { background-color: rgba(255, 255, 255, 0.05); color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
@@ -142,7 +143,7 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 Actualizando en tiempo real
 </p>
 </div>
-<!-- 🏆 RANKING DE PARTICIPANTES (movido debajo del bracket) -->
+<!-- 🏆 RANKING DE PARTICIPANTES -->
 <div class="w-full max-w-4xl mx-auto">
 <h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
 Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
@@ -223,13 +224,21 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
 </select>
 </div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Tipo de Victoria (Eliminación Directa)</label>
+</div>
+<!-- 🎯 SECCIÓN DE TIPO DE VICTORIA (oculta inicialmente) -->
+<div id="seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Tipo de Victoria</label>
 <select id="reel-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
 <option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
 <option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
 <option value="penales" class="bg-slate-800">Tanda de Penales</option>
 </select>
 </div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Local</label><input type="number" id="reel-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Visitante</label><input type="number" id="reel-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+</div>
+<p class="text-xs text-orange-300 mt-2">⚠️ Si hay empate en 90 min, selecciona cómo se definió el partido</p>
 </div>
 <div class="flex justify-center gap-4 mt-4">
 <button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg">💾 Guardar Resultado</button>
@@ -278,12 +287,19 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
 </select>
 </div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Tipo de Victoria</label>
+</div>
+<!-- 🎯 SECCIÓN TIPO DE VICTORIA EN MODAL -->
+<div id="edit-seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Tipo de Victoria</label>
 <select id="edit-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
 <option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
 <option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
 <option value="penales" class="bg-slate-800">Tanda de Penales</option>
 </select>
+</div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Local</label><input type="number" id="edit-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Visitante</label><input type="number" id="edit-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
 </div>
 </div>
 <div class="flex justify-center gap-4 mt-6">
@@ -665,6 +681,36 @@ if (tab === 'reel') cargarListaResultadosReel();
 if (tab === 'bracket') renderAdminBracket();
 }
 
+// 🎯 FUNCIÓN PARA MOSTRAR/OCULTAR SECCIÓN DE TIPO DE VICTORIA
+function toggleSeccionTipoVictoria() {
+  const golesLocal = parseInt(document.getElementById('reel-golesLocal').value);
+  const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
+  const estado = document.getElementById('reel-estado').value;
+  const seccion = document.getElementById('seccionTipoVictoria');
+  
+  // Mostrar solo si está finalizado y hay empate
+  if (estado === 'Finalizado' && !isNaN(golesLocal) && !isNaN(golesVisitante) && golesLocal === golesVisitante) {
+    seccion.classList.remove('hidden');
+  } else {
+    seccion.classList.add('hidden');
+    // Resetear valores
+    document.getElementById('reel-tipoVictoria').value = '90min';
+    document.getElementById('reel-penalesLocal').value = '';
+    document.getElementById('reel-penalesVisitante').value = '';
+  }
+}
+
+// Agregar listeners a los campos de goles y estado
+document.addEventListener('DOMContentLoaded', () => {
+  const golesLocalInput = document.getElementById('reel-golesLocal');
+  const golesVisitanteInput = document.getElementById('reel-golesVisitante');
+  const estadoSelect = document.getElementById('reel-estado');
+  
+  if (golesLocalInput) golesLocalInput.addEventListener('input', toggleSeccionTipoVictoria);
+  if (golesVisitanteInput) golesVisitanteInput.addEventListener('input', toggleSeccionTipoVictoria);
+  if (estadoSelect) estadoSelect.addEventListener('change', toggleSeccionTipoVictoria);
+});
+
 const MAX_RESULTADOS_REEL = 6;
 let resultadosReel = [];
 let reelScrollIndex = 0;
@@ -740,14 +786,20 @@ const estadoBadge = resultado.estado === 'En Vivo'
 ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
 : '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
 
-// 🎯 Badge de tipo de victoria (solo si está finalizado)
+// 🎯 Badge de tipo de victoria y penales
 let tipoVictoriaBadge = '';
+let penalesBadge = '';
 if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
   const tipoClase = `tipo-${resultado.tipoVictoria}`;
   const tipoTexto = resultado.tipoVictoria === '90min' ? "90'"
     : resultado.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
     : '🎯 Penales';
   tipoVictoriaBadge = `<span class="${tipoClase} tipo-badge">${tipoTexto}</span>`;
+  
+  // Mostrar resultado de penales si existe
+  if (resultado.tipoVictoria === 'penales' && resultado.penalesLocal !== undefined && resultado.penalesVisitante !== undefined) {
+    penalesBadge = `<span class="penales-score">(${resultado.penalesLocal}-${resultado.penalesVisitante})</span>`;
+  }
 }
 
 card.innerHTML = `
@@ -765,7 +817,7 @@ ${resultado.golesLocal ?? 0} - ${resultado.golesVisitante ?? 0}
 </div>
 </div>
 <div class="flex items-center justify-between mt-1">
-<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}</span>
+<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}${penalesBadge}</span>
 ${estadoBadge}
 </div>
 `;
@@ -804,11 +856,39 @@ const equipoVisitante = document.getElementById('reel-equipoVisitante').value.tr
 const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
 const fecha = document.getElementById('reel-fecha').value;
 const estado = document.getElementById('reel-estado').value;
-const tipoVictoria = document.getElementById('reel-tipoVictoria').value;
+
 if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
 showToast("⚠️ Completa todos los campos obligatorios", "error");
 return;
 }
+
+// 🎯 Si hay empate y está finalizado, verificar tipo de victoria
+let tipoVictoria = '90min';
+let penalesLocal = null;
+let penalesVisitante = null;
+
+if (estado === 'Finalizado' && golesLocal === golesVisitante) {
+  const seccion = document.getElementById('seccionTipoVictoria');
+  if (!seccion.classList.contains('hidden')) {
+    tipoVictoria = document.getElementById('reel-tipoVictoria').value;
+    
+    if (tipoVictoria === 'penales') {
+      penalesLocal = parseInt(document.getElementById('reel-penalesLocal').value);
+      penalesVisitante = parseInt(document.getElementById('reel-penalesVisitante').value);
+      
+      if (isNaN(penalesLocal) || isNaN(penalesVisitante)) {
+        showToast("⚠️ Ingresa el resultado de los penales", "error");
+        return;
+      }
+      
+      if (penalesLocal === penalesVisitante) {
+        showToast("⚠️ Los penales no pueden quedar empatados", "error");
+        return;
+      }
+    }
+  }
+}
+
 try {
 await db.collection('resultados').add({
 equipoLocal,
@@ -817,7 +897,9 @@ equipoVisitante,
 golesVisitante,
 fecha,
 estado,
-tipoVictoria: tipoVictoria || '90min',
+tipoVictoria: tipoVictoria,
+penalesLocal: penalesLocal,
+penalesVisitante: penalesVisitante,
 fechaHora: firebase.firestore.FieldValue.serverTimestamp(),
 publicadoPor: 'admin'
 });
@@ -827,7 +909,11 @@ document.getElementById('reel-golesLocal').value = '';
 document.getElementById('reel-equipoVisitante').value = '';
 document.getElementById('reel-golesVisitante').value = '';
 document.getElementById('reel-fecha').value = '';
+document.getElementById('reel-estado').value = 'Finalizado';
 document.getElementById('reel-tipoVictoria').value = '90min';
+document.getElementById('reel-penalesLocal').value = '';
+document.getElementById('reel-penalesVisitante').value = '';
+document.getElementById('seccionTipoVictoria').classList.add('hidden');
 cargarListaResultadosReel();
 } catch (error) {
 console.error('Error guardando resultado:', error);
@@ -848,24 +934,29 @@ return;
 let html = '<div class="space-y-2">';
 snap.forEach(doc => {
 const data = doc.data();
-// 🎯 Badge de tipo de victoria
+// 🎯 Badge de tipo de victoria y penales
 let tipoBadge = '';
+let penalesBadge = '';
 if (data.estado === 'Finalizado' && data.tipoVictoria) {
   const tipoClase = `tipo-${data.tipoVictoria}`;
   const tipoTexto = data.tipoVictoria === '90min' ? "90'"
     : data.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
     : '🎯 Penales';
   tipoBadge = `<span class="${tipoClase} tipo-badge ml-2">${tipoTexto}</span>`;
+  
+  if (data.tipoVictoria === 'penales' && data.penalesLocal !== undefined && data.penalesVisitante !== undefined) {
+    penalesBadge = `<span class="penales-score">(${data.penalesLocal}-${data.penalesVisitante})</span>`;
+  }
 }
 html += `
 <div class="glass p-3 rounded-lg flex justify-between items-center">
 <div class="flex items-center gap-3 flex-1 min-w-0">
-<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}</span>
+<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}${penalesBadge}</span>
 <span class="text-xs text-slate-400">${data.fecha || ''}</span>
 <span class="text-xs px-2 py-0.5 rounded ${data.estado === 'Finalizado' ? 'bg-green-500/20 text-green-400' : data.estado === 'En Vivo' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">${data.estado}</span>
 </div>
 <div class="flex gap-2">
-<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}')" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
+<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}', ${data.penalesLocal !== undefined ? data.penalesLocal : 'null'}, ${data.penalesVisitante !== undefined ? data.penalesVisitante : 'null'})" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
 <i data-lucide="edit-3" class="w-3 h-3"></i> Editar
 </button>
 <button onclick="eliminarResultadoReel('${doc.id}')" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
@@ -895,7 +986,7 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
-function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria) {
+function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria, penalesLocal, penalesVisitante) {
 document.getElementById('edit-id').value = id;
 document.getElementById('edit-equipoLocal').value = equipoLocal;
 document.getElementById('edit-golesLocal').value = golesLocal;
@@ -903,10 +994,31 @@ document.getElementById('edit-equipoVisitante').value = equipoVisitante;
 document.getElementById('edit-golesVisitante').value = golesVisitante;
 document.getElementById('edit-fecha').value = fecha;
 document.getElementById('edit-estado').value = estado;
+
 const tipoSelect = document.getElementById('edit-tipoVictoria');
+const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
+const penalesLocalInput = document.getElementById('edit-penalesLocal');
+const penalesVisitanteInput = document.getElementById('edit-penalesVisitante');
+
 if (tipoSelect) {
   tipoSelect.value = tipoVictoria || '90min';
 }
+
+// 🎯 Mostrar sección de tipo de victoria si hay empate
+if (estado === 'Finalizado' && golesLocal === golesVisitante) {
+  seccionTipo.classList.remove('hidden');
+  
+  if (tipoVictoria === 'penales') {
+    if (penalesLocalInput) penalesLocalInput.value = penalesLocal !== 'null' ? penalesLocal : '';
+    if (penalesVisitanteInput) penalesVisitanteInput.value = penalesVisitante !== 'null' ? penalesVisitante : '';
+  } else {
+    if (penalesLocalInput) penalesLocalInput.value = '';
+    if (penalesVisitanteInput) penalesVisitanteInput.value = '';
+  }
+} else {
+  seccionTipo.classList.add('hidden');
+}
+
 document.getElementById('modalEditarResultado').classList.remove('hidden');
 lucide.createIcons();
 }
@@ -923,7 +1035,31 @@ const equipoVisitante = document.getElementById('edit-equipoVisitante').value.tr
 const golesVisitante = parseInt(document.getElementById('edit-golesVisitante').value);
 const fecha = document.getElementById('edit-fecha').value;
 const estado = document.getElementById('edit-estado').value;
-const tipoVictoria = document.getElementById('edit-tipoVictoria')?.value || '90min';
+
+let tipoVictoria = '90min';
+let penalesLocal = null;
+let penalesVisitante = null;
+
+const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
+if (!seccionTipo.classList.contains('hidden')) {
+  tipoVictoria = document.getElementById('edit-tipoVictoria').value;
+  
+  if (tipoVictoria === 'penales') {
+    penalesLocal = parseInt(document.getElementById('edit-penalesLocal').value);
+    penalesVisitante = parseInt(document.getElementById('edit-penalesVisitante').value);
+    
+    if (isNaN(penalesLocal) || isNaN(penalesVisitante)) {
+      showToast("⚠️ Ingresa el resultado de los penales", "error");
+      return;
+    }
+    
+    if (penalesLocal === penalesVisitante) {
+      showToast("⚠️ Los penales no pueden quedar empatados", "error");
+      return;
+    }
+  }
+}
+
 if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
 showToast("⚠️ Completa todos los campos obligatorios", "error");
 return;
@@ -937,6 +1073,8 @@ golesVisitante,
 fecha,
 estado,
 tipoVictoria: tipoVictoria,
+penalesLocal: penalesLocal,
+penalesVisitante: penalesVisitante,
 ultimaEdicion: new Date()
 });
 showToast("✅ Resultado actualizado", "success");
