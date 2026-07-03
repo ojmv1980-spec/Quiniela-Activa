@@ -828,6 +828,9 @@ container.appendChild(card);
 });
 }
 
+
+
+
 function crearTarjetaReel(resultado, index) {
 const card = document.createElement('div');
 const cardClass = index === 0 ? 'reel-card newest' : 'reel-card older';
@@ -846,9 +849,13 @@ const estadoBadge = resultado.estado === 'En Vivo'
 ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
 : '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
 
-// 🎯 Badge de tipo de victoria y detalles
+//  Badge de tipo de victoria y detalles
 let tipoVictoriaBadge = '';
 let detalleBadge = '';
+
+// 🏆 Determinar ganador y agregar check
+let equipoLocalGanador = false;
+let equipoVisitanteGanador = false;
 
 if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
   const tipoClase = `tipo-${resultado.tipoVictoria}`;
@@ -857,14 +864,26 @@ if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
     : '🎯 Penales';
   tipoVictoriaBadge = `<span class="${tipoClase} tipo-badge">${tipoTexto}</span>`;
   
-  // Si es prórroga, mostrar resultado final
+  // Si es prórroga, determinar ganador por resultado final
   if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
     detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${resultado.golesLocalFinal}-${resultado.golesVisitanteFinal}</span>`;
+    
+    if (resultado.golesLocalFinal > resultado.golesVisitanteFinal) {
+      equipoLocalGanador = true;
+    } else {
+      equipoVisitanteGanador = true;
+    }
   }
   
-  // Si es penales, mostrar resultado de penales
+  // Si es penales, determinar ganador por penales
   if (resultado.tipoVictoria === 'penales' && resultado.penalesLocal !== undefined && resultado.penalesVisitante !== undefined) {
     detalleBadge = `<span class="penales-score">(${resultado.penalesLocal}-${resultado.penalesVisitante})</span>`;
+    
+    if (resultado.penalesLocal > resultado.penalesVisitante) {
+      equipoLocalGanador = true;
+    } else {
+      equipoVisitanteGanador = true;
+    }
   }
 }
 
@@ -872,23 +891,27 @@ if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
 let marcadorLocal = resultado.golesLocal ?? 0;
 let marcadorVisitante = resultado.golesVisitante ?? 0;
 
-// Si es prórroga, mostrar el marcador final en lugar del de 90 min
+// Si es prórroga, mostrar el marcador final
 if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
   marcadorLocal = resultado.golesLocalFinal;
   marcadorVisitante = resultado.golesVisitanteFinal;
 }
 
+// 🏆 Agregar check verde al ganador
+const checkLocal = equipoLocalGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
+const checkVisitante = equipoVisitanteGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
+
 card.innerHTML = `
 <div class="flex items-center justify-between gap-2">
 <div class="flex items-center gap-2 flex-1 min-w-0">
 <div class="flex-1 text-right truncate">
-<p class="text-white font-bold text-sm">${resultado.equipoLocal || 'Local'}</p>
+<p class="text-white font-bold text-sm">${resultado.equipoLocal || 'Local'}${checkLocal}</p>
 </div>
 <div class="score-badge px-3 py-1 rounded-lg text-lg min-w-[60px] text-center">
 ${marcadorLocal} - ${marcadorVisitante}
 </div>
 <div class="flex-1 truncate">
-<p class="text-white font-bold text-sm">${resultado.equipoVisitante || 'Visitante'}</p>
+<p class="text-white font-bold text-sm">${checkVisitante}${resultado.equipoVisitante || 'Visitante'}</p>
 </div>
 </div>
 </div>
@@ -899,6 +922,7 @@ ${estadoBadge}
 `;
 return card;
 }
+
 
 function iniciarAutoScrollReel() {
 detenerAutoScrollReel();
@@ -1018,6 +1042,7 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
+
 async function cargarListaResultadosReel() {
 const container = document.getElementById('reel-admin-list');
 if (!container) return;
@@ -1034,6 +1059,11 @@ const data = doc.data();
 // 🎯 Badge de tipo de victoria y detalles
 let tipoBadge = '';
 let detalleBadge = '';
+
+// 🏆 Determinar ganador para agregar check
+let equipoLocalGanador = false;
+let equipoVisitanteGanador = false;
+
 if (data.estado === 'Finalizado' && data.tipoVictoria) {
   const tipoClase = `tipo-${data.tipoVictoria}`;
   const tipoTexto = data.tipoVictoria === '90min' ? "90'"
@@ -1043,16 +1073,33 @@ if (data.estado === 'Finalizado' && data.tipoVictoria) {
   
   if (data.tipoVictoria === 'prorroga' && data.golesLocalFinal !== undefined && data.golesVisitanteFinal !== undefined) {
     detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${data.golesLocalFinal}-${data.golesVisitanteFinal}</span>`;
+    
+    if (data.golesLocalFinal > data.golesVisitanteFinal) {
+      equipoLocalGanador = true;
+    } else {
+      equipoVisitanteGanador = true;
+    }
   }
   
   if (data.tipoVictoria === 'penales' && data.penalesLocal !== undefined && data.penalesVisitante !== undefined) {
     detalleBadge = `<span class="penales-score">(${data.penalesLocal}-${data.penalesVisitante})</span>`;
+    
+    if (data.penalesLocal > data.penalesVisitante) {
+      equipoLocalGanador = true;
+    } else {
+      equipoVisitanteGanador = true;
+    }
   }
 }
+
+// 🏆 Agregar check verde al ganador
+const checkLocal = equipoLocalGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
+const checkVisitante = equipoVisitanteGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
+
 html += `
 <div class="glass p-3 rounded-lg flex justify-between items-center">
 <div class="flex items-center gap-3 flex-1 min-w-0">
-<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}${detalleBadge}</span>
+<span class="text-sm font-bold text-white truncate">${data.equipoLocal}${checkLocal} ${data.golesLocal} - ${data.golesVisitante} ${checkVisitante}${data.equipoVisitante}${tipoBadge}${detalleBadge}</span>
 <span class="text-xs text-slate-400">${data.fecha || ''}</span>
 <span class="text-xs px-2 py-0.5 rounded ${data.estado === 'Finalizado' ? 'bg-green-500/20 text-green-400' : data.estado === 'En Vivo' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">${data.estado}</span>
 </div>
@@ -1075,6 +1122,7 @@ console.error('Error cargando resultados:', error);
 container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
 }
 }
+
 
 async function eliminarResultadoReel(id) {
 if (!confirm('¿Eliminar este resultado del reel?')) return;
