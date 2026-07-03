@@ -89,7 +89,7 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 <div id="user-badge" class="hidden flex items-center gap-2 px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-full">
 <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></div>
 <span id="display-username" class="text-[10px] md:text-xs font-bold text-white"></span>
-<button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir">✕</button>
+<button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir"></button>
 </div>
 </div>
 </div>
@@ -101,7 +101,7 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 <div id="bracket-container" class="glass rounded-3xl p-6">
 <div class="flex items-center justify-between mb-6">
 <h3 class="text-xl md:text-2xl italic-black tracking-tighter uppercase text-blue-400">🏆 LLAVE DEL MUNDIAL</h3>
-<div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge">🔴 LIVE</div>
+<div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge"> LIVE</div>
 </div>
 <div class="flex overflow-x-auto gap-2 mb-6 pb-2">
 <button onclick="switchBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R32">16avos (16)</button>
@@ -213,9 +213,9 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <p class="text-xs text-slate-400 mb-4">Agrega resultados oficiales que aparecerán en el feed animado de la página principal.</p>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="reel-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: Argentina"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label><input type="number" id="reel-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local (90 min)</label><input type="number" id="reel-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="reel-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: México"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label><input type="number" id="reel-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante (90 min)</label><input type="number" id="reel-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="reel-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
 <select id="reel-estado" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
@@ -225,23 +225,31 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 </select>
 </div>
 </div>
-<!-- 🎯 SECCIÓN DE TIPO DE VICTORIA (oculta inicialmente) -->
+<!-- 🎯 SECCIÓN DE TIPO DE VICTORIA (oculta inicialmente, se muestra con empate + finalizado) -->
 <div id="seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Tipo de Victoria</label>
-<select id="reel-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
-<option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
-<option value="penales" class="bg-slate-800">Tanda de Penales</option>
+<div class="mb-3">
+<label class="block text-xs font-bold text-orange-400 mb-1">¿Cómo se definió el partido?</label>
+<select id="reel-tipoVictoria" onchange="actualizarCamposTipoVictoria()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+<option value="90min" class="bg-slate-800">Empate a 90 minutos (sin definición)</option>
+<option value="prorroga" class="bg-slate-800">Se definió en Prórroga (Tiempo Extra)</option>
+<option value="penales" class="bg-slate-800">Se definió en Tanda de Penales</option>
 </select>
 </div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Local</label><input type="number" id="reel-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Visitante</label><input type="number" id="reel-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<!-- Campos para PRÓRROGA: resultado final después del tiempo extra -->
+<div id="camposProrroga" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+<div><label class="block text-xs font-bold text-purple-400 mb-1">️ Goles Local (Resultado Final)</label><input type="number" id="reel-golesLocalFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 2"></div>
+<div><label class="block text-xs font-bold text-purple-400 mb-1">️ Goles Visitante (Resultado Final)</label><input type="number" id="reel-golesVisitanteFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 1"></div>
+<p class="text-xs text-purple-300 col-span-2">💡 Ingresa el marcador final después de los 120 minutos (90 + 30 de prórroga)</p>
 </div>
-<p class="text-xs text-orange-300 mt-2">⚠️ Si hay empate en 90 min, selecciona cómo se definió el partido</p>
+<!-- Campos para PENALES: resultado de la tanda -->
+<div id="camposPenales" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Local</label><input type="number" id="reel-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 4"></div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Visitante</label><input type="number" id="reel-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 3"></div>
+<p class="text-xs text-orange-300 col-span-2">💡 El marcador de 90 min se mantiene empatado. Ingresa solo los penales convertidos</p>
+</div>
 </div>
 <div class="flex justify-center gap-4 mt-4">
-<button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg">💾 Guardar Resultado</button>
+<button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg"> Guardar Resultado</button>
 </div>
 <div id="reel-admin-list" class="mt-6 space-y-2"></div>
 </div>
@@ -249,7 +257,7 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <!-- 🏆 ADMIN TAB BRACKET -->
 <div id="admin-tab-bracket" class="hidden">
 <div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-blue-400 mb-2">🏆 Bracket Eliminatorio - Cargar Resultados</h4>
+<h4 class="font-bold text-blue-400 mb-2"> Bracket Eliminatorio - Cargar Resultados</h4>
 <p class="text-xs text-slate-400 mb-4">Ingresa los goles y guarda. El sistema avanza al ganador automáticamente. Si hay empate, se piden penales.</p>
 <div class="flex overflow-x-auto gap-2 mb-4 pb-2">
 <button onclick="switchAdminBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R32">16avos (16)</button>
@@ -276,30 +284,37 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <input type="hidden" id="edit-id">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="edit-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local</label><input type="number" id="edit-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local (90 min)</label><input type="number" id="edit-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="edit-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante</label><input type="number" id="edit-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante (90 min)</label><input type="number" id="edit-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="edit-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
 <div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
-<select id="edit-estado" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+<select id="edit-estado" onchange="actualizarCamposTipoVictoriaEdit()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
 <option value="Finalizado" class="bg-slate-800">Finalizado</option>
 <option value="En Vivo" class="bg-slate-800">En Vivo</option>
 <option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
 </select>
 </div>
 </div>
-<!-- 🎯 SECCIÓN TIPO DE VICTORIA EN MODAL -->
+<!--  SECCIÓN TIPO DE VICTORIA EN MODAL -->
 <div id="edit-seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Tipo de Victoria</label>
-<select id="edit-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
-<option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
-<option value="penales" class="bg-slate-800">Tanda de Penales</option>
+<div class="mb-3">
+<label class="block text-xs font-bold text-orange-400 mb-1">¿Cómo se definió el partido?</label>
+<select id="edit-tipoVictoria" onchange="actualizarCamposTipoVictoriaEdit()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+<option value="90min" class="bg-slate-800">Empate a 90 minutos (sin definición)</option>
+<option value="prorroga" class="bg-slate-800">Se definió en Prórroga (Tiempo Extra)</option>
+<option value="penales" class="bg-slate-800">Se definió en Tanda de Penales</option>
 </select>
 </div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Local</label><input type="number" id="edit-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">Penales Visitante</label><input type="number" id="edit-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
+<!-- Campos para PRÓRROGA -->
+<div id="edit-camposProrroga" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+<div><label class="block text-xs font-bold text-purple-400 mb-1">⏱️ Goles Local (Resultado Final)</label><input type="number" id="edit-golesLocalFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-purple-400 mb-1">⏱️ Goles Visitante (Resultado Final)</label><input type="number" id="edit-golesVisitanteFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+</div>
+<!-- Campos para PENALES -->
+<div id="edit-camposPenales" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Local</label><input type="number" id="edit-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
+<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Visitante</label><input type="number" id="edit-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
 </div>
 </div>
 <div class="flex justify-center gap-4 mt-6">
@@ -681,22 +696,67 @@ if (tab === 'reel') cargarListaResultadosReel();
 if (tab === 'bracket') renderAdminBracket();
 }
 
-// 🎯 FUNCIÓN PARA MOSTRAR/OCULTAR SECCIÓN DE TIPO DE VICTORIA
+// 🎯 FUNCIÓN: Mostrar/ocultar sección tipo victoria según empate
 function toggleSeccionTipoVictoria() {
   const golesLocal = parseInt(document.getElementById('reel-golesLocal').value);
   const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
   const estado = document.getElementById('reel-estado').value;
   const seccion = document.getElementById('seccionTipoVictoria');
   
-  // Mostrar solo si está finalizado y hay empate
   if (estado === 'Finalizado' && !isNaN(golesLocal) && !isNaN(golesVisitante) && golesLocal === golesVisitante) {
     seccion.classList.remove('hidden');
   } else {
     seccion.classList.add('hidden');
     // Resetear valores
     document.getElementById('reel-tipoVictoria').value = '90min';
+    document.getElementById('camposProrroga').classList.add('hidden');
+    document.getElementById('camposPenales').classList.add('hidden');
+    document.getElementById('reel-golesLocalFinal').value = '';
+    document.getElementById('reel-golesVisitanteFinal').value = '';
     document.getElementById('reel-penalesLocal').value = '';
     document.getElementById('reel-penalesVisitante').value = '';
+  }
+}
+
+// 🎯 FUNCIÓN: Actualizar campos según tipo de victoria seleccionado (formulario nuevo)
+function actualizarCamposTipoVictoria() {
+  const tipo = document.getElementById('reel-tipoVictoria').value;
+  const camposProrroga = document.getElementById('camposProrroga');
+  const camposPenales = document.getElementById('camposPenales');
+  
+  camposProrroga.classList.add('hidden');
+  camposPenales.classList.add('hidden');
+  
+  if (tipo === 'prorroga') {
+    camposProrroga.classList.remove('hidden');
+  } else if (tipo === 'penales') {
+    camposPenales.classList.remove('hidden');
+  }
+}
+
+// 🎯 FUNCIÓN: Actualizar campos según tipo de victoria seleccionado (modal edición)
+function actualizarCamposTipoVictoriaEdit() {
+  const estado = document.getElementById('edit-estado').value;
+  const golesLocal = parseInt(document.getElementById('edit-golesLocal').value);
+  const golesVisitante = parseInt(document.getElementById('edit-golesVisitante').value);
+  const seccion = document.getElementById('edit-seccionTipoVictoria');
+  
+  if (estado === 'Finalizado' && !isNaN(golesLocal) && !isNaN(golesVisitante) && golesLocal === golesVisitante) {
+    seccion.classList.remove('hidden');
+    const tipo = document.getElementById('edit-tipoVictoria').value;
+    const camposProrroga = document.getElementById('edit-camposProrroga');
+    const camposPenales = document.getElementById('edit-camposPenales');
+    
+    camposProrroga.classList.add('hidden');
+    camposPenales.classList.add('hidden');
+    
+    if (tipo === 'prorroga') {
+      camposProrroga.classList.remove('hidden');
+    } else if (tipo === 'penales') {
+      camposPenales.classList.remove('hidden');
+    }
+  } else {
+    seccion.classList.add('hidden');
   }
 }
 
@@ -786,9 +846,10 @@ const estadoBadge = resultado.estado === 'En Vivo'
 ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
 : '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
 
-// 🎯 Badge de tipo de victoria y penales
+// 🎯 Badge de tipo de victoria y detalles
 let tipoVictoriaBadge = '';
-let penalesBadge = '';
+let detalleBadge = '';
+
 if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
   const tipoClase = `tipo-${resultado.tipoVictoria}`;
   const tipoTexto = resultado.tipoVictoria === '90min' ? "90'"
@@ -796,10 +857,25 @@ if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
     : '🎯 Penales';
   tipoVictoriaBadge = `<span class="${tipoClase} tipo-badge">${tipoTexto}</span>`;
   
-  // Mostrar resultado de penales si existe
-  if (resultado.tipoVictoria === 'penales' && resultado.penalesLocal !== undefined && resultado.penalesVisitante !== undefined) {
-    penalesBadge = `<span class="penales-score">(${resultado.penalesLocal}-${resultado.penalesVisitante})</span>`;
+  // Si es prórroga, mostrar resultado final
+  if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
+    detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${resultado.golesLocalFinal}-${resultado.golesVisitanteFinal}</span>`;
   }
+  
+  // Si es penales, mostrar resultado de penales
+  if (resultado.tipoVictoria === 'penales' && resultado.penalesLocal !== undefined && resultado.penalesVisitante !== undefined) {
+    detalleBadge = `<span class="penales-score">(${resultado.penalesLocal}-${resultado.penalesVisitante})</span>`;
+  }
+}
+
+// Determinar qué marcador mostrar
+let marcadorLocal = resultado.golesLocal ?? 0;
+let marcadorVisitante = resultado.golesVisitante ?? 0;
+
+// Si es prórroga, mostrar el marcador final en lugar del de 90 min
+if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
+  marcadorLocal = resultado.golesLocalFinal;
+  marcadorVisitante = resultado.golesVisitanteFinal;
 }
 
 card.innerHTML = `
@@ -809,7 +885,7 @@ card.innerHTML = `
 <p class="text-white font-bold text-sm">${resultado.equipoLocal || 'Local'}</p>
 </div>
 <div class="score-badge px-3 py-1 rounded-lg text-lg min-w-[60px] text-center">
-${resultado.golesLocal ?? 0} - ${resultado.golesVisitante ?? 0}
+${marcadorLocal} - ${marcadorVisitante}
 </div>
 <div class="flex-1 truncate">
 <p class="text-white font-bold text-sm">${resultado.equipoVisitante || 'Visitante'}</p>
@@ -817,7 +893,7 @@ ${resultado.golesLocal ?? 0} - ${resultado.golesVisitante ?? 0}
 </div>
 </div>
 <div class="flex items-center justify-between mt-1">
-<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}${penalesBadge}</span>
+<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}${detalleBadge}</span>
 ${estadoBadge}
 </div>
 `;
@@ -862,8 +938,10 @@ showToast("⚠️ Completa todos los campos obligatorios", "error");
 return;
 }
 
-// 🎯 Si hay empate y está finalizado, verificar tipo de victoria
+// 🎯 Si hay empate y está finalizado, procesar tipo de victoria
 let tipoVictoria = '90min';
+let golesLocalFinal = null;
+let golesVisitanteFinal = null;
 let penalesLocal = null;
 let penalesVisitante = null;
 
@@ -872,7 +950,20 @@ if (estado === 'Finalizado' && golesLocal === golesVisitante) {
   if (!seccion.classList.contains('hidden')) {
     tipoVictoria = document.getElementById('reel-tipoVictoria').value;
     
-    if (tipoVictoria === 'penales') {
+    if (tipoVictoria === 'prorroga') {
+      golesLocalFinal = parseInt(document.getElementById('reel-golesLocalFinal').value);
+      golesVisitanteFinal = parseInt(document.getElementById('reel-golesVisitanteFinal').value);
+      
+      if (isNaN(golesLocalFinal) || isNaN(golesVisitanteFinal)) {
+        showToast("⚠️ Ingresa el resultado final después de la prórroga", "error");
+        return;
+      }
+      
+      if (golesLocalFinal === golesVisitanteFinal) {
+        showToast("⚠️ El resultado final no puede quedar empatado (debe haber ganador en prórroga)", "error");
+        return;
+      }
+    } else if (tipoVictoria === 'penales') {
       penalesLocal = parseInt(document.getElementById('reel-penalesLocal').value);
       penalesVisitante = parseInt(document.getElementById('reel-penalesVisitante').value);
       
@@ -898,6 +989,8 @@ golesVisitante,
 fecha,
 estado,
 tipoVictoria: tipoVictoria,
+golesLocalFinal: golesLocalFinal,
+golesVisitanteFinal: golesVisitanteFinal,
 penalesLocal: penalesLocal,
 penalesVisitante: penalesVisitante,
 fechaHora: firebase.firestore.FieldValue.serverTimestamp(),
@@ -911,9 +1004,13 @@ document.getElementById('reel-golesVisitante').value = '';
 document.getElementById('reel-fecha').value = '';
 document.getElementById('reel-estado').value = 'Finalizado';
 document.getElementById('reel-tipoVictoria').value = '90min';
+document.getElementById('reel-golesLocalFinal').value = '';
+document.getElementById('reel-golesVisitanteFinal').value = '';
 document.getElementById('reel-penalesLocal').value = '';
 document.getElementById('reel-penalesVisitante').value = '';
 document.getElementById('seccionTipoVictoria').classList.add('hidden');
+document.getElementById('camposProrroga').classList.add('hidden');
+document.getElementById('camposPenales').classList.add('hidden');
 cargarListaResultadosReel();
 } catch (error) {
 console.error('Error guardando resultado:', error);
@@ -934,9 +1031,9 @@ return;
 let html = '<div class="space-y-2">';
 snap.forEach(doc => {
 const data = doc.data();
-// 🎯 Badge de tipo de victoria y penales
+// 🎯 Badge de tipo de victoria y detalles
 let tipoBadge = '';
-let penalesBadge = '';
+let detalleBadge = '';
 if (data.estado === 'Finalizado' && data.tipoVictoria) {
   const tipoClase = `tipo-${data.tipoVictoria}`;
   const tipoTexto = data.tipoVictoria === '90min' ? "90'"
@@ -944,19 +1041,23 @@ if (data.estado === 'Finalizado' && data.tipoVictoria) {
     : '🎯 Penales';
   tipoBadge = `<span class="${tipoClase} tipo-badge ml-2">${tipoTexto}</span>`;
   
+  if (data.tipoVictoria === 'prorroga' && data.golesLocalFinal !== undefined && data.golesVisitanteFinal !== undefined) {
+    detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${data.golesLocalFinal}-${data.golesVisitanteFinal}</span>`;
+  }
+  
   if (data.tipoVictoria === 'penales' && data.penalesLocal !== undefined && data.penalesVisitante !== undefined) {
-    penalesBadge = `<span class="penales-score">(${data.penalesLocal}-${data.penalesVisitante})</span>`;
+    detalleBadge = `<span class="penales-score">(${data.penalesLocal}-${data.penalesVisitante})</span>`;
   }
 }
 html += `
 <div class="glass p-3 rounded-lg flex justify-between items-center">
 <div class="flex items-center gap-3 flex-1 min-w-0">
-<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}${penalesBadge}</span>
+<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}${detalleBadge}</span>
 <span class="text-xs text-slate-400">${data.fecha || ''}</span>
 <span class="text-xs px-2 py-0.5 rounded ${data.estado === 'Finalizado' ? 'bg-green-500/20 text-green-400' : data.estado === 'En Vivo' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">${data.estado}</span>
 </div>
 <div class="flex gap-2">
-<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}', ${data.penalesLocal !== undefined ? data.penalesLocal : 'null'}, ${data.penalesVisitante !== undefined ? data.penalesVisitante : 'null'})" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
+<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}', ${data.golesLocalFinal !== undefined ? data.golesLocalFinal : 'null'}, ${data.golesVisitanteFinal !== undefined ? data.golesVisitanteFinal : 'null'}, ${data.penalesLocal !== undefined ? data.penalesLocal : 'null'}, ${data.penalesVisitante !== undefined ? data.penalesVisitante : 'null'})" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
 <i data-lucide="edit-3" class="w-3 h-3"></i> Editar
 </button>
 <button onclick="eliminarResultadoReel('${doc.id}')" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
@@ -986,7 +1087,7 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
-function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria, penalesLocal, penalesVisitante) {
+function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria, golesLocalFinal, golesVisitanteFinal, penalesLocal, penalesVisitante) {
 document.getElementById('edit-id').value = id;
 document.getElementById('edit-equipoLocal').value = equipoLocal;
 document.getElementById('edit-golesLocal').value = golesLocal;
@@ -997,23 +1098,28 @@ document.getElementById('edit-estado').value = estado;
 
 const tipoSelect = document.getElementById('edit-tipoVictoria');
 const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
-const penalesLocalInput = document.getElementById('edit-penalesLocal');
-const penalesVisitanteInput = document.getElementById('edit-penalesVisitante');
-
-if (tipoSelect) {
-  tipoSelect.value = tipoVictoria || '90min';
-}
+const camposProrroga = document.getElementById('edit-camposProrroga');
+const camposPenales = document.getElementById('edit-camposPenales');
 
 // 🎯 Mostrar sección de tipo de victoria si hay empate
 if (estado === 'Finalizado' && golesLocal === golesVisitante) {
   seccionTipo.classList.remove('hidden');
   
-  if (tipoVictoria === 'penales') {
-    if (penalesLocalInput) penalesLocalInput.value = penalesLocal !== 'null' ? penalesLocal : '';
-    if (penalesVisitanteInput) penalesVisitanteInput.value = penalesVisitante !== 'null' ? penalesVisitante : '';
-  } else {
-    if (penalesLocalInput) penalesLocalInput.value = '';
-    if (penalesVisitanteInput) penalesVisitanteInput.value = '';
+  if (tipoSelect) {
+    tipoSelect.value = tipoVictoria || '90min';
+  }
+  
+  camposProrroga.classList.add('hidden');
+  camposPenales.classList.add('hidden');
+  
+  if (tipoVictoria === 'prorroga') {
+    camposProrroga.classList.remove('hidden');
+    document.getElementById('edit-golesLocalFinal').value = golesLocalFinal !== 'null' ? golesLocalFinal : '';
+    document.getElementById('edit-golesVisitanteFinal').value = golesVisitanteFinal !== 'null' ? golesVisitanteFinal : '';
+  } else if (tipoVictoria === 'penales') {
+    camposPenales.classList.remove('hidden');
+    document.getElementById('edit-penalesLocal').value = penalesLocal !== 'null' ? penalesLocal : '';
+    document.getElementById('edit-penalesVisitante').value = penalesVisitante !== 'null' ? penalesVisitante : '';
   }
 } else {
   seccionTipo.classList.add('hidden');
@@ -1037,6 +1143,8 @@ const fecha = document.getElementById('edit-fecha').value;
 const estado = document.getElementById('edit-estado').value;
 
 let tipoVictoria = '90min';
+let golesLocalFinal = null;
+let golesVisitanteFinal = null;
 let penalesLocal = null;
 let penalesVisitante = null;
 
@@ -1044,7 +1152,20 @@ const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
 if (!seccionTipo.classList.contains('hidden')) {
   tipoVictoria = document.getElementById('edit-tipoVictoria').value;
   
-  if (tipoVictoria === 'penales') {
+  if (tipoVictoria === 'prorroga') {
+    golesLocalFinal = parseInt(document.getElementById('edit-golesLocalFinal').value);
+    golesVisitanteFinal = parseInt(document.getElementById('edit-golesVisitanteFinal').value);
+    
+    if (isNaN(golesLocalFinal) || isNaN(golesVisitanteFinal)) {
+      showToast("️ Ingresa el resultado final después de la prórroga", "error");
+      return;
+    }
+    
+    if (golesLocalFinal === golesVisitanteFinal) {
+      showToast("️ El resultado final no puede quedar empatado", "error");
+      return;
+    }
+  } else if (tipoVictoria === 'penales') {
     penalesLocal = parseInt(document.getElementById('edit-penalesLocal').value);
     penalesVisitante = parseInt(document.getElementById('edit-penalesVisitante').value);
     
@@ -1073,6 +1194,8 @@ golesVisitante,
 fecha,
 estado,
 tipoVictoria: tipoVictoria,
+golesLocalFinal: golesLocalFinal,
+golesVisitanteFinal: golesVisitanteFinal,
 penalesLocal: penalesLocal,
 penalesVisitante: penalesVisitante,
 ultimaEdicion: new Date()
@@ -1173,7 +1296,7 @@ renderBracket();
 renderAdminBracket();
 }
 });
-} catch (error) { console.error('❌ Error cargando bracket:', error); }
+} catch (error) { console.error(' Error cargando bracket:', error); }
 }
 
 function renderBracket() {
@@ -1232,7 +1355,7 @@ else { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
 let statusBadge = '';
 if (isLocked) statusBadge = '<span class="text-xs bg-slate-600 text-slate-300 px-2 py-1 rounded-full">🔒 Bloqueado</span>';
 else if (isLive) statusBadge = '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full animate-pulse">🔴 EN VIVO</span>';
-else if (hasPenalties) statusBadge = '<span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full">⚡ Penales</span>';
+else if (hasPenalties) statusBadge = '<span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full"> Penales</span>';
 else if (isFinished) statusBadge = '<span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Finalizado</span>';
 else statusBadge = '<span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">⏳ Pendiente</span>';
 
@@ -1301,7 +1424,7 @@ async function saveBracketMatchResult(matchId) {
 const match = knockoutMatches.find(m => m.id === matchId);
 if (!match) { showToast('❌ Partido no encontrado', 'error'); return; }
 if (match.score1 === null || match.score2 === null || match.score1 === undefined || match.score2 === undefined) {
-showToast('⚠️ Ingresa los goles de ambos equipos', 'error'); return;
+showToast('️ Ingresa los goles de ambos equipos', 'error'); return;
 }
 try {
 let status = 'finished';
@@ -1386,7 +1509,7 @@ if (sessionStorage.getItem('isAdmin') === 'true') {
 isAdmin = true;
 console.log('✅ Estado de admin recuperado de la sesión');
 }
-console.log('📱 Página cargada, iniciando aplicación...');
+console.log(' Página cargada, iniciando aplicación...');
 if (typeof startLeaderboardListener === 'function') {
 startLeaderboardListener();
 console.log('✅ Listener de ranking iniciado');
@@ -1441,7 +1564,7 @@ showView('view-home');
 }
 });
 } else {
-console.error('❌ Firebase Auth no está disponible');
+console.error(' Firebase Auth no está disponible');
 showView('view-home');
 }
 } catch (error) {
