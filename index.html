@@ -37,6 +37,12 @@ body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white
 @keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
 .score-badge { background: linear-gradient(135deg, #059669, #10b981); color: #fef3c7; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
 
+/* 🎯 BADGES DE TIPO DE VICTORIA */
+.tipo-90min { background: linear-gradient(135deg, #059669, #10b981); color: white; }
+.tipo-prorroga { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; }
+.tipo-penales { background: linear-gradient(135deg, #ea580c, #f97316); color: white; }
+.tipo-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 6px; }
+
 /* 🏆 ESTILOS DEL BRACKET ELIMINATORIO */
 .bracket-round-tab { background-color: rgba(255, 255, 255, 0.05); color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
 .bracket-round-tab.active { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
@@ -217,6 +223,13 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
 </select>
 </div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Tipo de Victoria (Eliminación Directa)</label>
+<select id="reel-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+<option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
+<option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
+<option value="penales" class="bg-slate-800">Tanda de Penales</option>
+</select>
+</div>
 </div>
 <div class="flex justify-center gap-4 mt-4">
 <button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg">💾 Guardar Resultado</button>
@@ -263,6 +276,13 @@ Ranking de <span class="text-blue-600 underline underline-offset-8">Participante
 <option value="Finalizado" class="bg-slate-800">Finalizado</option>
 <option value="En Vivo" class="bg-slate-800">En Vivo</option>
 <option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
+</select>
+</div>
+<div><label class="block text-xs font-bold text-slate-300 mb-1">Tipo de Victoria</label>
+<select id="edit-tipoVictoria" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+<option value="90min" class="bg-slate-800">Tiempo Reglamentario (90 min)</option>
+<option value="prorroga" class="bg-slate-800">Prórroga (Tiempo Extra)</option>
+<option value="penales" class="bg-slate-800">Tanda de Penales</option>
 </select>
 </div>
 </div>
@@ -713,11 +733,23 @@ const opacidades = [1, 0.85, 0.7, 0.5, 0.5, 0.5];
 const escalas = [1, 0.95, 0.9, 0.9, 0.9, 0.9];
 card.style.opacity = opacidades[index] || 0.5;
 card.style.transform = `scale(${escalas[index] || 0.9})`;
+
 const estadoBadge = resultado.estado === 'En Vivo'
 ? '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">🔴 EN VIVO</span>'
 : resultado.estado === 'Pospuesto'
 ? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
 : '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
+
+// 🎯 Badge de tipo de victoria (solo si está finalizado)
+let tipoVictoriaBadge = '';
+if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
+  const tipoClase = `tipo-${resultado.tipoVictoria}`;
+  const tipoTexto = resultado.tipoVictoria === '90min' ? "90'"
+    : resultado.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
+    : '🎯 Penales';
+  tipoVictoriaBadge = `<span class="${tipoClase} tipo-badge">${tipoTexto}</span>`;
+}
+
 card.innerHTML = `
 <div class="flex items-center justify-between gap-2">
 <div class="flex items-center gap-2 flex-1 min-w-0">
@@ -733,7 +765,7 @@ ${resultado.golesLocal ?? 0} - ${resultado.golesVisitante ?? 0}
 </div>
 </div>
 <div class="flex items-center justify-between mt-1">
-<span class="text-xs text-slate-400">${resultado.fecha || ''}</span>
+<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}</span>
 ${estadoBadge}
 </div>
 `;
@@ -772,6 +804,7 @@ const equipoVisitante = document.getElementById('reel-equipoVisitante').value.tr
 const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
 const fecha = document.getElementById('reel-fecha').value;
 const estado = document.getElementById('reel-estado').value;
+const tipoVictoria = document.getElementById('reel-tipoVictoria').value;
 if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
 showToast("⚠️ Completa todos los campos obligatorios", "error");
 return;
@@ -784,6 +817,7 @@ equipoVisitante,
 golesVisitante,
 fecha,
 estado,
+tipoVictoria: tipoVictoria || '90min',
 fechaHora: firebase.firestore.FieldValue.serverTimestamp(),
 publicadoPor: 'admin'
 });
@@ -793,6 +827,7 @@ document.getElementById('reel-golesLocal').value = '';
 document.getElementById('reel-equipoVisitante').value = '';
 document.getElementById('reel-golesVisitante').value = '';
 document.getElementById('reel-fecha').value = '';
+document.getElementById('reel-tipoVictoria').value = '90min';
 cargarListaResultadosReel();
 } catch (error) {
 console.error('Error guardando resultado:', error);
@@ -813,15 +848,24 @@ return;
 let html = '<div class="space-y-2">';
 snap.forEach(doc => {
 const data = doc.data();
+// 🎯 Badge de tipo de victoria
+let tipoBadge = '';
+if (data.estado === 'Finalizado' && data.tipoVictoria) {
+  const tipoClase = `tipo-${data.tipoVictoria}`;
+  const tipoTexto = data.tipoVictoria === '90min' ? "90'"
+    : data.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
+    : '🎯 Penales';
+  tipoBadge = `<span class="${tipoClase} tipo-badge ml-2">${tipoTexto}</span>`;
+}
 html += `
 <div class="glass p-3 rounded-lg flex justify-between items-center">
 <div class="flex items-center gap-3 flex-1 min-w-0">
-<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}</span>
+<span class="text-sm font-bold text-white truncate">${data.equipoLocal} ${data.golesLocal} - ${data.golesVisitante} ${data.equipoVisitante}${tipoBadge}</span>
 <span class="text-xs text-slate-400">${data.fecha || ''}</span>
 <span class="text-xs px-2 py-0.5 rounded ${data.estado === 'Finalizado' ? 'bg-green-500/20 text-green-400' : data.estado === 'En Vivo' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">${data.estado}</span>
 </div>
 <div class="flex gap-2">
-<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}')" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
+<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}')" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
 <i data-lucide="edit-3" class="w-3 h-3"></i> Editar
 </button>
 <button onclick="eliminarResultadoReel('${doc.id}')" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
@@ -851,7 +895,7 @@ showToast("❌ Error: " + error.message, "error");
 }
 }
 
-function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado) {
+function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria) {
 document.getElementById('edit-id').value = id;
 document.getElementById('edit-equipoLocal').value = equipoLocal;
 document.getElementById('edit-golesLocal').value = golesLocal;
@@ -859,6 +903,10 @@ document.getElementById('edit-equipoVisitante').value = equipoVisitante;
 document.getElementById('edit-golesVisitante').value = golesVisitante;
 document.getElementById('edit-fecha').value = fecha;
 document.getElementById('edit-estado').value = estado;
+const tipoSelect = document.getElementById('edit-tipoVictoria');
+if (tipoSelect) {
+  tipoSelect.value = tipoVictoria || '90min';
+}
 document.getElementById('modalEditarResultado').classList.remove('hidden');
 lucide.createIcons();
 }
@@ -875,6 +923,7 @@ const equipoVisitante = document.getElementById('edit-equipoVisitante').value.tr
 const golesVisitante = parseInt(document.getElementById('edit-golesVisitante').value);
 const fecha = document.getElementById('edit-fecha').value;
 const estado = document.getElementById('edit-estado').value;
+const tipoVictoria = document.getElementById('edit-tipoVictoria')?.value || '90min';
 if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
 showToast("⚠️ Completa todos los campos obligatorios", "error");
 return;
@@ -887,6 +936,7 @@ equipoVisitante,
 golesVisitante,
 fecha,
 estado,
+tipoVictoria: tipoVictoria,
 ultimaEdicion: new Date()
 });
 showToast("✅ Resultado actualizado", "success");
@@ -932,14 +982,13 @@ setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 
 function ordenarPartidosBracket(partidos) {
   const pendientes = partidos.filter(m => m.status === 'locked' || m.status === 'pending' || m.status === 'live');
   const finalizados = partidos.filter(m => m.status === 'finished' || m.status === 'finished_penalties');
-  
-  // Ordenar cada grupo por fecha
+
   const ordenarPorFecha = (arr) => arr.sort((a, b) => {
     const fechaA = a.date ? new Date(a.date).getTime() : 0;
     const fechaB = b.date ? new Date(b.date).getTime() : 0;
     return fechaA - fechaB;
   });
-  
+
   return [...ordenarPorFecha(pendientes), ...ordenarPorFecha(finalizados)];
 }
 
@@ -997,7 +1046,6 @@ if (roundMatches.length === 0) {
 container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
 return;
 }
-// 🏆 APLICAR ORDENAMIENTO: PENDIENTES PRIMERO, FINALIZADOS AL FINAL
 const partidosOrdenados = ordenarPartidosBracket(roundMatches);
 container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, false)).join('');
 }
@@ -1010,7 +1058,6 @@ if (roundMatches.length === 0) {
 container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
 return;
 }
-// 🏆 APLICAR ORDENAMIENTO: PENDIENTES PRIMERO, FINALIZADOS AL FINAL
 const partidosOrdenados = ordenarPartidosBracket(roundMatches);
 container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, true)).join('');
 }
@@ -1236,7 +1283,7 @@ if (pantallaGuardada) {
 console.log('📍 Restaurando vista:', pantallaGuardada);
 showView(pantallaGuardada);
 if (pantallaGuardada === 'view-predictions') renderMatches();
-} 
+}
 else {
 if (data.submitted) { showView('view-leaderboard'); }
 else { showView('view-predictions'); renderMatches(); }
