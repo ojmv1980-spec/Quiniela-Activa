@@ -1,1631 +1,2309 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trivia Mundial 2026 - Edición Élite</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #0a0f1e; color: white; }
-.italic-black { font-style: italic; font-weight: 900; letter-spacing: -0.05em; }
-.glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-.btn-sporty { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.btn-sporty:active { transform: scale(0.95); }
-#progress-bar { transition: width 0.8s ease-out; }
-.hidden { display: none !important; }
-.btn-option.selected { background: #2563eb !important; border-color: #60a5fa !important; color: white !important; }
-.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; z-index: 1000; animation: slideIn 0.3s ease; }
-.toast.success { background: #166534; border: 1px solid #22c55e; }
-.toast.error { background: #991b1b; border: 1px solid #ef4444; }
-@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.tabular-nums { font-variant-numeric: tabular-nums; }
-#sticky-progress { position: sticky; top: 80px; z-index: 30; transition: all 0.3s ease; }
-@media print { .glass { box-shadow: none; border: 1px solid #000; } }
-.reel-container { position: relative; overflow: hidden; border-radius: 1.5rem; background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); border: 4px solid rgba(234, 179, 8, 0.6); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(234, 179, 8, 0.1); }
-.reel-card { position: absolute; width: calc(100% - 1.5rem); left: 0.75rem; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid; border-radius: 1rem; padding: 0.75rem; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
-.reel-card.newest { border-color: #eab308; animation: cardEnter 0.6s ease-out; }
-.reel-card.older { border-color: #475569; }
-@keyframes cardEnter { 0% { transform: translateY(-50px) scale(0.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-.reel-overlay-top { background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent); }
-.reel-overlay-bottom { background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent); }
-.live-badge { animation: pulseRed 1.5s infinite; }
-@keyframes pulseRed { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
-.score-badge { background: linear-gradient(135deg, #059669, #10b981); color: #fef3c7; font-weight: 800; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
-
-/* 🎯 BADGES DE TIPO DE VICTORIA */
-.tipo-90min { background: linear-gradient(135deg, #059669, #10b981); color: white; }
-.tipo-prorroga { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; }
-.tipo-penales { background: linear-gradient(135deg, #ea580c, #f97316); color: white; }
-.tipo-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 6px; }
-.penales-score { background: rgba(234, 88, 12, 0.2); border: 1px solid #ea580c; color: #f97316; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 6px; }
-
-/* 🏆 ESTILOS DEL BRACKET ELIMINATORIO */
-.bracket-round-tab { background-color: rgba(255, 255, 255, 0.05); color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
-.bracket-round-tab.active { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
-.bracket-round-tab:hover:not(.active) { background-color: rgba(255, 255, 255, 0.1); }
-.bracket-match-card { transition: all 0.3s ease; }
-.bracket-match-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
-.bracket-match-card.locked { opacity: 0.5; background-color: rgba(15, 23, 42, 0.5); }
-.bracket-match-card.finished { border-left: 4px solid #10b981; }
-.bracket-match-card.live { border-left: 4px solid #ef4444; animation: pulse-border-bracket 2s infinite; }
-.bracket-match-card.finished-penalties { border-left: 4px solid #f59e0b; }
-@keyframes pulse-border-bracket { 0%, 100% { border-left-color: #ef4444; } 50% { border-left-color: #fca5a5; } }
-.bracket-score-input { width: 60px; text-align: center; font-size: 1.25rem; font-weight: bold; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 8px; padding: 4px; }
-.bracket-score-input:focus { border-color: #2563eb; outline: none; }
-.bracket-score-input:disabled { background-color: rgba(15, 23, 42, 0.5); cursor: not-allowed; opacity: 0.6; }
-.bracket-winner { font-weight: bold; color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-.bracket-loser { color: #64748b; opacity: 0.6; }
-@keyframes advanceGlow { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 50% { transform: scale(1.02); box-shadow: 0 0 30px 15px rgba(16, 185, 129, 0.5); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-.bracket-match-card.just-advanced { animation: advanceGlow 1.5s ease-out; }
-@keyframes successPulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-.bracket-success-animation { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 24px 48px; border-radius: 16px; font-size: 1.5rem; font-weight: bold; z-index: 9999; animation: successPulse 0.5s ease-out; box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5); }
-.penalties-badge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; display: inline-block; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8VOS DE FINAL - Mundial 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- html2canvas para generar imágenes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* ============================================
+           SISTEMA DE DISEÑO - 8VOS DE FINAL
+           Basado en Macuare BDR
+           ============================================ */
+        
+        :root {
+            --azul-marino: #0a1931;
+            --azul-claro: #152642;
+            --morado: #6a1b9a;
+            --morado-oscuro: #4a148c;
+            --fucsia: #d946ef;
+            --fucsia-claro: #e879f9;
+            --verde: #10b981;
+            --verde-oscuro: #059669;
+            --rojo: #ef4444;
+            --rojo-oscuro: #dc2626;
+            --amarillo: #fbbf24;
+            --blanco: #ffffff;
+        }
+        
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a1931 0%, #152642 50%, #6a1b9a 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* Fondo animado */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(217, 70, 239, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(106, 27, 154, 0.1) 0%, transparent 50%);
+            animation: fondoAnimado 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes fondoAnimado {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+        
+        /* Tipografía */
+        .font-titulo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+        }
+        
+        .font-numero {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+        
+        .font-nombre {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+        
+        .font-etiqueta {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+        }
+        
+        /* Gradientes */
+        .bg-app {
+            background: linear-gradient(135deg, #0a1931 0%, #152642 50%, #6a1b9a 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #d946ef 0%, #6a1b9a 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(217, 70, 239, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .titulo-gradient {
+            background: linear-gradient(135deg, #d946ef 0%, #e879f9 50%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes rebotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        .animate-scaleIn { animation: scaleIn 0.3s ease-out; }
+        .animate-slideDown { animation: slideDown 0.4s ease-out; }
+        .animate-latido { animation: latido 1s ease-in-out infinite; }
+        .animate-rebotar { animation: rebotar 0.6s ease-in-out; }
+        
+        /* Inputs */
+        .input-custom {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .input-custom:focus {
+            outline: none;
+            border-color: #d946ef;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.3);
+        }
+        
+        .input-custom::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Radio buttons personalizados */
+        .radio-custom {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .radio-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(217, 70, 239, 0.5);
+        }
+        
+        .radio-custom input[type="radio"] {
+            display: none;
+        }
+        
+        .radio-custom.selected {
+            background: linear-gradient(135deg, rgba(217, 70, 239, 0.3) 0%, rgba(106, 27, 154, 0.3) 100%);
+            border-color: #d946ef;
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+        }
+        
+        /* Chips y Badges */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .chip-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .chip-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .badge-warning {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        /* Barra de progreso */
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #fbbf24 100%);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        /* Tablas */
+        .tabla-glass {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .tabla-glass th {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+        }
+        
+        .tabla-glass td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tabla-glass tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: rgba(21, 38, 66, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(217, 70, 239, 0.3);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            animation: scaleIn 0.3s ease;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideDown 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toast-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .toast-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .toast-info {
+            background: linear-gradient(135deg, #d946ef 0%, #6a1b9a 100%);
+        }
+        
+        /* Vista oculta */
+        .vista {
+            display: none;
+        }
+        
+        .vista.activa {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(217, 70, 239, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(217, 70, 239, 0.7);
+        }
+        
+        /* Tarjeta de imagen para descargar */
+        .tarjeta-jugador {
+            background: linear-gradient(135deg, #0a1931 0%, #152642 50%, #6a1b9a 100%);
+            border: 2px solid rgba(217, 70, 239, 0.5);
+            border-radius: 20px;
+            padding: 32px;
+            color: white;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tarjeta-jugador h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(135deg, #d946ef 0%, #e879f9 50%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Pestañas admin */
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #d946ef 0%, #6a1b9a 100%);
+            border-color: #d946ef;
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* Semáforo de estado */
+        .semaforo {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .semaforo-verde {
+            background: #10b981;
+            box-shadow: 0 0 20px #10b981;
+        }
+        
+        .semaforo-rojo {
+            background: #ef4444;
+            box-shadow: 0 0 20px #ef4444;
+        }
+        
+        .semaforo-amarillo {
+            background: #fbbf24;
+            box-shadow: 0 0 20px #fbbf24;
+        }
+        
+        /* Barra de navegación stadium */
+        .nav-stadium {
+            position: sticky;
+            top: 16px;
+            z-index: 50;
+        }
+    </style>
 </head>
-<body class="min-h-screen pb-20">
-<header class="sticky top-0 z-40 bg-[#0a0f1e]/80 backdrop-blur-md border-b border-white/10">
-<div class="max-w-5xl mx-auto px-4 py-3">
-<div class="flex justify-between items-center">
-<div class="flex items-center gap-3">
-<div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-lg shadow-lg shadow-blue-500/20">
-<i data-lucide="trophy" class="text-white w-5 h-5"></i>
-</div>
-<div><h1 class="text-lg md:text-xl italic-black uppercase leading-none">Trivia 2026</h1></div>
-</div>
-<div class="flex items-center gap-3">
-<button onclick="showView('view-home')" class="text-xs md:text-sm font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition">INICIO</button>
-<button onclick="promptAdmin()" class="p-1.5 md:p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition" title="Panel de Administrador">
-<i data-lucide="settings" class="text-slate-400 hover:text-blue-400 w-4 h-4 md:w-5 md:h-5"></i>
-</button>
-</div>
-</div>
-<div class="flex justify-between items-center mt-1 pt-1 border-t border-white/5">
-<span class="text-[10px] md:text-xs text-blue-400 font-bold uppercase tracking-widest">Fase de Grupos</span>
-<div id="user-badge" class="hidden flex items-center gap-2 px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-<div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse"></div>
-<span id="display-username" class="text-[10px] md:text-xs font-bold text-white"></span>
-<button onclick="logout()" class="ml-1 md:ml-2 text-[9px] md:text-[10px] bg-red-600/80 hover:bg-red-500 text-white px-1.5 md:px-2 py-0.5 md:py-1 rounded font-bold transition" title="Salir"></button>
-</div>
-</div>
-</div>
-</header>
-<main class="max-w-5xl mx-auto px-4 py-8">
-<div id="view-home" class="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6">
-<div class="w-full max-w-4xl mx-auto space-y-6">
-<!-- 🏆 LLAVE DEL MUNDIAL - BRACKET ELIMINATORIO -->
-<div id="bracket-container" class="glass rounded-3xl p-6">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-xl md:text-2xl italic-black tracking-tighter uppercase text-blue-400">🏆 LLAVE DEL MUNDIAL</h3>
-<div class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full live-badge"> LIVE</div>
-</div>
-<div class="flex overflow-x-auto gap-2 mb-6 pb-2">
-<button onclick="switchBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R32">16avos (16)</button>
-<button onclick="switchBracketRound('R16')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="R16">Octavos (8)</button>
-<button onclick="switchBracketRound('QF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="QF">Cuartos (4)</button>
-<button onclick="switchBracketRound('SF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="SF">Semis (2)</button>
-<button onclick="switchBracketRound('F')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="F">🏆 Final</button>
-<button onclick="switchBracketRound('3RD')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-round="3RD">3er Puesto</button>
-</div>
-<div id="bracket-matches-container" class="space-y-3">
-<div class="text-center text-slate-400 py-8">
-<div class="animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500 mx-auto mb-3"></div>
-<p class="text-blue-400 font-bold">Cargando partidos...</p>
-</div>
-</div>
-<div class="mt-6 pt-4 border-t border-white/10 text-xs text-slate-400 flex flex-wrap gap-4">
-<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-600"></span><span>Bloqueado</span></div>
-<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-500"></span><span>Pendiente</span></div>
-<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span><span>En Vivo</span></div>
-<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span><span>Finalizado</span></div>
-<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500"></span><span>Penales</span></div>
-</div>
-</div>
-<!-- REEL DE RESULTADOS -->
-<div id="reelResultados" class="w-full max-w-md mx-auto">
-<div class="flex items-center justify-center mb-3">
-<span class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">⚽ RESULTADOS OFICIALES</span>
-</div>
-<div class="reel-container h-[520px]">
-<div id="listaResultadosReel" class="relative w-full"></div>
-<div class="reel-overlay-top absolute top-0 left-0 right-0 h-24 pointer-events-none z-10"></div>
-<div class="reel-overlay-bottom absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-10"></div>
-<div class="absolute top-2 right-2 z-20">
-<div class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full live-badge">🔴 LIVE</div>
-</div>
-</div>
-<p class="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-2">
-<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-Actualizando en tiempo real
-</p>
-</div>
-<!-- 🏆 RANKING DE PARTICIPANTES -->
-<div class="w-full max-w-4xl mx-auto">
-<h3 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none mb-4 text-center">
-Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span>
-</h3>
-<div class="glass rounded-3xl overflow-hidden">
-<table class="w-full text-left">
-<thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-<tr>
-<th class="p-4 w-16 text-center">Pos</th>
-<th class="p-4">Jugador</th>
-<th class="p-4 text-center">Puntos</th>
-</tr>
-</thead>
-<tbody id="home-leaderboard-body">
-<tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div id="view-predictions" class="hidden space-y-12">
-<div id="sticky-progress" class="glass p-4 rounded-2xl flex items-center gap-6 border-2 border-blue-500/30">
-<div class="space-y-1">
-<div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-blue-500"><span>Progreso</span><span id="progress-text">0%</span></div>
-<div class="w-48 h-2 bg-white/10 rounded-full overflow-hidden"><div id="progress-bar" class="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]" style="width: 0%"></div></div>
-</div>
-<div class="text-center"><span id="completed-count" class="block text-2xl font-black leading-none">0</span><span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">De 72</span></div>
-</div>
-<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6"><h2 class="text-4xl italic-black uppercase">Fase de Grupos</h2></div>
-<div id="matches-container" class="space-y-16"></div>
-<div id="submit-bar" class="fixed bottom-0 left-0 right-0 bg-[#0a0f1e]/90 backdrop-blur-xl border-t border-white/10 p-6 z-50">
-<div class="max-w-5xl mx-auto flex justify-between items-center gap-6">
-<div class="hidden md:block"><h4 class="italic-black uppercase text-lg leading-tight">Finalizar Jugada</h4><p class="text-xs text-slate-500 font-bold">Revisa bien antes de enviar.</p></div>
-<button id="btn-submit" onclick="handleSubmit()" disabled class="flex-1 md:flex-none bg-green-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-green-500 disabled:opacity-30 disabled:grayscale transition-all shadow-[0_10px_30px_rgba(22,163,74,0.3)]">ENVIAR PREDICCIONES</button>
-</div>
-</div>
-</div>
-<div id="view-leaderboard" class="hidden space-y-12 py-8">
-<div class="text-center space-y-4"><h2 class="text-lg md:text-xl italic-black tracking-tighter uppercase leading-none">Ranking de <span class="text-blue-600 underline underline-offset-8">Participantes</span></h2></div>
-<div class="glass rounded-3xl overflow-hidden">
-<table class="w-full text-left">
-<thead class="bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-<tr><th class="p-6 w-16 text-center">Pos</th><th class="p-6">Jugador</th><th class="p-6 text-center">Puntos</th></tr>
-</thead>
-<tbody id="leaderboard-body"><tr><td colspan="3" class="p-8 text-center text-slate-400">Cargando ranking...</td></tr></tbody>
-</table>
-</div>
-<div class="w-full max-w-4xl mx-auto glass p-5 rounded-2xl text-left space-y-3 mt-8">
-<h4 class="text-sm md:text-base font-bold text-blue-400 uppercase tracking-wide">Reglamento Oficial</h4>
-<div class="space-y-3 text-xs md:text-sm text-slate-300">
-<div><span class="font-bold text-white text-[13px]">I. El Objetivo:</span><p class="mt-0.5 leading-relaxed">Sumar la mayor cantidad de puntos acertando los resultados de los partidos.</p></div>
-<div><span class="font-bold text-white text-[13px]">II. Sistema de Puntuación:</span><ul class="mt-1 space-y-1 pl-3 border-l-2 border-blue-500/30"><li><span class="font-bold text-yellow-400">5 Puntos (Máx):</span> Pronosticas un empate y el partido termina empatado.</li><li><span class="font-bold text-green-400">3 Puntos (Ganador):</span> Pronosticas correctamente qué equipo ganará.</li><li><span class="font-bold text-blue-400">1 Punto (Consolación):</span> Apuestas por un ganador, pero el partido termina en empate.</li><li><span class="font-bold text-slate-400">0 Puntos (Fallo):</span> Gana el equipo contrario al que apostaste, o pronosticas empate y alguien gana.</li></ul></div>
-<div><span class="font-bold text-white text-[13px]">III. Tiempo válido:</span><p class="mt-0.5 leading-relaxed">Solo cuentan los 90 minutos reglamentarios (más el tiempo agregado). No se toman en cuenta tiempos extras ni tandas de penales.</p></div>
-</div>
-</div>
-</div>
-<div id="view-admin" class="hidden space-y-8 py-8">
-<div class="text-center"><h2 class="text-4xl italic-black uppercase text-red-400">Panel de Administrador</h2><p class="text-slate-400 text-sm">Gestiona el reel y el bracket eliminatorio.</p></div>
-<div class="flex justify-center gap-3 flex-wrap">
-<button onclick="showAdminTab('reel')" id="tab-reel" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🎰 Cargar Reel</button>
-<button onclick="showAdminTab('bracket')" id="tab-bracket" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-lg transition border border-white/10">🏆 Bracket Eliminatorio</button>
-</div>
-<div id="admin-tab-reel" class="hidden">
-<div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-amber-400 mb-2">🎰 Cargar Resultado en el Reel</h4>
-<p class="text-xs text-slate-400 mb-4">Agrega resultados oficiales que aparecerán en el feed animado de la página principal.</p>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="reel-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: Argentina"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local (90 min)</label><input type="number" id="reel-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="reel-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: México"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante (90 min)</label><input type="number" id="reel-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="0"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="reel-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
-<select id="reel-estado" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="Finalizado" class="bg-slate-800">Finalizado</option>
-<option value="En Vivo" class="bg-slate-800">En Vivo</option>
-<option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
-</select>
-</div>
-</div>
-<!-- 🎯 SECCIÓN DE TIPO DE VICTORIA (oculta inicialmente, se muestra con empate + finalizado) -->
-<div id="seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div class="mb-3">
-<label class="block text-xs font-bold text-orange-400 mb-1">¿Cómo se definió el partido?</label>
-<select id="reel-tipoVictoria" onchange="actualizarCamposTipoVictoria()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="90min" class="bg-slate-800">Empate a 90 minutos (sin definición)</option>
-<option value="prorroga" class="bg-slate-800">Se definió en Prórroga (Tiempo Extra)</option>
-<option value="penales" class="bg-slate-800">Se definió en Tanda de Penales</option>
-</select>
-</div>
-<!-- Campos para PRÓRROGA: resultado final después del tiempo extra -->
-<div id="camposProrroga" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-<div><label class="block text-xs font-bold text-purple-400 mb-1">️ Goles Local (Resultado Final)</label><input type="number" id="reel-golesLocalFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 2"></div>
-<div><label class="block text-xs font-bold text-purple-400 mb-1">️ Goles Visitante (Resultado Final)</label><input type="number" id="reel-golesVisitanteFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 1"></div>
-<p class="text-xs text-purple-300 col-span-2">💡 Ingresa el marcador final después de los 120 minutos (90 + 30 de prórroga)</p>
-</div>
-<!-- Campos para PENALES: resultado de la tanda -->
-<div id="camposPenales" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Local</label><input type="number" id="reel-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 4"></div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Visitante</label><input type="number" id="reel-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="Ej: 3"></div>
-<p class="text-xs text-orange-300 col-span-2">💡 El marcador de 90 min se mantiene empatado. Ingresa solo los penales convertidos</p>
-</div>
-</div>
-<div class="flex justify-center gap-4 mt-4">
-<button onclick="guardarResultadoReel()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition shadow-lg"> Guardar Resultado</button>
-</div>
-<div id="reel-admin-list" class="mt-6 space-y-2"></div>
-</div>
-</div>
-<!-- 🏆 ADMIN TAB BRACKET -->
-<div id="admin-tab-bracket" class="hidden">
-<div class="glass p-4 rounded-xl mb-4">
-<h4 class="font-bold text-blue-400 mb-2"> Bracket Eliminatorio - Cargar Resultados</h4>
-<p class="text-xs text-slate-400 mb-4">Ingresa los goles y guarda. El sistema avanza al ganador automáticamente. Si hay empate, se piden penales.</p>
-<div class="flex overflow-x-auto gap-2 mb-4 pb-2">
-<button onclick="switchAdminBracketRound('R32')" class="bracket-round-tab active px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R32">16avos (16)</button>
-<button onclick="switchAdminBracketRound('R16')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="R16">Octavos (8)</button>
-<button onclick="switchAdminBracketRound('QF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="QF">Cuartos (4)</button>
-<button onclick="switchAdminBracketRound('SF')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="SF">Semis (2)</button>
-<button onclick="switchAdminBracketRound('F')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="F">🏆 Final</button>
-<button onclick="switchAdminBracketRound('3RD')" class="bracket-round-tab px-4 py-2 rounded-lg font-bold whitespace-nowrap text-sm" data-admin-round="3RD">3er Puesto</button>
-</div>
-<div id="admin-bracket-matches-container" class="space-y-3">
-<div class="text-center text-slate-400 py-8">Cargando partidos...</div>
-</div>
-</div>
-</div>
-<div class="text-center"><button onclick="showView('view-leaderboard')" class="text-blue-400 font-bold text-sm hover:text-blue-300 transition-colors">← Volver al Ranking</button></div>
-</div>
-<!-- MODAL DE EDICIÓN -->
-<div id="modalEditarResultado" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-<div class="flex justify-between items-center mb-4">
-<h3 class="text-lg font-bold text-amber-400">✏️ Editar Resultado</h3>
-<button onclick="cerrarModalEditar()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-</div>
-<input type="hidden" id="edit-id">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Local</label><input type="text" id="edit-equipoLocal" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Local (90 min)</label><input type="number" id="edit-golesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Equipo Visitante</label><input type="text" id="edit-equipoVisitante" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Goles Visitante (90 min)</label><input type="number" id="edit-golesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Fecha</label><input type="date" id="edit-fecha" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
-<select id="edit-estado" onchange="actualizarCamposTipoVictoriaEdit()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="Finalizado" class="bg-slate-800">Finalizado</option>
-<option value="En Vivo" class="bg-slate-800">En Vivo</option>
-<option value="Pospuesto" class="bg-slate-800">Pospuesto</option>
-</select>
-</div>
-</div>
-<!--  SECCIÓN TIPO DE VICTORIA EN MODAL -->
-<div id="edit-seccionTipoVictoria" class="hidden mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div class="mb-3">
-<label class="block text-xs font-bold text-orange-400 mb-1">¿Cómo se definió el partido?</label>
-<select id="edit-tipoVictoria" onchange="actualizarCamposTipoVictoriaEdit()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-<option value="90min" class="bg-slate-800">Empate a 90 minutos (sin definición)</option>
-<option value="prorroga" class="bg-slate-800">Se definió en Prórroga (Tiempo Extra)</option>
-<option value="penales" class="bg-slate-800">Se definió en Tanda de Penales</option>
-</select>
-</div>
-<!-- Campos para PRÓRROGA -->
-<div id="edit-camposProrroga" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-<div><label class="block text-xs font-bold text-purple-400 mb-1">⏱️ Goles Local (Resultado Final)</label><input type="number" id="edit-golesLocalFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-purple-400 mb-1">⏱️ Goles Visitante (Resultado Final)</label><input type="number" id="edit-golesVisitanteFinal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-</div>
-<!-- Campos para PENALES -->
-<div id="edit-camposPenales" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Local</label><input type="number" id="edit-penalesLocal" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-<div><label class="block text-xs font-bold text-orange-400 mb-1">🎯 Penales Convertidos - Visitante</label><input type="number" id="edit-penalesVisitante" min="0" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></div>
-</div>
-</div>
-<div class="flex justify-center gap-4 mt-6">
-<button onclick="cerrarModalEditar()" class="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-bold rounded-lg transition">Cancelar</button>
-<button onclick="guardarEdicionResultado()" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">💾 Guardar Cambios</button>
-</div>
-</div>
-</div>
-</main>
-<div id="toast-container"></div>
-<script>
-const firebaseConfig = {
-apiKey: "AIzaSyDeAbrwz31kQ4ODablfJK0SBzwuZ_jw_6s",
-authDomain: "quiniela-activa-mundial-782bc.firebaseapp.com",
-projectId: "quiniela-activa-mundial-782bc",
-storageBucket: "quiniela-activa-mundial-782bc.firebasestorage.app",
-messagingSenderId: "382073365129",
-appId: "1:382073365129:web:5808964974cfa00b069c58"
-};
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-const ADMIN_PIN = "111180";
-let currentUser = null;
-let predictions = {};
-let isSubmitted = false;
-let currentBracketRound = 'R32';
-let adminBracketRound = 'R32';
-let knockoutMatches = [];
-let isAdmin = false;
-
-// 🏆 FUNCIÓN PARA OBTENER BANDERA DE UN PAÍS
-function getBandera(nombreEquipo) {
-  const banderas = {
-    'Canadá': 'ca', 'Marruecos': 'ma', 'Paraguay': 'py', 'Francia': 'fr',
-    'Brasil': 'br', 'Noruega': 'no', 'México': 'mx', 'Inglaterra': 'gb-eng',
-    'Bélgica': 'be', 'Senegal': 'sn', 'Estados Unidos': 'us', 'Bosnia-Herzegovina': 'ba',
-    'Bosnia y Herzegovina': 'ba', 'España': 'es', 'Austria': 'at', 'Portugal': 'pt',
-    'Croacia': 'hr', 'Suiza': 'ch', 'Argelia': 'dz', 'Colombia': 'co',
-    'Ghana': 'gh', 'Australia': 'au', 'Egipto': 'eg', 'Argentina': 'ar',
-    'Cabo Verde': 'cv', 'Sudáfrica': 'za', 'Países Bajos': 'nl', 'Alemania': 'de',
-    'Japón': 'jp', 'Costa de Marfil': 'ci', 'Ecuador': 'ec', 'RD Congo': 'cd',
-    'Suecia': 'se', 'Chequia': 'cz', 'Qatar': 'qa', 'Haití': 'ht', 'Escocia': 'gb-sct',
-    'Curazao': 'cw', 'Túnez': 'tn', 'Irán': 'ir', 'Nueva Zelanda': 'nz',
-    'Irak': 'iq', 'Jordania': 'jo', 'Uzbekistán': 'uz', 'Panamá': 'pa',
-    'RD del Congo': 'cd', 'Bosnia y Herzegovina': 'ba'
-  };
-  const codigo = banderas[nombreEquipo] || 'un';
-  return `https://flagcdn.com/w40/${codigo}.png`;
-}
-
-// 🏆 FUNCIÓN PARA FORMATEAR HORA DE VENEZUELA
-function formatHoraVenezuela(fechaISO) {
-  if (!fechaISO) return '';
-  const date = new Date(fechaISO);
-  return date.toLocaleString('es-VE', {
-    timeZone: 'America/Caracas',
-    weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
-}
-
-function abreviarPais(nombre) {
-const abreviaciones = {
-'Bosnia y Herzegovina': 'Bos y Herz',
-'Costa de Marfil': 'C. de Marfil',
-'Estados Unidos': 'USA',
-'Corea del Sur': 'Cor del Sur',
-'Nueva Zelanda': 'Nv. Zelanda',
-'Arabia Saudita': 'Ara Saudita'
-};
-return abreviaciones[nombre] || nombre;
-}
-
-const matchSchedule = {
-'gam1': { fecha: '2026-06-11', hora: '15:00', local: 'México', visitante: 'Sudáfrica' },
-'gam2': { fecha: '2026-06-11', hora: '22:00', local: 'Corea del Sur', visitante: 'Chequia' },
-'gam3': { fecha: '2026-06-18', hora: '12:00', local: 'México', visitante: 'Corea del Sur' },
-'gam4': { fecha: '2026-06-18', hora: '21:00', local: 'Chequia', visitante: 'Sudáfrica' },
-'gam5': { fecha: '2026-06-24', hora: '21:00', local: 'Chequia', visitante: 'México' },
-'gam6': { fecha: '2026-06-24', hora: '21:00', local: 'Sudáfrica', visitante: 'Corea del Sur' },
-'gbm1': { fecha: '2026-06-12', hora: '15:00', local: 'Canadá', visitante: 'Bosnia y Herzegovina' },
-'gbm2': { fecha: '2026-06-13', hora: '15:00', local: 'Qatar', visitante: 'Suiza' },
-'gbm3': { fecha: '2026-06-18', hora: '15:00', local: 'Canadá', visitante: 'Qatar' },
-'gbm4': { fecha: '2026-06-18', hora: '18:00', local: 'Suiza', visitante: 'Bosnia y Herzegovina' },
-'gbm5': { fecha: '2026-06-24', hora: '15:00', local: 'Suiza', visitante: 'Canadá' },
-'gbm6': { fecha: '2026-06-24', hora: '15:00', local: 'Bosnia y Herzegovina', visitante: 'Qatar' },
-'gcm1': { fecha: '2026-06-13', hora: '18:00', local: 'Brasil', visitante: 'Marruecos' },
-'gcm2': { fecha: '2026-06-13', hora: '21:00', local: 'Haití', visitante: 'Escocia' },
-'gcm3': { fecha: '2026-06-19', hora: '18:00', local: 'Brasil', visitante: 'Haití' },
-'gcm4': { fecha: '2026-06-19', hora: '21:00', local: 'Escocia', visitante: 'Marruecos' },
-'gcm5': { fecha: '2026-06-24', hora: '18:00', local: 'Escocia', visitante: 'Brasil' },
-'gcm6': { fecha: '2026-06-24', hora: '18:00', local: 'Marruecos', visitante: 'Haití' },
-'gdm1': { fecha: '2026-06-12', hora: '21:00', local: 'Estados Unidos', visitante: 'Paraguay' },
-'gdm2': { fecha: '2026-06-14', hora: '00:00', local: 'Australia', visitante: 'Turquía' },
-'gdm3': { fecha: '2026-06-19', hora: '15:00', local: 'Estados Unidos', visitante: 'Australia' },
-'gdm4': { fecha: '2026-06-20', hora: '00:00', local: 'Turquía', visitante: 'Paraguay' },
-'gdm5': { fecha: '2026-06-25', hora: '22:00', local: 'Turquía', visitante: 'Estados Unidos' },
-'gdm6': { fecha: '2026-06-25', hora: '22:00', local: 'Paraguay', visitante: 'Australia' },
-'gem1': { fecha: '2026-06-14', hora: '13:00', local: 'Alemania', visitante: 'Curazao' },
-'gem2': { fecha: '2026-06-14', hora: '19:00', local: 'Costa de Marfil', visitante: 'Ecuador' },
-'gem3': { fecha: '2026-06-20', hora: '16:00', local: 'Alemania', visitante: 'Costa de Marfil' },
-'gem4': { fecha: '2026-06-20', hora: '22:00', local: 'Ecuador', visitante: 'Curazao' },
-'gem5': { fecha: '2026-06-25', hora: '16:00', local: 'Ecuador', visitante: 'Alemania' },
-'gem6': { fecha: '2026-06-25', hora: '16:00', local: 'Curazao', visitante: 'Costa de Marfil' },
-'gfm1': { fecha: '2026-06-14', hora: '16:00', local: 'Países Bajos', visitante: 'Japón' },
-'gfm2': { fecha: '2026-06-14', hora: '22:00', local: 'Suecia', visitante: 'Túnez' },
-'gfm3': { fecha: '2026-06-20', hora: '13:00', local: 'Países Bajos', visitante: 'Suecia' },
-'gfm4': { fecha: '2026-06-21', hora: '00:00', local: 'Túnez', visitante: 'Japón' },
-'gfm5': { fecha: '2026-06-25', hora: '19:00', local: 'Túnez', visitante: 'Países Bajos' },
-'gfm6': { fecha: '2026-06-25', hora: '19:00', local: 'Japón', visitante: 'Suecia' },
-'ggm1': { fecha: '2026-06-15', hora: '15:00', local: 'Bélgica', visitante: 'Egipto' },
-'ggm2': { fecha: '2026-06-15', hora: '21:00', local: 'Irán', visitante: 'Nueva Zelanda' },
-'ggm3': { fecha: '2026-06-21', hora: '15:00', local: 'Bélgica', visitante: 'Irán' },
-'ggm4': { fecha: '2026-06-21', hora: '21:00', local: 'Nueva Zelanda', visitante: 'Egipto' },
-'ggm5': { fecha: '2026-06-26', hora: '23:00', local: 'Nueva Zelanda', visitante: 'Bélgica' },
-'ggm6': { fecha: '2026-06-26', hora: '23:00', local: 'Egipto', visitante: 'Irán' },
-'ghm1': { fecha: '2026-06-15', hora: '12:00', local: 'España', visitante: 'Cabo Verde' },
-'ghm2': { fecha: '2026-06-15', hora: '18:00', local: 'Arabia Saudita', visitante: 'Uruguay' },
-'ghm3': { fecha: '2026-06-21', hora: '12:00', local: 'España', visitante: 'Arabia Saudita' },
-'ghm4': { fecha: '2026-06-21', hora: '18:00', local: 'Uruguay', visitante: 'Cabo Verde' },
-'ghm5': { fecha: '2026-06-26', hora: '20:00', local: 'Uruguay', visitante: 'España' },
-'ghm6': { fecha: '2026-06-26', hora: '20:00', local: 'Cabo Verde', visitante: 'Arabia Saudita' },
-'gim1': { fecha: '2026-06-16', hora: '15:00', local: 'Francia', visitante: 'Senegal' },
-'gim2': { fecha: '2026-06-16', hora: '18:00', local: 'Irak', visitante: 'Noruega' },
-'gim3': { fecha: '2026-06-22', hora: '17:00', local: 'Francia', visitante: 'Irak' },
-'gim4': { fecha: '2026-06-22', hora: '20:00', local: 'Noruega', visitante: 'Senegal' },
-'gim5': { fecha: '2026-06-26', hora: '15:00', local: 'Noruega', visitante: 'Francia' },
-'gim6': { fecha: '2026-06-26', hora: '15:00', local: 'Senegal', visitante: 'Irak' },
-'gjm1': { fecha: '2026-06-16', hora: '21:00', local: 'Argentina', visitante: 'Argelia' },
-'gjm2': { fecha: '2026-06-17', hora: '00:00', local: 'Austria', visitante: 'Jordania' },
-'gjm3': { fecha: '2026-06-22', hora: '13:00', local: 'Argentina', visitante: 'Austria' },
-'gjm4': { fecha: '2026-06-22', hora: '23:00', local: 'Jordania', visitante: 'Argelia' },
-'gjm5': { fecha: '2026-06-27', hora: '22:00', local: 'Jordania', visitante: 'Argentina' },
-'gjm6': { fecha: '2026-06-27', hora: '22:00', local: 'Argelia', visitante: 'Austria' },
-'gkm1': { fecha: '2026-06-17', hora: '13:00', local: 'Portugal', visitante: 'RD Congo' },
-'gkm2': { fecha: '2026-06-17', hora: '22:00', local: 'Uzbekistán', visitante: 'Colombia' },
-'gkm3': { fecha: '2026-06-23', hora: '13:00', local: 'Portugal', visitante: 'Uzbekistán' },
-'gkm4': { fecha: '2026-06-23', hora: '22:00', local: 'Colombia', visitante: 'RD Congo' },
-'gkm5': { fecha: '2026-06-27', hora: '19:30', local: 'Colombia', visitante: 'Portugal' },
-'gkm6': { fecha: '2026-06-27', hora: '19:30', local: 'RD Congo', visitante: 'Uzbekistán' },
-'glm1': { fecha: '2026-06-17', hora: '16:00', local: 'Inglaterra', visitante: 'Croacia' },
-'glm2': { fecha: '2026-06-17', hora: '19:00', local: 'Ghana', visitante: 'Panamá' },
-'glm3': { fecha: '2026-06-23', hora: '16:00', local: 'Inglaterra', visitante: 'Ghana' },
-'glm4': { fecha: '2026-06-23', hora: '19:00', local: 'Panamá', visitante: 'Croacia' },
-'glm5': { fecha: '2026-06-27', hora: '17:00', local: 'Panamá', visitante: 'Inglaterra' },
-'glm6': { fecha: '2026-06-27', hora: '17:00', local: 'Croacia', visitante: 'Ghana' }
-};
-
-const groupsData = {
-A: ['México', 'Sudáfrica', 'Corea del Sur', 'Chequia'],
-B: ['Canadá', 'Bosnia y Herzegovina', 'Qatar', 'Suiza'],
-C: ['Brasil', 'Marruecos', 'Haití', 'Escocia'],
-D: ['Estados Unidos', 'Paraguay', 'Australia', 'Turquía'],
-E: ['Alemania', 'Curazao', 'Costa de Marfil', 'Ecuador'],
-F: ['Países Bajos', 'Japón', 'Suecia', 'Túnez'],
-G: ['Bélgica', 'Egipto', 'Irán', 'Nueva Zelanda'],
-H: ['España', 'Cabo Verde', 'Arabia Saudita', 'Uruguay'],
-I: ['Francia', 'Senegal', 'Irak', 'Noruega'],
-J: ['Argentina', 'Argelia', 'Austria', 'Jordania'],
-K: ['Portugal', 'RD Congo', 'Uzbekistán', 'Colombia'],
-L: ['Inglaterra', 'Croacia', 'Ghana', 'Panamá']
-};
-
-function renderMatches() {
-const container = document.getElementById('matches-container');
-container.innerHTML = '';
-Object.entries(groupsData).forEach(([group, teams], gIdx) => {
-let groupHtml = `<div class="space-y-6">
-<div class="flex items-center gap-4"><div class="h-px flex-1 bg-blue-600/30"></div>
-<h3 class="text-2xl italic-black uppercase"><span class="bg-blue-600 text-white px-3 py-1 rounded-sm">GRUPO ${group}</span></h3>
-<div class="h-px flex-1 bg-blue-600/30"></div></div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
-const groupMatches = [[teams[0], teams[1]], [teams[2], teams[3]], [teams[0], teams[2]], [teams[3], teams[1]], [teams[3], teams[0]], [teams[1], teams[2]]];
-groupMatches.forEach((m, mIdx) => {
-const matchId = `g${group.toLowerCase()}m${mIdx + 1}`;
-const saved = predictions[matchId];
-const disabled = isSubmitted ? 'disabled opacity-50 cursor-not-allowed' : '';
-groupHtml += `<div class="glass p-5 rounded-2xl space-y-4 hover:border-white/20 transition-all">
-<div class="flex justify-between items-center"><span class="text-[10px] font-black uppercase text-slate-500">Partido #${(gIdx * 6) + mIdx + 1}</span>
-${isSubmitted ? `<span class="text-[10px] font-bold text-green-400">✓ Enviado</span>` : ''}</div>
-<div class="flex items-center justify-center gap-3 font-bold text-sm">
-<span class="flex-1 text-right truncate">${m[0]}</span><div class="px-2 py-1 bg-white/5 rounded text-[10px] text-slate-400 font-black">VS</div>
-<span class="flex-1 truncate">${m[1]}</span></div>
-<div class="grid grid-cols-3 gap-2">
-<button onclick="select('${matchId}', 'Local')" id="btn-${matchId}-Local" class="btn-option bg-white/5 border border-white/5 p-2 rounded-lg text-[10px] font-black uppercase text-slate-400 hover:bg-white/10 transition-all ${saved === 'Local' ? 'selected' : ''}" ${disabled}>1<span class="block text-[8px] opacity-60 font-medium">Local</span></button>
-<button onclick="select('${matchId}', 'Empate')" id="btn-${matchId}-Empate" class="btn-option bg-white/5 border border-white/5 p-2 rounded-lg text-[10px] font-black uppercase text-slate-400 hover:bg-white/10 transition-all ${saved === 'Empate' ? 'selected' : ''}" ${disabled}>X<span class="block text-[8px] opacity-60 font-medium">Empate</span></button>
-<button onclick="select('${matchId}', 'Visitante')" id="btn-${matchId}-Visitante" class="btn-option bg-white/5 border border-white/5 p-2 rounded-lg text-[10px] font-black uppercase text-slate-400 hover:bg-white/10 transition-all ${saved === 'Visitante' ? 'selected' : ''}" ${disabled}>2<span class="block text-[8px] opacity-60 font-medium">Visitante</span></button>
-</div></div>`;
-});
-groupHtml += `</div></div>`;
-container.innerHTML += groupHtml;
-});
-}
-
-function select(matchId, value) {
-if (isSubmitted) return;
-predictions[matchId] = value;
-document.querySelectorAll(`[id^="btn-${matchId}-"]`).forEach(btn => btn.classList.remove('selected'));
-document.getElementById(`btn-${matchId}-${value}`)?.classList.add('selected');
-updateProgress();
-if (currentUser) { clearTimeout(window._saveTimeout); window._saveTimeout = setTimeout(() => autoSave(), 800); }
-}
-
-function updateProgress() {
-const count = Object.keys(predictions).length;
-const pct = Math.round((count / 72) * 100);
-document.getElementById('progress-bar').style.width = pct + '%';
-document.getElementById('progress-text').innerText = pct + '%';
-document.getElementById('completed-count').innerText = count;
-document.getElementById('btn-submit').disabled = count < 72 || isSubmitted;
-}
-
-async function autoSave() {
-if (!currentUser || isSubmitted) return;
-try {
-const batch = db.batch();
-const userRef = db.collection('participants').doc(currentUser.uid);
-batch.set(userRef, { displayName: currentUser.displayName, lastActive: new Date(), submitted: false }, { merge: true });
-Object.entries(predictions).forEach(([matchId, value]) => {
-batch.set(userRef.collection('predictions').doc(matchId), { value, updatedAt: new Date() }, { merge: true });
-});
-await batch.commit();
-} catch (e) { console.error('Auto-save error:', e); }
-}
-
-async function loadPredictions(uid) {
-try {
-const snapshot = await db.collection('participants').doc(uid).collection('predictions').get();
-predictions = {}; snapshot.forEach(doc => predictions[doc.id] = doc.data().value);
-const userDoc = await db.collection('participants').doc(uid).get();
-if (userDoc.data()?.submitted) isSubmitted = true;
-} catch (e) { console.error(e); }
-}
-
-async function handleSubmit() {
-if (Object.keys(predictions).length < 72) return;
-if (!confirm("⚠️ ¿Confirmar envío? No podrás cambiar tus predicciones.")) return;
-const btn = document.getElementById('btn-submit');
-btn.disabled = true; btn.innerHTML = 'Enviando...';
-try {
-const userDoc = await db.collection('participants').doc(currentUser.uid).get();
-let userCode = userDoc.data()?.userCode;
-if (!userCode) {
-const counterRef = db.collection('config').doc('userCounter');
-await db.runTransaction(async (transaction) => {
-const counterDoc = await transaction.get(counterRef);
-const newCount = (counterDoc.data()?.count || 0) + 1;
-transaction.set(counterRef, { count: newCount }, { merge: true });
-userCode = `QA${String(newCount).padStart(4, '0')}`;
-});
-}
-const batch = db.batch();
-const userRef = db.collection('participants').doc(currentUser.uid);
-batch.update(userRef, { submitted: true, submittedAt: new Date(), totalPredictions: 72, userCode: userCode });
-Object.entries(predictions).forEach(([matchId, value]) => {
-batch.set(userRef.collection('predictions').doc(matchId), { value, submitted: true }, { merge: true });
-});
-await batch.commit();
-isSubmitted = true;
-currentUser.userCode = userCode;
-showToast(`✅ ¡Predicciones bloqueadas! Tu código: ${userCode}`, "success");
-setTimeout(() => showView('view-leaderboard'), 1500);
-} catch (err) {
-showToast("Error: " + err.message, "error");
-btn.disabled = false; btn.innerText = 'ENVIAR PREDICCIONES';
-}
-}
-
-let unsubscribeLB = null;
-function startLeaderboardListener() {
-if (unsubscribeLB) {
-unsubscribeLB();
-}
-const unsub = db.collection('participants').onSnapshot(pSnap => {
-const players = [];
-pSnap.forEach(doc => {
-const data = doc.data();
-if (data.deleted) return;
-if (!data.submitted) return;
-players.push({
-id: doc.id,
-name: data.displayName || 'Anónimo',
-code: data.userCode || 'QA0000',
-score: data.score || 0
-});
-});
-players.sort((a, b) => b.score - a.score || a.code.localeCompare(b.code));
-renderLeaderboard(players);
-});
-unsubscribeLB = unsub;
-}
-
-async function calcularYGuardarPuntajes() {
-try {
-console.log('🔄 Calculando puntajes...');
-const mSnap = await db.collection('matches').get();
-const results = {};
-mSnap.forEach(doc => results[doc.id] = doc.data().result);
-const pSnap = await db.collection('participants').get();
-for (const doc of pSnap.docs) {
-const data = doc.data();
-if (data.deleted || !data.submitted) continue;
-const predsSnap = await db.collection('participants').doc(doc.id).collection('predictions').get();
-let score = 0;
-predsSnap.forEach(predDoc => {
-const pred = predDoc.data().value;
-const res = results[predDoc.id];
-if (!res) return;
-if (res === 'Empate') {
-if (pred === 'Empate') score += 5;
-else score += 1;
-} else {
-if (pred === res) score += 3;
-}
-});
-await db.collection('participants').doc(doc.id).update({
-score: score,
-lastCalculated: new Date()
-});
-console.log(`✅ ${data.displayName}: ${score} puntos`);
-}
-console.log('✅ Puntajes calculados y guardados');
-} catch (error) {
-console.error('❌ Error calculando puntajes:', error);
-}
-}
-
-function renderLeaderboard(players) {
-const homeTbody = document.getElementById('home-leaderboard-body');
-const mainTbody = document.getElementById('leaderboard-body');
-let html = '';
-if (players.length === 0) {
-html = `<tr><td colspan="3" class="p-8 text-center text-slate-400">Aún no hay participantes que hayan enviado sus predicciones oficialmente.</td></tr>`;
-} else {
-html = players.map((p, idx) => {
-const isMe = p.id === currentUser?.uid;
-const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
-return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors ${isMe ? 'bg-blue-600/20' : ''}">
-<td class="p-4 text-center font-black text-lg">${medal}</td>
-<td class="p-4 font-bold ${isMe ? 'text-blue-400' : ''}">${p.name} ${isMe ? '<span class="text-[10px] text-blue-400 ml-2">(Tú)</span>' : ''}</td>
-<td class="p-4 text-center font-black text-xl text-yellow-400">${p.score}</td>
-</tr>`;
-}).join('');
-}
-if (homeTbody) homeTbody.innerHTML = html;
-if (mainTbody) mainTbody.innerHTML = html;
-}
-
-async function promptAdmin() {
-const pin = prompt("🔐 Ingresa el PIN de administrador:");
-if (pin === ADMIN_PIN) {
-try {
-if (!auth.currentUser) await auth.signInAnonymously();
-isAdmin = true;
-sessionStorage.setItem('isAdmin', 'true');
-showView('view-admin');
-cargarListaResultadosReel();
-loadKnockoutMatches();
-showToast("✅ Acceso de administrador concedido", "success");
-} catch (error) { showToast("Error al autenticar: " + error.message, "error"); }
-} else if (pin !== null) { showToast("PIN incorrecto", "error"); }
-}
-
-function showAdminTab(tab) {
-['reel','bracket'].forEach(t => {
-document.getElementById(`admin-tab-${t}`).classList.add('hidden');
-document.getElementById(`tab-${t}`).classList.remove('bg-blue-600');
-document.getElementById(`tab-${t}`).classList.add('bg-white/10');
-});
-document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-document.getElementById(`tab-${tab}`).classList.remove('bg-white/10');
-document.getElementById(`tab-${tab}`).classList.add('bg-blue-600');
-if (tab === 'reel') cargarListaResultadosReel();
-if (tab === 'bracket') renderAdminBracket();
-}
-
-// 🎯 FUNCIÓN: Mostrar/ocultar sección tipo victoria según empate
-function toggleSeccionTipoVictoria() {
-  const golesLocal = parseInt(document.getElementById('reel-golesLocal').value);
-  const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
-  const estado = document.getElementById('reel-estado').value;
-  const seccion = document.getElementById('seccionTipoVictoria');
-  
-  if (estado === 'Finalizado' && !isNaN(golesLocal) && !isNaN(golesVisitante) && golesLocal === golesVisitante) {
-    seccion.classList.remove('hidden');
-  } else {
-    seccion.classList.add('hidden');
-    // Resetear valores
-    document.getElementById('reel-tipoVictoria').value = '90min';
-    document.getElementById('camposProrroga').classList.add('hidden');
-    document.getElementById('camposPenales').classList.add('hidden');
-    document.getElementById('reel-golesLocalFinal').value = '';
-    document.getElementById('reel-golesVisitanteFinal').value = '';
-    document.getElementById('reel-penalesLocal').value = '';
-    document.getElementById('reel-penalesVisitante').value = '';
-  }
-}
-
-// 🎯 FUNCIÓN: Actualizar campos según tipo de victoria seleccionado (formulario nuevo)
-function actualizarCamposTipoVictoria() {
-  const tipo = document.getElementById('reel-tipoVictoria').value;
-  const camposProrroga = document.getElementById('camposProrroga');
-  const camposPenales = document.getElementById('camposPenales');
-  
-  camposProrroga.classList.add('hidden');
-  camposPenales.classList.add('hidden');
-  
-  if (tipo === 'prorroga') {
-    camposProrroga.classList.remove('hidden');
-  } else if (tipo === 'penales') {
-    camposPenales.classList.remove('hidden');
-  }
-}
-
-// 🎯 FUNCIÓN: Actualizar campos según tipo de victoria seleccionado (modal edición)
-function actualizarCamposTipoVictoriaEdit() {
-  const estado = document.getElementById('edit-estado').value;
-  const golesLocal = parseInt(document.getElementById('edit-golesLocal').value);
-  const golesVisitante = parseInt(document.getElementById('edit-golesVisitante').value);
-  const seccion = document.getElementById('edit-seccionTipoVictoria');
-  
-  if (estado === 'Finalizado' && !isNaN(golesLocal) && !isNaN(golesVisitante) && golesLocal === golesVisitante) {
-    seccion.classList.remove('hidden');
-    const tipo = document.getElementById('edit-tipoVictoria').value;
-    const camposProrroga = document.getElementById('edit-camposProrroga');
-    const camposPenales = document.getElementById('edit-camposPenales');
+<body class="relative">
     
-    camposProrroga.classList.add('hidden');
-    camposPenales.classList.add('hidden');
+    <!-- ============================================
+         CONTENEDOR PRINCIPAL
+         ============================================ -->
+    <div id="app" class="relative z-10 min-h-screen p-4 md:p-8">
+        
+        <!-- ============================================
+             VISTA 1: REGISTRO INICIAL
+             ============================================ -->
+            <div id="vista-registro" class="vista activa max-w-md mx-auto mt-20">
+                <div class="glass-strong p-8 text-center">
+                    <h1 class="font-titulo text-4xl md:text-5xl titulo-gradient mb-4">
+                        8VOS DE FINAL
+                    </h1>
+                    <p class="text-white/70 mb-8 font-semibold">
+                        Mundial 2026 • Sistema de Pronósticos
+                    </p>
+                    
+                    <!-- Temporizador -->
+                    <div id="temporizador-container" class="glass p-4 mb-6">
+                        <p class="text-xs text-white/60 font-etiqueta mb-2">Primer partido inicia en:</p>
+                        <p id="temporizador" class="font-titulo text-3xl text-yellow-400">
+                            --:--:--
+                        </p>
+                    </div>
+                    
+                    <!-- Input de nombre -->
+                    <div class="mb-6">
+                        <label class="block text-left text-sm font-semibold text-white/80 mb-2">
+                            👤 Tu nombre de participación
+                        </label>
+                        <input 
+                            type="text" 
+                            id="input-nombre" 
+                            class="input-custom" 
+                            placeholder="Ej: JUAN"
+                            maxlength="20"
+                            autocomplete="off"
+                        >
+                    </div>
+                    
+                    <!-- Mensaje de sugerencia (oculto por defecto) -->
+                    <div id="mensaje-sugerencia" class="hidden glass p-4 mb-6 animate-slideDown">
+                        <p class="text-sm text-yellow-400 font-semibold mb-2">
+                            ⚠️ Este nombre ya está participando.
+                        </p>
+                        <p class="text-xs text-white/70 mb-3">
+                            Puedes usar una de estas opciones:
+                        </p>
+                        <div id="sugerencias-nombres" class="flex flex-wrap gap-2">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <!-- Botón participar -->
+                    <button 
+                        id="btn-participar" 
+                        class="btn-primary w-full py-4 rounded-xl font-titulo text-lg text-white shadow-lg"
+                    >
+                        🎯 PARTICIPAR
+                    </button>
+                    
+                    <!-- Link admin (discreto) -->
+                    <button 
+                        id="btn-admin-link" 
+                        class="mt-6 text-xs text-white/30 hover:text-white/60 transition-colors"
+                    >
+                        admin
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 2: INSTRUCCIONES
+                 ============================================ -->
+            <div id="vista-instrucciones" class="vista max-w-md mx-auto mt-20">
+                <div class="glass-strong p-8 text-center">
+                    <div class="text-6xl mb-4">️</div>
+                    <h2 class="font-titulo text-2xl titulo-gradient mb-6">
+                        IMPORTANTE
+                    </h2>
+                    <div class="glass p-6 mb-6 text-left">
+                        <p class="text-white/90 mb-4 font-semibold">
+                            Una vez guardado cada bloque, <span class="text-red-400">NO podrás modificar tus respuestas</span>.
+                        </p>
+                        <p class="text-white/70 text-sm">
+                            Asegúrate de elegir bien antes de confirmar. Cada acierto vale 1 punto.
+                        </p>
+                    </div>
+                    <button 
+                        id="btn-empezar" 
+                        class="btn-success w-full py-4 rounded-xl font-titulo text-lg text-white shadow-lg"
+                    >
+                        ✅ ENTENDIDO, EMPEZAR
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 3: BLOQUE DE PARTIDO
+                 ============================================ -->
+            <div id="vista-bloque" class="vista max-w-2xl mx-auto mt-8">
+                <div class="glass-strong p-6 md:p-8">
+                    <!-- Encabezado del bloque -->
+                    <div class="text-center mb-6">
+                        <div class="flex items-center justify-center gap-2 mb-2">
+                            <span class="chip bg-white/10">
+                                BLOQUE <span id="bloque-numero" class="font-numero text-yellow-400 ml-1">1</span> DE 8
+                            </span>
+                        </div>
+                        <h2 id="bloque-partido" class="font-titulo text-2xl md:text-3xl titulo-gradient mb-2">
+                            CANADÁ vs MARRUECOS
+                        </h2>
+                        <p id="bloque-fecha" class="text-sm text-white/60 font-semibold">
+                            Sáb 04/07, 1:00 PM
+                        </p>
+                    </div>
+                    
+                    <!-- Barra de progreso -->
+                    <div class="progress-bar mb-8">
+                        <div id="progreso-fill" class="progress-fill" style="width: 12.5%"></div>
+                    </div>
+                    
+                    <!-- Preguntas -->
+                    <div id="preguntas-container" class="space-y-6 mb-8">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <!-- Botón guardar -->
+                    <button 
+                        id="btn-guardar-bloque" 
+                        class="btn-primary w-full py-4 rounded-xl font-titulo text-lg text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        💾 GUARDAR SELECCIONES
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 4: RESUMEN FINAL + IMAGEN
+                 ============================================ -->
+            <div id="vista-resumen" class="vista max-w-2xl mx-auto mt-8">
+                <div class="glass-strong p-6 md:p-8 mb-6">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4 animate-rebotar"></div>
+                        <h2 class="font-titulo text-3xl titulo-gradient mb-2">
+                            ¡PARTICIPACIÓN COMPLETA!
+                        </h2>
+                        <p class="text-white/70 font-semibold">
+                            👤 <span id="resumen-nombre" class="text-yellow-400">JUAN</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Resumen de selecciones -->
+                    <div id="resumen-selecciones" class="space-y-4 mb-8">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="space-y-4">
+                        <button 
+                            id="btn-descargar-jpg" 
+                            class="btn-primary w-full py-4 rounded-xl font-titulo text-lg text-white shadow-lg"
+                        >
+                            📥 DESCARGAR MI TARJETA JPG
+                        </button>
+                        <button 
+                            id="btn-volver-inicio" 
+                            class="btn-secondary w-full py-4 rounded-xl font-titulo text-lg text-white"
+                        >
+                            🏠 VOLVER AL INICIO
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta oculta para generar imagen -->
+                <div id="tarjeta-oculta" class="hidden">
+                    <div id="tarjeta-jugador" class="tarjeta-jugador">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 5: PANTALLA PRINCIPAL (STADIUM)
+                 ============================================ -->
+            <div id="vista-stadium" class="vista max-w-6xl mx-auto mt-8">
+                
+                <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+                <div class="glass-strong p-4 mb-6 flex items-center justify-between nav-stadium">
+                    <button 
+                        id="btn-salir-stadium" 
+                        class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2"
+                    >
+                        🚪 SALIR
+                    </button>
+                    
+                    <h2 class="font-titulo text-lg md:text-xl titulo-gradient hidden sm:block">
+                        🏆 8VOS DE FINAL
+                    </h2>
+                    
+                    <button 
+                        id="btn-admin-stadium" 
+                        class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2"
+                    >
+                        🔐 ADMIN
+                    </button>
+                </div>
+                
+                <!-- Input para nuevo usuario (se oculta cuando está cerrado) -->
+                <div id="stadium-input-container" class="glass-strong p-6 mb-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <div class="flex-1 w-full">
+                            <input 
+                                type="text" 
+                                id="input-nombre-stadium" 
+                                class="input-custom" 
+                                placeholder="👤 Ingresa tu nombre para participar"
+                                maxlength="20"
+                                autocomplete="off"
+                            >
+                        </div>
+                        <button 
+                            id="btn-participar-stadium" 
+                            class="btn-primary px-8 py-4 rounded-xl font-titulo text-white shadow-lg whitespace-nowrap"
+                        >
+                            🎯 PARTICIPAR
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ranking (oculto hasta que haya resultados) -->
+                <div id="ranking-container" class="hidden glass-strong p-6 mb-6">
+                    <h3 class="font-titulo text-2xl titulo-gradient mb-4 text-center">
+                        🏆 RANKING ACTUAL
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="tabla-glass">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Nombre</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-body">
+                                <!-- Se llena dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Jugadas por bloque -->
+                <div class="glass-strong p-6">
+                    <h3 class="font-titulo text-2xl titulo-gradient mb-4 text-center">
+                         JUGADAS POR BLOQUE
+                    </h3>
+                    <div id="bloques-jugadas" class="space-y-4">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 6: LOGIN ADMIN
+                 ============================================ -->
+            <div id="vista-admin-login" class="vista max-w-md mx-auto mt-20">
+                <div class="glass-strong p-8 text-center">
+                    <div class="text-6xl mb-4">🔐</div>
+                    <h2 class="font-titulo text-2xl titulo-gradient mb-6">
+                        ACCESO ADMINISTRADOR
+                    </h2>
+                    <div class="mb-6">
+                        <input 
+                            type="password" 
+                            id="input-password-admin" 
+                            class="input-custom text-center" 
+                            placeholder="Contraseña"
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button 
+                        id="btn-login-admin" 
+                        class="btn-primary w-full py-4 rounded-xl font-titulo text-lg text-white shadow-lg"
+                    >
+                        INGRESAR
+                    </button>
+                    <button 
+                        id="btn-volver-desde-admin" 
+                        class="mt-4 text-sm text-white/60 hover:text-white transition-colors"
+                    >
+                        ← Volver
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ============================================
+                 VISTA 7: PANEL ADMIN
+                 ============================================ -->
+            <div id="vista-admin-panel" class="vista max-w-6xl mx-auto mt-8">
+                <div class="glass-strong p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-titulo text-2xl titulo-gradient">
+                            🎛️ PANEL ADMINISTRADOR
+                        </h2>
+                        <button 
+                            id="btn-salir-admin" 
+                            class="btn-secondary px-4 py-2 rounded-lg text-sm font-semibold"
+                        >
+                            Salir
+                        </button>
+                    </div>
+                    
+                    <!-- Pestañas -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <button class="tab-btn active" data-tab="resultados">
+                            📊 RESULTADOS
+                        </button>
+                        <button class="tab-btn" data-tab="edicion">
+                            ✏️ EDICIÓN
+                        </button>
+                        <button class="tab-btn" data-tab="control">
+                            🎮 CONTROL
+                        </button>
+                    </div>
+                    
+                    <!-- Contenido de pestañas -->
+                    <div id="tab-resultados" class="tab-content active">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <div id="tab-edicion" class="tab-content">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <div id="tab-control" class="tab-content">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- ============================================
+             MODALES
+             ============================================ -->
+        <div id="modal-confirmar" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="text-center">
+                    <div class="text-6xl mb-4">️</div>
+                    <h3 class="font-titulo text-2xl titulo-gradient mb-4">
+                        CONFIRMAR SELECCIÓN
+                    </h3>
+                    <p class="text-white/80 mb-6">
+                        ¿Estás seguro? <span class="text-red-400 font-bold">No podrás cambiar estas respuestas</span> después de guardar.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button 
+                            id="btn-modal-volver" 
+                            class="btn-secondary flex-1 py-3 rounded-xl font-semibold"
+                        >
+                            Volver a revisar
+                        </button>
+                        <button 
+                            id="btn-modal-confirmar" 
+                            class="btn-success flex-1 py-3 rounded-xl font-semibold"
+                        >
+                            ✅ Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ============================================
+             TOAST NOTIFICATIONS
+             ============================================ -->
+        <div id="toast-container"></div>
     
-    if (tipo === 'prorroga') {
-      camposProrroga.classList.remove('hidden');
-    } else if (tipo === 'penales') {
-      camposPenales.classList.remove('hidden');
-    }
-  } else {
-    seccion.classList.add('hidden');
-  }
-}
-
-// Agregar listeners a los campos de goles y estado
-document.addEventListener('DOMContentLoaded', () => {
-  const golesLocalInput = document.getElementById('reel-golesLocal');
-  const golesVisitanteInput = document.getElementById('reel-golesVisitante');
-  const estadoSelect = document.getElementById('reel-estado');
-  
-  if (golesLocalInput) golesLocalInput.addEventListener('input', toggleSeccionTipoVictoria);
-  if (golesVisitanteInput) golesVisitanteInput.addEventListener('input', toggleSeccionTipoVictoria);
-  if (estadoSelect) estadoSelect.addEventListener('change', toggleSeccionTipoVictoria);
-});
-
-const MAX_RESULTADOS_REEL = 6;
-let resultadosReel = [];
-let reelScrollIndex = 0;
-let reelAutoScrollInterval;
-let reelUnsubscribe = null;
-
-function cargarResultadosReel() {
-if (reelUnsubscribe) reelUnsubscribe();
-db.collection('resultados')
-.orderBy('fechaHora', 'desc')
-.limit(15)
-.onSnapshot(snapshot => {
-resultadosReel = [];
-snapshot.forEach(doc => {
-resultadosReel.push({ id: doc.id, ...doc.data() });
-});
-renderizarReel('listaResultadosReel');
-if (resultadosReel.length > MAX_RESULTADOS_REEL) {
-iniciarAutoScrollReel();
-} else {
-detenerAutoScrollReel();
-}
-}, error => {
-console.warn('⚠️ orderBy falló, usando fallback:', error.message);
-db.collection('resultados')
-.limit(15)
-.onSnapshot(snapshot => {
-resultadosReel = [];
-snapshot.forEach(doc => {
-resultadosReel.push({ id: doc.id, ...doc.data() });
-});
-resultadosReel.sort((a, b) => {
-const timeA = a.fechaHora?.toMillis?.() || 0;
-const timeB = b.fechaHora?.toMillis?.() || 0;
-return timeB - timeA;
-});
-renderizarReel('listaResultadosReel');
-if (resultadosReel.length > MAX_RESULTADOS_REEL) {
-iniciarAutoScrollReel();
-} else {
-detenerAutoScrollReel();
-}
-});
-});
-}
-
-function renderizarReel(containerId) {
-const container = document.getElementById(containerId);
-if (!container) return;
-container.innerHTML = '';
-const visible = resultadosReel.slice(0, MAX_RESULTADOS_REEL);
-visible.forEach((resultado, index) => {
-const card = crearTarjetaReel(resultado, index);
-container.appendChild(card);
-});
-}
-
-
-
-
-function crearTarjetaReel(resultado, index) {
-const card = document.createElement('div');
-const cardClass = index === 0 ? 'reel-card newest' : 'reel-card older';
-card.className = cardClass;
-const alturaTarjeta = 85;
-const offset = index * alturaTarjeta;
-card.style.top = `${offset}px`;
-const opacidades = [1, 0.85, 0.7, 0.5, 0.5, 0.5];
-const escalas = [1, 0.95, 0.9, 0.9, 0.9, 0.9];
-card.style.opacity = opacidades[index] || 0.5;
-card.style.transform = `scale(${escalas[index] || 0.9})`;
-
-const estadoBadge = resultado.estado === 'En Vivo'
-? '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">🔴 EN VIVO</span>'
-: resultado.estado === 'Pospuesto'
-? '<span class="bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">⏸️ POSPUESTO</span>'
-: '<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">✅ FINALIZADO</span>';
-
-//  Badge de tipo de victoria y detalles
-let tipoVictoriaBadge = '';
-let detalleBadge = '';
-
-// 🏆 Determinar ganador y agregar check
-let equipoLocalGanador = false;
-let equipoVisitanteGanador = false;
-
-if (resultado.estado === 'Finalizado' && resultado.tipoVictoria) {
-  const tipoClase = `tipo-${resultado.tipoVictoria}`;
-  const tipoTexto = resultado.tipoVictoria === '90min' ? "90'"
-    : resultado.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
-    : '🎯 Penales';
-  tipoVictoriaBadge = `<span class="${tipoClase} tipo-badge">${tipoTexto}</span>`;
-  
-  // Si es prórroga, determinar ganador por resultado final
-  if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
-    detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${resultado.golesLocalFinal}-${resultado.golesVisitanteFinal}</span>`;
+    <!-- ============================================
+         FIREBASE + JAVASCRIPT
+         ============================================ -->
+    <script type="module">
+        // ============================================
+        // IMPORTACIONES DE FIREBASE
+        // ============================================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            getDocs, 
+            updateDoc, 
+            deleteDoc,
+            query, 
+            where, 
+            onSnapshot,
+            orderBy,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        
+        // ============================================
+        // CONFIGURACIÓN DE FIREBASE
+        // ============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBazeOQheNIrtfHA0YaPgXZPXnfaSQn7SU",
+            authDomain: "vos-de-final.firebaseapp.com",
+            projectId: "vos-de-final",
+            storageBucket: "vos-de-final.firebasestorage.app",
+            messagingSenderId: "809115394077",
+            appId: "1:809115394077:web:06cebf1fa9722626f8a6f4"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // ============================================
+        // DATOS DE PARTIDOS (8 BLOQUES)
+        // ============================================
+        const PARTIDOS = [
+            {
+                numero: 1,
+                local: "Canadá",
+                visitante: "Marruecos",
+                fecha: "2026-07-04T13:00:00",
+                fechaTexto: "Sáb 04/07, 1:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿El primer gol del partido será después del minuto 30 del 1T?" },
+                    { id: "p2", texto: "¿Ambos equipos anotan en los 90'?" },
+                    { id: "p3", texto: "¿Habrá menos de 2.5 goles en los 90'?" }
+                ]
+            },
+            {
+                numero: 2,
+                local: "Paraguay",
+                visitante: "Francia",
+                fecha: "2026-07-04T17:00:00",
+                fechaTexto: "Sáb 04/07, 5:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿Francia gana Y ambos equipos anotan?" },
+                    { id: "p2", texto: "¿Francia gana al descanso?" },
+                    { id: "p3", texto: "¿Habrá más de 3.5 goles en los 90'?" }
+                ]
+            },
+            {
+                numero: 3,
+                local: "Brasil",
+                visitante: "Noruega",
+                fecha: "2026-07-05T16:00:00",
+                fechaTexto: "Dom 05/07, 4:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿Ambos equipos anotan en el 2T?" },
+                    { id: "p2", texto: "¿Noruega anota el primer gol del partido?" },
+                    { id: "p3", texto: "¿El partido termina en empate en los 90'?" }
+                ]
+            },
+            {
+                numero: 4,
+                local: "México",
+                visitante: "Inglaterra",
+                fecha: "2026-07-05T20:00:00",
+                fechaTexto: "Dom 05/07, 8:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿Inglaterra gana al descanso?" },
+                    { id: "p2", texto: "¿México clasifica a la siguiente fase?" },
+                    { id: "p3", texto: "¿Ambos equipos anotan en los 90'?" }
+                ]
+            },
+            {
+                numero: 5,
+                local: "Portugal",
+                visitante: "España",
+                fecha: "2026-07-06T15:00:00",
+                fechaTexto: "Lun 06/07, 3:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿El partido termina en empate en los 90'?" },
+                    { id: "p2", texto: "¿Portugal anota primero?" },
+                    { id: "p3", texto: "¿Habrá al menos una tarjeta roja (incluyendo prórroga)?" }
+                ]
+            },
+            {
+                numero: 6,
+                local: "EE. UU.",
+                visitante: "Bélgica",
+                fecha: "2026-07-06T20:00:00",
+                fechaTexto: "Lun 06/07, 8:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿EE. UU. anota primero?" },
+                    { id: "p2", texto: "¿Habrá más de 2.5 goles en los 90'?" },
+                    { id: "p3", texto: "¿El primer tiempo termina en empate?" }
+                ]
+            },
+            {
+                numero: 7,
+                local: "Argentina",
+                visitante: "Egipto",
+                fecha: "2026-07-07T12:00:00",
+                fechaTexto: "Mar 07/07, 12:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿Argentina gana sin recibir goles?" },
+                    { id: "p2", texto: "¿Egipto anota al menos un gol en el 1T?" },
+                    { id: "p3", texto: "¿Habrá más de 9.5 tiros de esquina en los 90'?" }
+                ]
+            },
+            {
+                numero: 8,
+                local: "Suiza",
+                visitante: "Colombia",
+                fecha: "2026-07-07T16:00:00",
+                fechaTexto: "Mar 07/07, 4:00 PM",
+                preguntas: [
+                    { id: "p1", texto: "¿Colombia clasifica a la siguiente fase?" },
+                    { id: "p2", texto: "¿Suiza gana o empata al descanso?" },
+                    { id: "p3", texto: "¿Habrá menos de 2.5 goles en los 90'?" }
+                ]
+            }
+        ];
+        
+        // ============================================
+        // ESTADO GLOBAL DE LA APP
+        // ============================================
+        const estado = {
+            usuarioActual: null,
+            bloqueActual: 1,
+            respuestasTemporales: {},
+            modoAdmin: false
+        };
+        
+        // ============================================
+        // UTILIDADES
+        // ============================================
+        
+        // Mostrar/ocultar vistas
+        function mostrarVista(idVista) {
+            document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+            document.getElementById(idVista).classList.add('activa');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Toast notification
+        function mostrarToast(mensaje, tipo = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${tipo}`;
+            toast.textContent = mensaje;
+            document.getElementById('toast-container').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Sonidos
+        function reproducirSonido(tipo) {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            if (tipo === 'clic') {
+                oscillator.frequency.value = 800;
+                gainNode.gain.setValueAtTime(0.3, context.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.1);
+                oscillator.start(context.currentTime);
+                oscillator.stop(context.currentTime + 0.1);
+            } else if (tipo === 'trompeta') {
+                oscillator.frequency.value = 440;
+                oscillator.type = 'sawtooth';
+                gainNode.gain.setValueAtTime(0.3, context.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+                oscillator.start(context.currentTime);
+                oscillator.stop(context.currentTime + 0.5);
+            }
+        }
+        
+        // Formatear fecha
+        function formatearFecha(fechaISO) {
+            const fecha = new Date(fechaISO);
+            return fecha.toLocaleString('es-VE', {
+                weekday: 'short',
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // ============================================
+        // TEMPORIZADOR CON CIERRE AUTOMÁTICO
+        // ============================================
+        let yaCerroAutomaticamente = false;
+        
+        function actualizarTemporizador() {
+            const primerPartido = new Date(PARTIDOS[0].fecha);
+            const ahora = new Date();
+            const diferencia = primerPartido - ahora;
+            
+            if (diferencia <= 0) {
+                document.getElementById('temporizador').textContent = '¡EN VIVO!';
+                document.getElementById('temporizador').classList.add('text-red-400');
+                
+                // Cerrar jugadas automáticamente cuando llegue a cero (solo una vez)
+                if (!yaCerroAutomaticamente) {
+                    yaCerroAutomaticamente = true;
+                    cerrarJugadasAutomaticamente();
+                }
+                return;
+            }
+            
+            const horas = Math.floor(diferencia / (1000 * 60 * 60));
+            const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+            
+            document.getElementById('temporizador').textContent = 
+                `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        }
+        
+        // Función para cerrar jugadas automáticamente
+        async function cerrarJugadasAutomaticamente() {
+            try {
+                const configDoc = await getDoc(doc(db, 'config', 'global'));
+                const config = configDoc.data();
+                
+                // Solo cerrar si está ABIERTO
+                if (config.estadoApp === 'ABIERTO') {
+                    await updateDoc(doc(db, 'config', 'global'), {
+                        estadoApp: 'CERRADO'
+                    });
+                    mostrarToast(' Las jugadas se han cerrado automáticamente', 'info');
+                }
+            } catch (error) {
+                console.error('Error al cerrar automáticamente:', error);
+            }
+        }
+        
+        setInterval(actualizarTemporizador, 1000);
+        actualizarTemporizador();
+        
+        // ============================================
+        // INICIALIZAR FIRESTORE (SI ESTÁ VACÍO)
+        // ============================================
+        async function inicializarFirestore() {
+            try {
+                // Verificar si existe la colección 'config'
+                const configDoc = await getDoc(doc(db, 'config', 'global'));
+                
+                if (!configDoc.exists()) {
+                    // Crear documento de configuración
+                    await setDoc(doc(db, 'config', 'global'), {
+                        estadoApp: 'ABIERTO',
+                        fechaPrimerPartido: PARTIDOS[0].fecha,
+                        contrasenaAdmin: '111180'
+                    });
+                    console.log('✅ Configuración inicial creada');
+                }
+                
+                // Verificar si existen los partidos
+                const partidosSnapshot = await getDocs(collection(db, 'partidos'));
+                
+                if (partidosSnapshot.empty) {
+                    // Crear los 8 partidos
+                    for (const partido of PARTIDOS) {
+                        await setDoc(doc(db, 'partidos', `bloque_${partido.numero}`), {
+                            numero: partido.numero,
+                            equipoLocal: partido.local,
+                            equipoVisitante: partido.visitante,
+                            fecha: partido.fecha,
+                            fechaTexto: partido.fechaTexto,
+                            preguntas: partido.preguntas,
+                            resultadosOficiales: {
+                                p1: null,
+                                p2: null,
+                                p3: null
+                            },
+                            estado: 'PENDIENTE'
+                        });
+                    }
+                    console.log('✅ Partidos iniciales creados');
+                }
+            } catch (error) {
+                console.error(' Error inicializando Firestore:', error);
+            }
+        }
+        
+        inicializarFirestore();
+        
+        // ============================================
+        // REGISTRO DE USUARIO
+        // ============================================
+        const inputNombre = document.getElementById('input-nombre');
+        const btnParticipar = document.getElementById('btn-participar');
+        const mensajeSugerencia = document.getElementById('mensaje-sugerencia');
+        const sugerenciasNombres = document.getElementById('sugerencias-nombres');
+        
+        inputNombre.addEventListener('input', () => {
+            mensajeSugerencia.classList.add('hidden');
+        });
+        
+        btnParticipar.addEventListener('click', async () => {
+            const nombre = inputNombre.value.trim().toUpperCase();
+            
+            if (!nombre) {
+                mostrarToast('Por favor ingresa tu nombre', 'danger');
+                return;
+            }
+            
+            try {
+                // Verificar si el nombre ya existe
+                const participantesSnapshot = await getDocs(collection(db, 'participantes'));
+                const nombresExistentes = [];
+                
+                participantesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    nombresExistentes.push(data.nombre);
+                });
+                
+                // Si el nombre ya existe, mostrar sugerencias
+                if (nombresExistentes.includes(nombre)) {
+                    mensajeSugerencia.classList.remove('hidden');
+                    sugerenciasNombres.innerHTML = '';
+                    
+                    for (let i = 2; i <= 4; i++) {
+                        const nombreSugerido = `${nombre}_${String(i).padStart(2, '0')}`;
+                        if (!nombresExistentes.includes(nombreSugerido)) {
+                            const btn = document.createElement('button');
+                            btn.className = 'chip bg-fucsia/20 text-fucsia border border-fucsia/30 cursor-pointer hover:bg-fucsia/30 transition-colors';
+                            btn.textContent = nombreSugerido;
+                            btn.addEventListener('click', () => {
+                                inputNombre.value = nombreSugerido;
+                                mensajeSugerencia.classList.add('hidden');
+                            });
+                            sugerenciasNombres.appendChild(btn);
+                        }
+                    }
+                    
+                    mostrarToast('Este nombre ya está en uso', 'danger');
+                    return;
+                }
+                
+                // Verificar si el nombre está en "sesión fantasma" (en progreso)
+                const querySesion = query(
+                    collection(db, 'participantes'),
+                    where('nombre', '==', nombre),
+                    where('estado', '==', 'EN_PROGRESO')
+                );
+                const sesionSnapshot = await getDocs(querySesion);
+                
+                if (!sesionSnapshot.empty) {
+                    mostrarToast('Este nombre está en uso por otro dispositivo', 'danger');
+                    return;
+                }
+                
+                // Crear sesión fantasma
+                const timestamp = Date.now();
+                const idParticipante = `${nombre.toLowerCase().replace(/\s+/g, '_')}_${timestamp}`;
+                
+                await setDoc(doc(db, 'participantes', idParticipante), {
+                    nombre: nombre,
+                    estado: 'EN_PROGRESO',
+                    timestamp: timestamp,
+                    respuestas: {},
+                    puntajes: {}
+                });
+                
+                estado.usuarioActual = {
+                    id: idParticipante,
+                    nombre: nombre
+                };
+                
+                // Guardar en localStorage para persistencia durante la sesión
+                localStorage.setItem('usuarioActual', JSON.stringify(estado.usuarioActual));
+                
+                mostrarToast('¡Bienvenido!', 'success');
+                reproducirSonido('clic');
+                
+                // Ir a instrucciones
+                mostrarVista('vista-instrucciones');
+                
+            } catch (error) {
+                console.error('Error al registrar:', error);
+                mostrarToast('Error al registrar. Intenta de nuevo.', 'danger');
+            }
+        });
+        
+        // ============================================
+        // INSTRUCCIONES
+        // ============================================
+        document.getElementById('btn-empezar').addEventListener('click', () => {
+            estado.bloqueActual = 1;
+            estado.respuestasTemporales = {};
+            cargarBloque(1);
+            mostrarVista('vista-bloque');
+        });
+        
+        // ============================================
+        // CARGAR BLOQUE DE PARTIDO
+        // ============================================
+        function cargarBloque(numero) {
+            const partido = PARTIDOS[numero - 1];
+            
+            document.getElementById('bloque-numero').textContent = numero;
+            document.getElementById('bloque-partido').textContent = `${partido.local} vs ${partido.visitante}`;
+            document.getElementById('bloque-fecha').textContent = partido.fechaTexto;
+            document.getElementById('progreso-fill').style.width = `${(numero / 8) * 100}%`;
+            
+            const preguntasContainer = document.getElementById('preguntas-container');
+            preguntasContainer.innerHTML = '';
+            
+            partido.preguntas.forEach((pregunta, index) => {
+                const preguntaDiv = document.createElement('div');
+                preguntaDiv.className = 'glass p-6';
+                preguntaDiv.innerHTML = `
+                    <p class="font-semibold text-white/90 mb-4">
+                        <span class="text-yellow-400 font-numero">${index + 1}.</span> ${pregunta.texto}
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="radio-custom" data-pregunta="${pregunta.id}" data-respuesta="Sí">
+                            <input type="radio" name="pregunta_${pregunta.id}" value="Sí">
+                            <span>Sí</span>
+                        </label>
+                        <label class="radio-custom" data-pregunta="${pregunta.id}" data-respuesta="No">
+                            <input type="radio" name="pregunta_${pregunta.id}" value="No">
+                            <span>No</span>
+                        </label>
+                    </div>
+                `;
+                preguntasContainer.appendChild(preguntaDiv);
+            });
+            
+            // Event listeners para radio buttons
+            document.querySelectorAll('.radio-custom').forEach(label => {
+                label.addEventListener('click', () => {
+                    const preguntaId = label.dataset.pregunta;
+                    const respuesta = label.dataset.respuesta;
+                    
+                    // Desmarcar otros
+                    document.querySelectorAll(`.radio-custom[data-pregunta="${preguntaId}"]`).forEach(l => {
+                        l.classList.remove('selected');
+                    });
+                    
+                    // Marcar este
+                    label.classList.add('selected');
+                    label.querySelector('input').checked = true;
+                    
+                    // Guardar en estado temporal
+                    estado.respuestasTemporales[`bloque_${numero}`] = estado.respuestasTemporales[`bloque_${numero}`] || {};
+                    estado.respuestasTemporales[`bloque_${numero}`][preguntaId] = respuesta;
+                    
+                    // Verificar si todas las preguntas están respondidas
+                    verificarCompletitud();
+                    
+                    reproducirSonido('clic');
+                });
+            });
+            
+            // Deshabilitar botón guardar
+            document.getElementById('btn-guardar-bloque').disabled = true;
+        }
+        
+        function verificarCompletitud() {
+            const bloqueActual = estado.bloqueActual;
+            const respuestasBloque = estado.respuestasTemporales[`bloque_${bloqueActual}`] || {};
+            const preguntas = PARTIDOS[bloqueActual - 1].preguntas;
+            
+            const todasRespondidas = preguntas.every(p => respuestasBloque[p.id]);
+            
+            document.getElementById('btn-guardar-bloque').disabled = !todasRespondidas;
+        }
+        
+        // ============================================
+        // GUARDAR BLOQUE
+        // ============================================
+        document.getElementById('btn-guardar-bloque').addEventListener('click', () => {
+            document.getElementById('modal-confirmar').classList.remove('hidden');
+        });
+        
+        document.getElementById('btn-modal-volver').addEventListener('click', () => {
+            document.getElementById('modal-confirmar').classList.add('hidden');
+        });
+        
+        document.getElementById('btn-modal-confirmar').addEventListener('click', async () => {
+            document.getElementById('modal-confirmar').classList.add('hidden');
+            
+            try {
+                // Actualizar en Firestore
+                const participanteRef = doc(db, 'participantes', estado.usuarioActual.id);
+                const updateData = {
+                    [`respuestas.bloque_${estado.bloqueActual}`]: estado.respuestasTemporales[`bloque_${estado.bloqueActual}`]
+                };
+                
+                await updateDoc(participanteRef, updateData);
+                
+                mostrarToast(`Bloque ${estado.bloqueActual} guardado`, 'success');
+                reproducirSonido('clic');
+                
+                // Avanzar al siguiente bloque
+                estado.bloqueActual++;
+                
+                if (estado.bloqueActual > 8) {
+                    // Completó todos los bloques
+                    await completarParticipacion();
+                } else {
+                    // Cargar siguiente bloque
+                    cargarBloque(estado.bloqueActual);
+                }
+                
+            } catch (error) {
+                console.error('Error al guardar bloque:', error);
+                mostrarToast('Error al guardar. Intenta de nuevo.', 'danger');
+            }
+        });
+        
+        // ============================================
+        // COMPLETAR PARTICIPACIÓN
+        // ============================================
+        async function completarParticipacion() {
+            try {
+                // Actualizar estado a COMPLETADO
+                const participanteRef = doc(db, 'participantes', estado.usuarioActual.id);
+                await updateDoc(participanteRef, {
+                    estado: 'COMPLETADO'
+                });
+                
+                // Mostrar resumen
+                mostrarResumen();
+                mostrarVista('vista-resumen');
+                
+            } catch (error) {
+                console.error('Error al completar participación:', error);
+                mostrarToast('Error al completar. Intenta de nuevo.', 'danger');
+            }
+        }
+        
+        // ============================================
+        // MOSTRAR RESUMEN
+        // ============================================
+        function mostrarResumen() {
+            document.getElementById('resumen-nombre').textContent = estado.usuarioActual.nombre;
+            
+            const resumenContainer = document.getElementById('resumen-selecciones');
+            resumenContainer.innerHTML = '';
+            
+            PARTIDOS.forEach((partido, index) => {
+                const bloqueNum = index + 1;
+                const respuestas = estado.respuestasTemporales[`bloque_${bloqueNum}`] || {};
+                
+                const bloqueDiv = document.createElement('div');
+                bloqueDiv.className = 'glass p-4';
+                bloqueDiv.innerHTML = `
+                    <h4 class="font-semibold text-yellow-400 mb-3">
+                        BLOQUE ${bloqueNum}: ${partido.local} vs ${partido.visitante}
+                    </h4>
+                    <div class="space-y-2">
+                        ${partido.preguntas.map((p, i) => `
+                            <div class="flex items-center gap-2 text-sm">
+                                <span class="text-white/60">${i + 1}.</span>
+                                <span class="text-white/80 flex-1">${p.texto}</span>
+                                <span class="chip ${respuestas[p.id] === 'Sí' ? 'chip-success' : 'chip-danger'}">
+                                    ${respuestas[p.id] || '—'}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                resumenContainer.appendChild(bloqueDiv);
+            });
+        }
+        
+        // ============================================
+        // DESCARGAR IMAGEN JPG
+        // ============================================
+        document.getElementById('btn-descargar-jpg').addEventListener('click', async () => {
+            try {
+                // Generar contenido de la tarjeta
+                const tarjetaDiv = document.getElementById('tarjeta-jugador');
+                tarjetaDiv.innerHTML = `
+                    <h2 class="text-3xl mb-2">8VOS DE FINAL</h2>
+                    <p class="text-white/70 mb-6">Mundial 2026 • Tarjeta de Participación</p>
+                    <div class="glass p-4 mb-4">
+                        <p class="text-sm text-white/60 mb-1">JUGADOR</p>
+                        <p class="text-2xl font-bold text-yellow-400">${estado.usuarioActual.nombre}</p>
+                    </div>
+                    <div class="space-y-3">
+                        ${PARTIDOS.map((partido, index) => {
+                            const bloqueNum = index + 1;
+                            const respuestas = estado.respuestasTemporales[`bloque_${bloqueNum}`] || {};
+                            return `
+                                <div class="glass p-3">
+                                    <p class="text-xs text-white/60 mb-2">BLOQUE ${bloqueNum}: ${partido.local} vs ${partido.visitante}</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${partido.preguntas.map((p, i) => `
+                                            <span class="chip ${respuestas[p.id] === 'Sí' ? 'chip-success' : 'chip-danger'} text-xs">
+                                                P${i + 1}: ${respuestas[p.id]}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <p class="text-center text-xs text-white/40 mt-6">
+                        Generado el ${new Date().toLocaleString('es-VE')}
+                    </p>
+                `;
+                
+                // Mostrar temporalmente para capturar
+                document.getElementById('tarjeta-oculta').classList.remove('hidden');
+                
+                // Esperar un momento para que se renderice
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Generar imagen con html2canvas
+                const canvas = await html2canvas(tarjetaDiv, {
+                    scale: 3, // Alta calidad
+                    backgroundColor: null,
+                    useCORS: true
+                });
+                
+                // Convertir a JPG y descargar
+                const link = document.createElement('a');
+                link.download = `8vos_final_${estado.usuarioActual.nombre}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+                
+                // Ocultar tarjeta
+                document.getElementById('tarjeta-oculta').classList.add('hidden');
+                
+                mostrarToast('¡Tarjeta descargada!', 'success');
+                reproducirSonido('trompeta');
+                
+            } catch (error) {
+                console.error('Error al generar imagen:', error);
+                mostrarToast('Error al generar imagen', 'danger');
+            }
+        });
+        
+        // ============================================
+        // VOLVER AL INICIO (STADIUM)
+        // ============================================
+        document.getElementById('btn-volver-inicio').addEventListener('click', () => {
+            cargarStadium();
+            mostrarVista('vista-stadium');
+        });
+        
+        // ============================================
+        // CARGAR STADIUM (PANTALLA PRINCIPAL) - MEJORADO
+        // ============================================
+        async function cargarStadium() {
+            try {
+                // Verificar estado de la app
+                const configDoc = await getDoc(doc(db, 'config', 'global'));
+                const config = configDoc.data();
+                const estadoApp = config.estadoApp;
+                
+                // Ocultar/mostrar input según estado
+                const inputContainer = document.getElementById('stadium-input-container');
+                if (inputContainer) {
+                    if (estadoApp === 'CERRADO' || estadoApp === 'FINALIZADO') {
+                        inputContainer.classList.add('hidden');
+                    } else {
+                        inputContainer.classList.remove('hidden');
+                    }
+                }
+                
+                // Cargar ranking
+                await cargarRanking();
+                
+                // Cargar jugadas por bloque
+                await cargarJugadasPorBloque();
+                
+                // Mostrar mensaje si está cerrado
+                if (estadoApp === 'CERRADO') {
+                    mostrarToast('Jugadas cerradas - Esperando resultados', 'info');
+                }
+                
+            } catch (error) {
+                console.error('Error cargando stadium:', error);
+                mostrarToast('Error al cargar datos', 'danger');
+            }
+        }
+        
+        // ============================================
+        // CARGAR RANKING - MEJORADO CON MANEJO DE ERRORES
+        // ============================================
+        async function cargarRanking() {
+            try {
+                const rankingContainer = document.getElementById('ranking-container');
+                const rankingBody = document.getElementById('ranking-body');
+                
+                if (!rankingContainer || !rankingBody) {
+                    console.error('Elementos del ranking no encontrados');
+                    return;
+                }
+                
+                const participantesSnapshot = await getDocs(collection(db, 'participantes'));
+                const participantes = [];
+                
+                participantesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.estado === 'COMPLETADO') {
+                        participantes.push({
+                            id: doc.id,
+                            nombre: data.nombre,
+                            puntajeTotal: data.puntajes?.total || 0
+                        });
+                    }
+                });
+                
+                // Solo mostrar ranking si hay resultados
+                const hayResultados = participantes.some(p => p.puntajeTotal > 0);
+                
+                if (!hayResultados) {
+                    rankingContainer.classList.add('hidden');
+                    return;
+                }
+                
+                rankingContainer.classList.remove('hidden');
+                
+                // Ordenar por puntaje (descendente) y luego alfabéticamente
+                participantes.sort((a, b) => {
+                    if (b.puntajeTotal !== a.puntajeTotal) {
+                        return b.puntajeTotal - a.puntajeTotal;
+                    }
+                    return a.nombre.localeCompare(b.nombre);
+                });
+                
+                rankingBody.innerHTML = '';
+                
+                participantes.forEach((p, index) => {
+                    const posicion = index + 1;
+                    let emoji = '';
+                    if (posicion === 1) emoji = '🥇';
+                    else if (posicion === 2) emoji = '';
+                    else if (posicion === 3) emoji = '🥉';
+                    else emoji = `${posicion}°`;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="font-numero text-xl">${emoji}</td>
+                        <td class="font-nombre">${p.nombre}</td>
+                        <td class="font-numero text-xl text-yellow-400">${p.puntajeTotal}</td>
+                    `;
+                    rankingBody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error cargando ranking:', error);
+            }
+        }
+        
+        // ============================================
+        // CARGAR JUGADAS POR BLOQUE - MEJORADO CON MANEJO DE ERRORES
+        // ============================================
+        async function cargarJugadasPorBloque() {
+            try {
+                const bloquesContainer = document.getElementById('bloques-jugadas');
+                
+                if (!bloquesContainer) {
+                    console.error('Contenedor de bloques no encontrado');
+                    return;
+                }
+                
+                bloquesContainer.innerHTML = '';
+                
+                // Cargar participantes
+                const participantesSnapshot = await getDocs(collection(db, 'participantes'));
+                const participantes = [];
+                
+                participantesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.estado === 'COMPLETADO') {
+                        participantes.push({
+                            id: doc.id,
+                            nombre: data.nombre,
+                            respuestas: data.respuestas || {},
+                            puntajes: data.puntajes || {}
+                        });
+                    }
+                });
+                
+                // Cargar resultados oficiales
+                const partidosSnapshot = await getDocs(collection(db, 'partidos'));
+                const resultadosOficiales = {};
+                
+                partidosSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    resultadosOficiales[`bloque_${data.numero}`] = data.resultadosOficiales;
+                });
+                
+                // Generar tabla por bloque
+                PARTIDOS.forEach((partido, index) => {
+                    const bloqueNum = index + 1;
+                    const bloqueKey = `bloque_${bloqueNum}`;
+                    const resultados = resultadosOficiales[bloqueKey] || {};
+                    const hayResultados = Object.values(resultados).some(r => r !== null);
+                    
+                    const bloqueDiv = document.createElement('div');
+                    bloqueDiv.className = 'glass p-4';
+                    
+                    // Construir HTML con preguntas visibles debajo del título
+                    let tablaHTML = `
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-yellow-400 mb-2 text-lg">
+                                BLOQUE ${bloqueNum}: ${partido.local} vs ${partido.visitante}
+                            </h4>
+                            <!-- PREGUNTAS COMPLETAS EN TEXTO PEQUEÑO -->
+                            <div class="space-y-1 mb-3 pl-2 border-l-2 border-fucsia/30">
+                                ${partido.preguntas.map((p, i) => `
+                                    <p class="text-xs text-white/60 font-medium">
+                                        <span class="text-fucsia font-bold">P${i + 1}:</span> ${p.texto}
+                                    </p>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="tabla-glass text-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th title="${partido.preguntas[0].texto}" class="cursor-help">
+                                            P1 <span class="text-white/40 text-xs">ⓘ</span>
+                                        </th>
+                                        <th title="${partido.preguntas[1].texto}" class="cursor-help">
+                                            P2 <span class="text-white/40 text-xs"></span>
+                                        </th>
+                                        <th title="${partido.preguntas[2].texto}" class="cursor-help">
+                                            P3 <span class="text-white/40 text-xs">ⓘ</span>
+                                        </th>
+                                        ${hayResultados ? '<th>Pts</th>' : ''}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    participantes.forEach(p => {
+                        const respuestas = p.respuestas[bloqueKey] || {};
+                        let puntos = 0;
+                        
+                        tablaHTML += `<tr>
+                            <td class="font-nombre">${p.nombre}</td>`;
+                        
+                        partido.preguntas.forEach(pregunta => {
+                            const respuesta = respuestas[pregunta.id] || '—';
+                            let clase = '';
+                            let icono = '';
+                            
+                            if (hayResultados && respuesta !== '—') {
+                                const correcta = resultados[pregunta.id];
+                                if (respuesta === correcta) {
+                                    clase = 'chip-success';
+                                    icono = '✔️';
+                                    puntos++;
+                                } else {
+                                    clase = 'chip-danger';
+                                    icono = '❌';
+                                }
+                            }
+                            
+                            tablaHTML += `
+                                <td>
+                                    <span class="chip ${clase}">
+                                        ${respuesta} ${icono}
+                                    </span>
+                                </td>
+                            `;
+                        });
+                        
+                        if (hayResultados) {
+                            tablaHTML += `<td class="font-numero text-yellow-400">${puntos}</td>`;
+                        }
+                        
+                        tablaHTML += `</tr>`;
+                    });
+                    
+                    tablaHTML += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    
+                    bloqueDiv.innerHTML = tablaHTML;
+                    bloquesContainer.appendChild(bloqueDiv);
+                });
+                
+            } catch (error) {
+                console.error('Error cargando jugadas:', error);
+                mostrarToast('Error al cargar jugadas', 'danger');
+            }
+        }
+        
+        // ============================================
+        // ADMIN - LOGIN
+        // ============================================
+        document.getElementById('btn-admin-link').addEventListener('click', () => {
+            mostrarVista('vista-admin-login');
+        });
+        
+        document.getElementById('btn-volver-desde-admin').addEventListener('click', () => {
+            mostrarVista('vista-registro');
+        });
+        
+        document.getElementById('btn-login-admin').addEventListener('click', async () => {
+            const password = document.getElementById('input-password-admin').value;
+            
+            try {
+                const configDoc = await getDoc(doc(db, 'config', 'global'));
+                const config = configDoc.data();
+                
+                if (password === config.contrasenaAdmin) {
+                    estado.modoAdmin = true;
+                    mostrarToast('Acceso concedido', 'success');
+                    cargarPanelAdmin();
+                    mostrarVista('vista-admin-panel');
+                } else {
+                    mostrarToast('Contraseña incorrecta', 'danger');
+                }
+            } catch (error) {
+                console.error('Error al verificar contraseña:', error);
+                mostrarToast('Error de conexión', 'danger');
+            }
+        });
+        
+        document.getElementById('btn-salir-admin').addEventListener('click', () => {
+            estado.modoAdmin = false;
+            mostrarVista('vista-registro');
+        });
+        
+        // ============================================
+        // BOTONES DE NAVEGACIÓN EN STADIUM
+        // ============================================
+        document.getElementById('btn-salir-stadium').addEventListener('click', () => {
+            // Limpiar estado del usuario actual
+            estado.usuarioActual = null;
+            localStorage.removeItem('usuarioActual');
+            
+            // Limpiar inputs
+            document.getElementById('input-nombre').value = '';
+            document.getElementById('input-nombre-stadium').value = '';
+            
+            // Volver a la pantalla de registro
+            mostrarVista('vista-registro');
+            mostrarToast('Sesión cerrada', 'info');
+        });
+        
+        document.getElementById('btn-admin-stadium').addEventListener('click', () => {
+            mostrarVista('vista-admin-login');
+        });
+        
+        // ============================================
+        // ADMIN - PESTAÑAS
+        // ============================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+            });
+        });
+        
+        // ============================================
+        // ADMIN - CARGAR PANEL
+        // ============================================
+        async function cargarPanelAdmin() {
+            await cargarTabResultados();
+            await cargarTabEdicion();
+            await cargarTabControl();
+        }
+        
+        // ============================================
+        // ADMIN - TAB RESULTADOS
+        // ============================================
+        async function cargarTabResultados() {
+            const container = document.getElementById('tab-resultados');
+            container.innerHTML = '';
+            
+            // Selector de bloque
+            const selectorHTML = `
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-white/80 mb-2">
+                        Seleccionar bloque
+                    </label>
+                    <select id="select-bloque-resultados" class="input-custom">
+                        ${PARTIDOS.map(p => `
+                            <option value="${p.numero}">Bloque ${p.numero}: ${p.local} vs ${p.visitante}</option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div id="formulario-resultados"></div>
+            `;
+            
+            container.innerHTML = selectorHTML;
+            
+            document.getElementById('select-bloque-resultados').addEventListener('change', (e) => {
+                cargarFormularioResultados(parseInt(e.target.value));
+            });
+            
+            cargarFormularioResultados(1);
+        }
+        
+        async function cargarFormularioResultados(bloqueNum) {
+            const container = document.getElementById('formulario-resultados');
+            const partido = PARTIDOS[bloqueNum - 1];
+            
+            try {
+                // Cargar resultados oficiales actuales
+                const partidoDoc = await getDoc(doc(db, 'partidos', `bloque_${bloqueNum}`));
+                const resultados = partidoDoc.data().resultadosOficiales;
+                
+                let html = `
+                    <div class="glass p-6 mb-6">
+                        <h3 class="font-titulo text-xl titulo-gradient mb-4">
+                            BLOQUE ${bloqueNum}: ${partido.local} vs ${partido.visitante}
+                        </h3>
+                        <div class="space-y-4">
+                `;
+                
+                partido.preguntas.forEach((pregunta, index) => {
+                    const respuestaActual = resultados[pregunta.id];
+                    
+                    html += `
+                        <div class="glass p-4">
+                            <p class="font-semibold text-white/90 mb-3">
+                                <span class="text-yellow-400 font-numero">${index + 1}.</span> ${pregunta.texto}
+                            </p>
+                            <div class="flex flex-wrap gap-3">
+                                <label class="radio-custom ${respuestaActual === 'Sí' ? 'selected' : ''}" 
+                                       data-pregunta="${pregunta.id}" 
+                                       data-respuesta="Sí"
+                                       data-bloque="${bloqueNum}">
+                                    <input type="radio" name="resultado_${bloqueNum}_${pregunta.id}" value="Sí" ${respuestaActual === 'Sí' ? 'checked' : ''}>
+                                    <span>Sí</span>
+                                </label>
+                                <label class="radio-custom ${respuestaActual === 'No' ? 'selected' : ''}" 
+                                       data-pregunta="${pregunta.id}" 
+                                       data-respuesta="No"
+                                       data-bloque="${bloqueNum}">
+                                    <input type="radio" name="resultado_${bloqueNum}_${pregunta.id}" value="No" ${respuestaActual === 'No' ? 'checked' : ''}>
+                                    <span>No</span>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                            <button id="btn-guardar-resultados" class="btn-success flex-1 py-3 rounded-xl font-semibold">
+                                💾 GUARDAR RESULTADOS
+                            </button>
+                            <button id="btn-copiar-whatsapp" class="btn-primary flex-1 py-3 rounded-xl font-semibold">
+                                📋 COPIAR PARA WHATSAPP
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+                
+                // Event listeners para radio buttons
+                container.querySelectorAll('.radio-custom').forEach(label => {
+                    label.addEventListener('click', () => {
+                        const preguntaId = label.dataset.pregunta;
+                        const bloque = parseInt(label.dataset.bloque);
+                        
+                        container.querySelectorAll(`.radio-custom[data-pregunta="${preguntaId}"][data-bloque="${bloque}"]`).forEach(l => {
+                            l.classList.remove('selected');
+                        });
+                        
+                        label.classList.add('selected');
+                        label.querySelector('input').checked = true;
+                    });
+                });
+                
+                // Guardar resultados
+                document.getElementById('btn-guardar-resultados').addEventListener('click', async () => {
+                    const nuevosResultados = {};
+                    
+                    partido.preguntas.forEach(pregunta => {
+                        const selected = container.querySelector(`.radio-custom.selected[data-pregunta="${pregunta.id}"]`);
+                        if (selected) {
+                            nuevosResultados[pregunta.id] = selected.dataset.respuesta;
+                        }
+                    });
+                    
+                    if (Object.keys(nuevosResultados).length !== 3) {
+                        mostrarToast('Debes seleccionar todas las respuestas', 'danger');
+                        return;
+                    }
+                    
+                    try {
+                        // Actualizar resultados oficiales
+                        await updateDoc(doc(db, 'partidos', `bloque_${bloqueNum}`), {
+                            resultadosOficiales: nuevosResultados,
+                            estado: 'COMPLETADO'
+                        });
+                        
+                        // Recalcular puntajes de todos los participantes
+                        await recalcularPuntajes();
+                        
+                        mostrarToast('Resultados guardados', 'success');
+                        
+                    } catch (error) {
+                        console.error('Error al guardar resultados:', error);
+                        mostrarToast('Error al guardar', 'danger');
+                    }
+                });
+                
+                // Copiar para WhatsApp
+                document.getElementById('btn-copiar-whatsapp').addEventListener('click', async () => {
+                    const texto = generarTextoWhatsApp(bloqueNum);
+                    
+                    try {
+                        await navigator.clipboard.writeText(texto);
+                        mostrarToast('¡Copiado! Pégalo en WhatsApp', 'success');
+                    } catch (error) {
+                        console.error('Error al copiar:', error);
+                        mostrarToast('Error al copiar', 'danger');
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error cargando formulario:', error);
+            }
+        }
+        
+        async function recalcularPuntajes() {
+            try {
+                const participantesSnapshot = await getDocs(collection(db, 'participantes'));
+                const partidosSnapshot = await getDocs(collection(db, 'partidos'));
+                
+                const resultadosOficiales = {};
+                partidosSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    resultadosOficiales[`bloque_${data.numero}`] = data.resultadosOficiales;
+                });
+                
+                participantesSnapshot.forEach(async (docSnap) => {
+                    const data = docSnap.data();
+                    if (data.estado !== 'COMPLETADO') return;
+                    
+                    const puntajes = {};
+                    let total = 0;
+                    
+                    for (let i = 1; i <= 8; i++) {
+                        const bloqueKey = `bloque_${i}`;
+                        const respuestas = data.respuestas[bloqueKey] || {};
+                        const resultados = resultadosOficiales[bloqueKey] || {};
+                        
+                        let puntos = 0;
+                        
+                        for (const preguntaId in respuestas) {
+                            if (respuestas[preguntaId] === resultados[preguntaId]) {
+                                puntos++;
+                            }
+                        }
+                        
+                        puntajes[bloqueKey] = puntos;
+                        total += puntos;
+                    }
+                    
+                    puntajes.total = total;
+                    
+                    await updateDoc(doc(db, 'participantes', docSnap.id), {
+                        puntajes: puntajes
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error recalculando puntajes:', error);
+            }
+        }
+        
+        function generarTextoWhatsApp(bloqueNum) {
+            const partido = PARTIDOS[bloqueNum - 1];
+            
+            let texto = `*🏆 8VOS DE FINAL - BLOQUE ${bloqueNum} 🏆*\n`;
+            texto += `*${partido.local} vs ${partido.visitante}*\n\n`;
+            
+            texto += `Resultados cargados correctamente.\n`;
+            texto += `Revisa el ranking en la app.\n\n`;
+            texto += `_Generado el ${new Date().toLocaleString('es-VE')}_`;
+            
+            return texto;
+        }
+        
+        // ============================================
+        // ADMIN - TAB EDICIÓN
+        // ============================================
+        async function cargarTabEdicion() {
+            const container = document.getElementById('tab-edicion');
+            
+            try {
+                const participantesSnapshot = await getDocs(collection(db, 'participantes'));
+                const participantes = [];
+                
+                participantesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.estado === 'COMPLETADO') {
+                        participantes.push({
+                            id: doc.id,
+                            nombre: data.nombre,
+                            respuestas: data.respuestas,
+                            puntajes: data.puntajes
+                        });
+                    }
+                });
+                
+                let html = `
+                    <h3 class="font-titulo text-xl titulo-gradient mb-4">
+                        👥 PARTICIPANTES (${participantes.length})
+                    </h3>
+                    <div class="space-y-3">
+                `;
+                
+                participantes.forEach(p => {
+                    html += `
+                        <div class="glass p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-nombre text-lg">${p.nombre}</span>
+                                <span class="chip chip-success">${p.puntajes?.total || 0} pts</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="btn-secondary px-3 py-1 rounded-lg text-xs font-semibold" 
+                                        onclick="editarParticipante('${p.id}')">
+                                    ✏️ Editar
+                                </button>
+                                <button class="btn-danger px-3 py-1 rounded-lg text-xs font-semibold" 
+                                        onclick="eliminarParticipante('${p.id}')">
+                                    ️ Eliminar
+                                </button>
+                                <button class="btn-primary px-3 py-1 rounded-lg text-xs font-semibold" 
+                                        onclick="generarJPGAdmin('${p.id}')">
+                                     Generar JPG
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error cargando edición:', error);
+            }
+        }
+        
+        // Funciones globales para onclick
+        window.editarParticipante = async (id) => {
+            mostrarToast('Función de edición en desarrollo', 'info');
+        };
+        
+        window.eliminarParticipante = async (id) => {
+            if (confirm('¿Estás seguro de eliminar este participante?')) {
+                try {
+                    await deleteDoc(doc(db, 'participantes', id));
+                    mostrarToast('Participante eliminado', 'success');
+                    cargarTabEdicion();
+                } catch (error) {
+                    console.error('Error al eliminar:', error);
+                    mostrarToast('Error al eliminar', 'danger');
+                }
+            }
+        };
+        
+        window.generarJPGAdmin = async (id) => {
+            mostrarToast('Función de generación JPG en desarrollo', 'info');
+        };
+        
+        // ============================================
+        // ADMIN - TAB CONTROL
+        // ============================================
+        async function cargarTabControl() {
+            const container = document.getElementById('tab-control');
+            
+            try {
+                const configDoc = await getDoc(doc(db, 'config', 'global'));
+                const config = configDoc.data();
+                const estadoApp = config.estadoApp;
+                
+                let colorSemaforo = 'semaforo-verde';
+                let textoEstado = 'ABIERTO';
+                
+                if (estadoApp === 'CERRADO') {
+                    colorSemaforo = 'semaforo-rojo';
+                    textoEstado = 'CERRADO';
+                } else if (estadoApp === 'FINALIZADO') {
+                    colorSemaforo = 'semaforo-amarillo';
+                    textoEstado = 'FINALIZADO';
+                }
+                
+                container.innerHTML = `
+                    <div class="glass p-6 mb-6">
+                        <h3 class="font-titulo text-xl titulo-gradient mb-4">
+                            ESTADO ACTUAL
+                        </h3>
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="semaforo ${colorSemaforo}"></span>
+                            <span class="font-nombre text-2xl">${textoEstado}</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button id="btn-cerrar-jugadas" class="btn-danger flex-1 py-3 rounded-xl font-semibold">
+                                🔴 CERRAR JUGADAS
+                            </button>
+                            <button id="btn-abrir-jugadas" class="btn-success flex-1 py-3 rounded-xl font-semibold">
+                                 ABRIR JUGADAS
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('btn-cerrar-jugadas').addEventListener('click', async () => {
+                    await updateDoc(doc(db, 'config', 'global'), {
+                        estadoApp: 'CERRADO'
+                    });
+                    mostrarToast('Jugadas cerradas', 'success');
+                    cargarTabControl();
+                });
+                
+                document.getElementById('btn-abrir-jugadas').addEventListener('click', async () => {
+                    await updateDoc(doc(db, 'config', 'global'), {
+                        estadoApp: 'ABIERTO'
+                    });
+                    mostrarToast('Jugadas abiertas', 'success');
+                    cargarTabControl();
+                });
+                
+            } catch (error) {
+                console.error('Error cargando control:', error);
+            }
+        }
+        
+        // ============================================
+        // PARTICIPAR DESDE STADIUM
+        // ============================================
+        document.getElementById('btn-participar-stadium').addEventListener('click', () => {
+            const nombre = document.getElementById('input-nombre-stadium').value.trim().toUpperCase();
+            
+            if (nombre) {
+                document.getElementById('input-nombre').value = nombre;
+                mostrarVista('vista-registro');
+                btnParticipar.click();
+            } else {
+                mostrarToast('Por favor ingresa tu nombre', 'danger');
+            }
+        });
+        
+        // ============================================
+        // LISTENER EN TIEMPO REAL PARA CAMBIOS DE ESTADO
+        // ============================================
+        onSnapshot(doc(db, 'config', 'global'), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const estadoApp = data.estadoApp;
+                
+                // Si estamos en la vista stadium, recargar
+                if (document.getElementById('vista-stadium').classList.contains('activa')) {
+                    cargarStadium();
+                }
+                
+                // Si estamos en la vista registro y el estado cambió a CERRADO, actualizar temporizador
+                if (document.getElementById('vista-registro').classList.contains('activa')) {
+                    if (estadoApp === 'CERRADO') {
+                        document.getElementById('temporizador').textContent = 'CERRADO';
+                        document.getElementById('temporizador').classList.add('text-red-400');
+                    }
+                }
+            }
+        });
+        
+        // ============================================
+        // PERSISTENCIA DE SESIÓN
+        // ============================================
+        window.addEventListener('beforeunload', () => {
+            // Si el usuario cierra la página antes de completar, borrar sesión fantasma
+            if (estado.usuarioActual && !estado.modoAdmin) {
+                const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioActual'));
+                if (usuarioGuardado) {
+                    navigator.sendBeacon(`/api/limpiar-sesion/${usuarioGuardado.id}`);
+                }
+            }
+        });
+        
+        // Verificar si hay sesión activa al cargar
+        window.addEventListener('load', () => {
+            const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioActual'));
+            if (usuarioGuardado) {
+                getDoc(doc(db, 'participantes', usuarioGuardado.id)).then(docSnap => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.estado === 'EN_PROGRESO') {
+                            deleteDoc(doc(db, 'participantes', usuarioGuardado.id));
+                            localStorage.removeItem('usuarioActual');
+                        } else if (data.estado === 'COMPLETADO') {
+                            estado.usuarioActual = usuarioGuardado;
+                            cargarStadium();
+                            mostrarVista('vista-stadium');
+                        }
+                    }
+                });
+            }
+        });
+        
+    </script>
     
-    if (resultado.golesLocalFinal > resultado.golesVisitanteFinal) {
-      equipoLocalGanador = true;
-    } else {
-      equipoVisitanteGanador = true;
-    }
-  }
-  
-  // Si es penales, determinar ganador por penales
-  if (resultado.tipoVictoria === 'penales' && resultado.penalesLocal !== undefined && resultado.penalesVisitante !== undefined) {
-    detalleBadge = `<span class="penales-score">(${resultado.penalesLocal}-${resultado.penalesVisitante})</span>`;
-    
-    if (resultado.penalesLocal > resultado.penalesVisitante) {
-      equipoLocalGanador = true;
-    } else {
-      equipoVisitanteGanador = true;
-    }
-  }
-}
-
-// Determinar qué marcador mostrar
-let marcadorLocal = resultado.golesLocal ?? 0;
-let marcadorVisitante = resultado.golesVisitante ?? 0;
-
-// Si es prórroga, mostrar el marcador final
-if (resultado.tipoVictoria === 'prorroga' && resultado.golesLocalFinal !== undefined && resultado.golesVisitanteFinal !== undefined) {
-  marcadorLocal = resultado.golesLocalFinal;
-  marcadorVisitante = resultado.golesVisitanteFinal;
-}
-
-// 🏆 Agregar check verde al ganador
-const checkLocal = equipoLocalGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
-const checkVisitante = equipoVisitanteGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
-
-card.innerHTML = `
-<div class="flex items-center justify-between gap-2">
-<div class="flex items-center gap-2 flex-1 min-w-0">
-<div class="flex-1 text-right truncate">
-<p class="text-white font-bold text-sm">${resultado.equipoLocal || 'Local'}${checkLocal}</p>
-</div>
-<div class="score-badge px-3 py-1 rounded-lg text-lg min-w-[60px] text-center">
-${marcadorLocal} - ${marcadorVisitante}
-</div>
-<div class="flex-1 truncate">
-<p class="text-white font-bold text-sm">${checkVisitante}${resultado.equipoVisitante || 'Visitante'}</p>
-</div>
-</div>
-</div>
-<div class="flex items-center justify-between mt-1">
-<span class="text-xs text-slate-400">${resultado.fecha || ''}${tipoVictoriaBadge}${detalleBadge}</span>
-${estadoBadge}
-</div>
-`;
-return card;
-}
-
-
-function iniciarAutoScrollReel() {
-detenerAutoScrollReel();
-reelAutoScrollInterval = setInterval(() => {
-reelScrollIndex++;
-if (reelScrollIndex >= resultadosReel.length - MAX_RESULTADOS_REEL) {
-reelScrollIndex = 0;
-}
-const container = document.getElementById('listaResultadosReel');
-if (!container) return;
-const visible = resultadosReel.slice(reelScrollIndex, reelScrollIndex + MAX_RESULTADOS_REEL);
-container.innerHTML = '';
-visible.forEach((resultado, index) => {
-const card = crearTarjetaReel(resultado, index);
-container.appendChild(card);
-});
-}, 3500);
-}
-
-function detenerAutoScrollReel() {
-if (reelAutoScrollInterval) {
-clearInterval(reelAutoScrollInterval);
-reelAutoScrollInterval = null;
-}
-}
-
-async function guardarResultadoReel() {
-const equipoLocal = document.getElementById('reel-equipoLocal').value.trim();
-const golesLocal = parseInt(document.getElementById('reel-golesLocal').value);
-const equipoVisitante = document.getElementById('reel-equipoVisitante').value.trim();
-const golesVisitante = parseInt(document.getElementById('reel-golesVisitante').value);
-const fecha = document.getElementById('reel-fecha').value;
-const estado = document.getElementById('reel-estado').value;
-
-if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
-showToast("⚠️ Completa todos los campos obligatorios", "error");
-return;
-}
-
-// 🎯 Si hay empate y está finalizado, procesar tipo de victoria
-let tipoVictoria = '90min';
-let golesLocalFinal = null;
-let golesVisitanteFinal = null;
-let penalesLocal = null;
-let penalesVisitante = null;
-
-if (estado === 'Finalizado' && golesLocal === golesVisitante) {
-  const seccion = document.getElementById('seccionTipoVictoria');
-  if (!seccion.classList.contains('hidden')) {
-    tipoVictoria = document.getElementById('reel-tipoVictoria').value;
-    
-    if (tipoVictoria === 'prorroga') {
-      golesLocalFinal = parseInt(document.getElementById('reel-golesLocalFinal').value);
-      golesVisitanteFinal = parseInt(document.getElementById('reel-golesVisitanteFinal').value);
-      
-      if (isNaN(golesLocalFinal) || isNaN(golesVisitanteFinal)) {
-        showToast("⚠️ Ingresa el resultado final después de la prórroga", "error");
-        return;
-      }
-      
-      if (golesLocalFinal === golesVisitanteFinal) {
-        showToast("⚠️ El resultado final no puede quedar empatado (debe haber ganador en prórroga)", "error");
-        return;
-      }
-    } else if (tipoVictoria === 'penales') {
-      penalesLocal = parseInt(document.getElementById('reel-penalesLocal').value);
-      penalesVisitante = parseInt(document.getElementById('reel-penalesVisitante').value);
-      
-      if (isNaN(penalesLocal) || isNaN(penalesVisitante)) {
-        showToast("⚠️ Ingresa el resultado de los penales", "error");
-        return;
-      }
-      
-      if (penalesLocal === penalesVisitante) {
-        showToast("⚠️ Los penales no pueden quedar empatados", "error");
-        return;
-      }
-    }
-  }
-}
-
-try {
-await db.collection('resultados').add({
-equipoLocal,
-golesLocal,
-equipoVisitante,
-golesVisitante,
-fecha,
-estado,
-tipoVictoria: tipoVictoria,
-golesLocalFinal: golesLocalFinal,
-golesVisitanteFinal: golesVisitanteFinal,
-penalesLocal: penalesLocal,
-penalesVisitante: penalesVisitante,
-fechaHora: firebase.firestore.FieldValue.serverTimestamp(),
-publicadoPor: 'admin'
-});
-showToast("✅ Resultado guardado en el reel", "success");
-document.getElementById('reel-equipoLocal').value = '';
-document.getElementById('reel-golesLocal').value = '';
-document.getElementById('reel-equipoVisitante').value = '';
-document.getElementById('reel-golesVisitante').value = '';
-document.getElementById('reel-fecha').value = '';
-document.getElementById('reel-estado').value = 'Finalizado';
-document.getElementById('reel-tipoVictoria').value = '90min';
-document.getElementById('reel-golesLocalFinal').value = '';
-document.getElementById('reel-golesVisitanteFinal').value = '';
-document.getElementById('reel-penalesLocal').value = '';
-document.getElementById('reel-penalesVisitante').value = '';
-document.getElementById('seccionTipoVictoria').classList.add('hidden');
-document.getElementById('camposProrroga').classList.add('hidden');
-document.getElementById('camposPenales').classList.add('hidden');
-cargarListaResultadosReel();
-} catch (error) {
-console.error('Error guardando resultado:', error);
-showToast("❌ Error: " + error.message, "error");
-}
-}
-
-
-async function cargarListaResultadosReel() {
-const container = document.getElementById('reel-admin-list');
-if (!container) return;
-container.innerHTML = '<div class="text-center text-slate-400 py-4">Cargando resultados...</div>';
-try {
-const snap = await db.collection('resultados').orderBy('fechaHora', 'desc').limit(20).get();
-if (snap.empty) {
-container.innerHTML = '<div class="text-center text-slate-400 py-4">No hay resultados cargados aún.</div>';
-return;
-}
-let html = '<div class="space-y-2">';
-snap.forEach(doc => {
-const data = doc.data();
-// 🎯 Badge de tipo de victoria y detalles
-let tipoBadge = '';
-let detalleBadge = '';
-
-// 🏆 Determinar ganador para agregar check
-let equipoLocalGanador = false;
-let equipoVisitanteGanador = false;
-
-if (data.estado === 'Finalizado' && data.tipoVictoria) {
-  const tipoClase = `tipo-${data.tipoVictoria}`;
-  const tipoTexto = data.tipoVictoria === '90min' ? "90'"
-    : data.tipoVictoria === 'prorroga' ? '⏱️ Prórroga'
-    : '🎯 Penales';
-  tipoBadge = `<span class="${tipoClase} tipo-badge ml-2">${tipoTexto}</span>`;
-  
-  if (data.tipoVictoria === 'prorroga' && data.golesLocalFinal !== undefined && data.golesVisitanteFinal !== undefined) {
-    detalleBadge = `<span class="penales-score" style="background:rgba(124,58,237,0.2);border-color:#7c3aed;color:#a78bfa;">Final: ${data.golesLocalFinal}-${data.golesVisitanteFinal}</span>`;
-    
-    if (data.golesLocalFinal > data.golesVisitanteFinal) {
-      equipoLocalGanador = true;
-    } else {
-      equipoVisitanteGanador = true;
-    }
-  }
-  
-  if (data.tipoVictoria === 'penales' && data.penalesLocal !== undefined && data.penalesVisitante !== undefined) {
-    detalleBadge = `<span class="penales-score">(${data.penalesLocal}-${data.penalesVisitante})</span>`;
-    
-    if (data.penalesLocal > data.penalesVisitante) {
-      equipoLocalGanador = true;
-    } else {
-      equipoVisitanteGanador = true;
-    }
-  }
-}
-
-// 🏆 Agregar check verde al ganador
-const checkLocal = equipoLocalGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
-const checkVisitante = equipoVisitanteGanador ? '<span class="text-green-400 font-bold ml-1">✔️</span>' : '';
-
-html += `
-<div class="glass p-3 rounded-lg flex justify-between items-center">
-<div class="flex items-center gap-3 flex-1 min-w-0">
-<span class="text-sm font-bold text-white truncate">${data.equipoLocal}${checkLocal} ${data.golesLocal} - ${data.golesVisitante} ${checkVisitante}${data.equipoVisitante}${tipoBadge}${detalleBadge}</span>
-<span class="text-xs text-slate-400">${data.fecha || ''}</span>
-<span class="text-xs px-2 py-0.5 rounded ${data.estado === 'Finalizado' ? 'bg-green-500/20 text-green-400' : data.estado === 'En Vivo' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">${data.estado}</span>
-</div>
-<div class="flex gap-2">
-<button onclick="abrirModalEditar('${doc.id}', '${data.equipoLocal}', ${data.golesLocal}, '${data.equipoVisitante}', ${data.golesVisitante}, '${data.fecha}', '${data.estado}', '${data.tipoVictoria || '90min'}', ${data.golesLocalFinal !== undefined ? data.golesLocalFinal : 'null'}, ${data.golesVisitanteFinal !== undefined ? data.golesVisitanteFinal : 'null'}, ${data.penalesLocal !== undefined ? data.penalesLocal : 'null'}, ${data.penalesVisitante !== undefined ? data.penalesVisitante : 'null'})" class="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
-<i data-lucide="edit-3" class="w-3 h-3"></i> Editar
-</button>
-<button onclick="eliminarResultadoReel('${doc.id}')" class="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded transition flex items-center gap-1">
-<i data-lucide="trash-2" class="w-3 h-3"></i> Eliminar
-</button>
-</div>
-</div>
-`;
-});
-html += '</div>';
-container.innerHTML = html;
-lucide.createIcons();
-} catch (error) {
-console.error('Error cargando resultados:', error);
-container.innerHTML = `<div class="text-red-400 font-bold p-4">Error: ${error.message}</div>`;
-}
-}
-
-
-async function eliminarResultadoReel(id) {
-if (!confirm('¿Eliminar este resultado del reel?')) return;
-try {
-await db.collection('resultados').doc(id).delete();
-showToast("🗑️ Resultado eliminado", "success");
-cargarListaResultadosReel();
-} catch (error) {
-showToast("❌ Error: " + error.message, "error");
-}
-}
-
-function abrirModalEditar(id, equipoLocal, golesLocal, equipoVisitante, golesVisitante, fecha, estado, tipoVictoria, golesLocalFinal, golesVisitanteFinal, penalesLocal, penalesVisitante) {
-document.getElementById('edit-id').value = id;
-document.getElementById('edit-equipoLocal').value = equipoLocal;
-document.getElementById('edit-golesLocal').value = golesLocal;
-document.getElementById('edit-equipoVisitante').value = equipoVisitante;
-document.getElementById('edit-golesVisitante').value = golesVisitante;
-document.getElementById('edit-fecha').value = fecha;
-document.getElementById('edit-estado').value = estado;
-
-const tipoSelect = document.getElementById('edit-tipoVictoria');
-const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
-const camposProrroga = document.getElementById('edit-camposProrroga');
-const camposPenales = document.getElementById('edit-camposPenales');
-
-// 🎯 Mostrar sección de tipo de victoria si hay empate
-if (estado === 'Finalizado' && golesLocal === golesVisitante) {
-  seccionTipo.classList.remove('hidden');
-  
-  if (tipoSelect) {
-    tipoSelect.value = tipoVictoria || '90min';
-  }
-  
-  camposProrroga.classList.add('hidden');
-  camposPenales.classList.add('hidden');
-  
-  if (tipoVictoria === 'prorroga') {
-    camposProrroga.classList.remove('hidden');
-    document.getElementById('edit-golesLocalFinal').value = golesLocalFinal !== 'null' ? golesLocalFinal : '';
-    document.getElementById('edit-golesVisitanteFinal').value = golesVisitanteFinal !== 'null' ? golesVisitanteFinal : '';
-  } else if (tipoVictoria === 'penales') {
-    camposPenales.classList.remove('hidden');
-    document.getElementById('edit-penalesLocal').value = penalesLocal !== 'null' ? penalesLocal : '';
-    document.getElementById('edit-penalesVisitante').value = penalesVisitante !== 'null' ? penalesVisitante : '';
-  }
-} else {
-  seccionTipo.classList.add('hidden');
-}
-
-document.getElementById('modalEditarResultado').classList.remove('hidden');
-lucide.createIcons();
-}
-
-function cerrarModalEditar() {
-document.getElementById('modalEditarResultado').classList.add('hidden');
-}
-
-async function guardarEdicionResultado() {
-const id = document.getElementById('edit-id').value;
-const equipoLocal = document.getElementById('edit-equipoLocal').value.trim();
-const golesLocal = parseInt(document.getElementById('edit-golesLocal').value);
-const equipoVisitante = document.getElementById('edit-equipoVisitante').value.trim();
-const golesVisitante = parseInt(document.getElementById('edit-golesVisitante').value);
-const fecha = document.getElementById('edit-fecha').value;
-const estado = document.getElementById('edit-estado').value;
-
-let tipoVictoria = '90min';
-let golesLocalFinal = null;
-let golesVisitanteFinal = null;
-let penalesLocal = null;
-let penalesVisitante = null;
-
-const seccionTipo = document.getElementById('edit-seccionTipoVictoria');
-if (!seccionTipo.classList.contains('hidden')) {
-  tipoVictoria = document.getElementById('edit-tipoVictoria').value;
-  
-  if (tipoVictoria === 'prorroga') {
-    golesLocalFinal = parseInt(document.getElementById('edit-golesLocalFinal').value);
-    golesVisitanteFinal = parseInt(document.getElementById('edit-golesVisitanteFinal').value);
-    
-    if (isNaN(golesLocalFinal) || isNaN(golesVisitanteFinal)) {
-      showToast("️ Ingresa el resultado final después de la prórroga", "error");
-      return;
-    }
-    
-    if (golesLocalFinal === golesVisitanteFinal) {
-      showToast("️ El resultado final no puede quedar empatado", "error");
-      return;
-    }
-  } else if (tipoVictoria === 'penales') {
-    penalesLocal = parseInt(document.getElementById('edit-penalesLocal').value);
-    penalesVisitante = parseInt(document.getElementById('edit-penalesVisitante').value);
-    
-    if (isNaN(penalesLocal) || isNaN(penalesVisitante)) {
-      showToast("⚠️ Ingresa el resultado de los penales", "error");
-      return;
-    }
-    
-    if (penalesLocal === penalesVisitante) {
-      showToast("⚠️ Los penales no pueden quedar empatados", "error");
-      return;
-    }
-  }
-}
-
-if (!equipoLocal || !equipoVisitante || isNaN(golesLocal) || isNaN(golesVisitante) || !fecha) {
-showToast("⚠️ Completa todos los campos obligatorios", "error");
-return;
-}
-try {
-await db.collection('resultados').doc(id).update({
-equipoLocal,
-golesLocal,
-equipoVisitante,
-golesVisitante,
-fecha,
-estado,
-tipoVictoria: tipoVictoria,
-golesLocalFinal: golesLocalFinal,
-golesVisitanteFinal: golesVisitanteFinal,
-penalesLocal: penalesLocal,
-penalesVisitante: penalesVisitante,
-ultimaEdicion: new Date()
-});
-showToast("✅ Resultado actualizado", "success");
-cerrarModalEditar();
-cargarListaResultadosReel();
-} catch (error) {
-console.error('Error actualizando resultado:', error);
-showToast("❌ Error: " + error.message, "error");
-}
-}
-
-function logout() {
-if (!confirm("¿Seguro que quieres salir?")) return;
-sessionStorage.removeItem('ultimaPantalla');
-sessionStorage.removeItem('isAdmin');
-isAdmin = false;
-auth.signOut().then(() => { window.location.reload(); }).catch((error) => { showToast("Error: " + error.message, "error"); });
-}
-
-function showView(viewId) {
-['view-home', 'view-predictions', 'view-leaderboard', 'view-admin'].forEach(id => {
-const el = document.getElementById(id);
-if (el) el.classList.add('hidden');
-});
-const targetEl = document.getElementById(viewId);
-if (targetEl) targetEl.classList.remove('hidden');
-const submitBar = document.getElementById('submit-bar');
-if (submitBar) {
-if (viewId === 'view-predictions') submitBar.classList.remove('hidden');
-else submitBar.classList.add('hidden');
-}
-if (viewId === 'view-leaderboard') startLeaderboardListener();
-sessionStorage.setItem('ultimaPantalla', viewId);
-}
-
-function showToast(msg, type = 'success') {
-const c = document.getElementById('toast-container');
-const t = document.createElement('div'); t.className = `toast ${type}`; t.innerText = msg; c.appendChild(t);
-setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
-}
-
-// 🏆 FUNCIÓN HELPER: ORDENAR PARTIDOS (PENDIENTES PRIMERO, FINALIZADOS AL FINAL)
-function ordenarPartidosBracket(partidos) {
-  const pendientes = partidos.filter(m => m.status === 'locked' || m.status === 'pending' || m.status === 'live');
-  const finalizados = partidos.filter(m => m.status === 'finished' || m.status === 'finished_penalties');
-
-  const ordenarPorFecha = (arr) => arr.sort((a, b) => {
-    const fechaA = a.date ? new Date(a.date).getTime() : 0;
-    const fechaB = b.date ? new Date(b.date).getTime() : 0;
-    return fechaA - fechaB;
-  });
-
-  return [...ordenarPorFecha(pendientes), ...ordenarPorFecha(finalizados)];
-}
-
-// 🏆 FUNCIONES DEL BRACKET ELIMINATORIO
-function switchBracketRound(round) {
-currentBracketRound = round;
-document.querySelectorAll('.bracket-round-tab[data-round]').forEach(tab => {
-tab.classList.remove('active');
-if (tab.dataset.round === round) tab.classList.add('active');
-});
-renderBracket();
-}
-
-function switchAdminBracketRound(round) {
-adminBracketRound = round;
-document.querySelectorAll('.bracket-round-tab[data-admin-round]').forEach(tab => {
-tab.classList.remove('active');
-if (tab.dataset.adminRound === round) tab.classList.add('active');
-});
-renderAdminBracket();
-}
-
-async function loadKnockoutMatches() {
-try {
-const snapshot = await db.collection('knockout_matches').orderBy('matchNumber').get();
-knockoutMatches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-console.log('✅ Partidos eliminatorios cargados:', knockoutMatches.length);
-renderBracket();
-renderAdminBracket();
-
-db.collection('knockout_matches').onSnapshot(snapshot => {
-const focusedElement = document.activeElement;
-const isInputFocused = focusedElement && focusedElement.tagName === 'INPUT' && focusedElement.classList.contains('bracket-score-input');
-
-if (!isInputFocused) {
-snapshot.forEach(doc => {
-const matchData = doc.data();
-const matchIndex = knockoutMatches.findIndex(m => m.id === doc.id);
-if (matchIndex !== -1) {
-knockoutMatches[matchIndex] = { id: doc.id, ...matchData };
-}
-});
-renderBracket();
-renderAdminBracket();
-}
-});
-} catch (error) { console.error(' Error cargando bracket:', error); }
-}
-
-function renderBracket() {
-const container = document.getElementById('bracket-matches-container');
-if (!container) return;
-const roundMatches = knockoutMatches.filter(m => m.round === currentBracketRound);
-if (roundMatches.length === 0) {
-container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
-return;
-}
-const partidosOrdenados = ordenarPartidosBracket(roundMatches);
-container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, false)).join('');
-}
-
-function renderAdminBracket() {
-const container = document.getElementById('admin-bracket-matches-container');
-if (!container) return;
-const roundMatches = knockoutMatches.filter(m => m.round === adminBracketRound);
-if (roundMatches.length === 0) {
-container.innerHTML = '<div class="text-center text-slate-400 py-8">No hay partidos en esta ronda</div>';
-return;
-}
-const partidosOrdenados = ordenarPartidosBracket(roundMatches);
-container.innerHTML = partidosOrdenados.map(match => renderBracketMatchCard(match, true)).join('');
-}
-
-function updateBracketScore(matchId, field, value) {
-const match = knockoutMatches.find(m => m.id === matchId);
-if (match) {
-match[field] = value === '' ? null : parseInt(value);
-}
-}
-
-function renderBracketMatchCard(match, isAdminView) {
-const isLocked = match.status === 'locked';
-const isFinished = match.status === 'finished' || match.status === 'finished_penalties';
-const isLive = match.status === 'live';
-const hasPenalties = match.status === 'finished_penalties';
-
-let cardClass = 'bracket-match-card glass rounded-xl p-4';
-if (isLocked) cardClass += ' locked';
-if (isFinished && !hasPenalties) cardClass += ' finished';
-if (isLive) cardClass += ' live';
-if (hasPenalties) cardClass += ' finished-penalties';
-
-let team1Class = '', team2Class = '';
-if (isFinished && match.score1 !== null && match.score2 !== null) {
-if (match.score1 > match.score2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
-else if (match.score2 > match.score1) { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
-else if (hasPenalties) {
-if (match.penalties1 > match.penalties2) { team1Class = 'bracket-winner'; team2Class = 'bracket-loser'; }
-else { team1Class = 'bracket-loser'; team2Class = 'bracket-winner'; }
-}
-}
-
-let statusBadge = '';
-if (isLocked) statusBadge = '<span class="text-xs bg-slate-600 text-slate-300 px-2 py-1 rounded-full">🔒 Bloqueado</span>';
-else if (isLive) statusBadge = '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full animate-pulse">🔴 EN VIVO</span>';
-else if (hasPenalties) statusBadge = '<span class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full"> Penales</span>';
-else if (isFinished) statusBadge = '<span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Finalizado</span>';
-else statusBadge = '<span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">⏳ Pendiente</span>';
-
-const fechaFormateada = match.date ? formatHoraVenezuela(match.date) : '';
-
-const team1Name = match.team1 || '<span class="text-slate-500 italic">Por definir</span>';
-const team2Name = match.team2 || '<span class="text-slate-500 italic">Por definir</span>';
-
-const bandera1 = match.team1 ? `<img src="${getBandera(match.team1)}" alt="${match.team1}" class="w-6 h-4 inline-block mr-2 rounded shadow" onerror="this.style.display='none'">` : '';
-const bandera2 = match.team2 ? `<img src="${getBandera(match.team2)}" alt="${match.team2}" class="w-6 h-4 inline-block mr-2 rounded shadow" onerror="this.style.display='none'">` : '';
-
-const canEdit = isAdmin && !isLocked;
-const disabledAttr = canEdit ? '' : 'disabled';
-const score1Value = match.score1 !== null && match.score1 !== undefined ? match.score1 : '';
-const score2Value = match.score2 !== null && match.score2 !== undefined ? match.score2 : '';
-
-const penaltiesInfo = hasPenalties ? `
-<div class="mt-3 pt-3 border-t border-dashed border-orange-500/30 text-xs text-center">
-<span class="penalties-badge">PENALES</span>
-<div class="mt-2 flex justify-center gap-4">
-<span class="font-bold text-white">${match.team1}: <span class="text-orange-400">${match.penalties1}</span></span>
-<span class="text-slate-500">-</span>
-<span class="font-bold text-white">${match.team2}: <span class="text-orange-400">${match.penalties2}</span></span>
-</div>
-</div>
-` : '';
-
-return `
-<div class="${cardClass}" data-match-id="${match.id}">
-<div class="flex items-center justify-between mb-3">
-<div class="text-xs text-slate-400">
-${fechaFormateada}
-${match.venue ? ` • ${match.venue}` : ''}
-</div>
-${statusBadge}
-</div>
-<div class="space-y-3">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2 flex-1">
-${bandera1}
-<span class="${team1Class} text-sm font-medium">${team1Name}</span>
-</div>
-<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score1Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score1', this.value)">
-</div>
-<div class="border-t border-white/10"></div>
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2 flex-1">
-${bandera2}
-<span class="${team2Class} text-sm font-medium">${team2Name}</span>
-</div>
-<input type="number" min="0" max="99" class="bracket-score-input rounded-lg" value="${score2Value}" ${disabledAttr} onchange="updateBracketScore('${match.id}', 'score2', this.value)">
-</div>
-</div>
-${penaltiesInfo}
-${canEdit && !isLocked ? `
-<div class="flex gap-2 mt-4">
-<button onclick="saveBracketMatchResult('${match.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all">💾 Guardar</button>
-${isFinished ? `<button onclick="resetBracketMatch('${match.id}')" class="bg-red-600/80 hover:bg-red-500 text-white font-bold py-2 px-3 rounded-lg transition-all" title="Resetear">🔄</button>` : ''}
-</div>
-` : ''}
-</div>
-`;
-}
-
-async function saveBracketMatchResult(matchId) {
-const match = knockoutMatches.find(m => m.id === matchId);
-if (!match) { showToast('❌ Partido no encontrado', 'error'); return; }
-if (match.score1 === null || match.score2 === null || match.score1 === undefined || match.score2 === undefined) {
-showToast('️ Ingresa los goles de ambos equipos', 'error'); return;
-}
-try {
-let status = 'finished';
-let winner = null;
-let penaltiesData = {};
-if (match.score1 === match.score2) {
-const penales1 = prompt(`Empate en 90 min (${match.score1}-${match.score2}).\n\nIngresa los PENALES de ${match.team1 || 'Local'}:`, '0');
-if (penales1 === null) return;
-const penales2 = prompt(`Ingresa los PENALES de ${match.team2 || 'Visitante'}:`, '0');
-if (penales2 === null) return;
-const p1 = parseInt(penales1) || 0;
-const p2 = parseInt(penales2) || 0;
-penaltiesData = { penalties1: p1, penalties2: p2, winnerByPenalties: p1 > p2 ? match.team1 : match.team2 };
-winner = penaltiesData.winnerByPenalties;
-status = 'finished_penalties';
-} else {
-winner = match.score1 > match.score2 ? match.team1 : match.team2;
-}
-await db.collection('knockout_matches').doc(matchId).update({
-score1: match.score1, score2: match.score2, status: status, ...penaltiesData
-});
-if (winner && match.nextMatchId) {
-await advanceBracketWinner(match.nextMatchId, match.nextMatchSlot, winner);
-}
-showBracketSuccessAnimation();
-showToast('✅ Resultado guardado', 'success');
-loadKnockoutMatches();
-} catch (error) { console.error('❌ Error:', error); showToast('❌ Error: ' + error.message, 'error'); }
-}
-
-async function advanceBracketWinner(nextMatchId, slot, winnerTeam) {
-try {
-const updateData = {};
-if (slot === 1) updateData.team1 = winnerTeam;
-else if (slot === 2) updateData.team2 = winnerTeam;
-const nextMatchDoc = await db.collection('knockout_matches').doc(nextMatchId).get();
-const nextMatch = nextMatchDoc.data();
-if ((slot === 1 && nextMatch.team2) || (slot === 2 && nextMatch.team1)) {
-updateData.status = 'pending';
-}
-await db.collection('knockout_matches').doc(nextMatchId).update(updateData);
-console.log(`✅ Ganador ${winnerTeam} avanzado a ${nextMatchId}`);
-} catch (error) { console.error('❌ Error al avanzar:', error); }
-}
-
-async function resetBracketMatch(matchId) {
-if (!confirm('⚠️ ¿Resetear este partido?')) return;
-try {
-const match = knockoutMatches.find(m => m.id === matchId);
-let currentWinner = null;
-if (match.status === 'finished_penalties') currentWinner = match.winnerByPenalties;
-else if (match.score1 > match.score2) currentWinner = match.team1;
-else if (match.score2 > match.score1) currentWinner = match.team2;
-await db.collection('knockout_matches').doc(matchId).update({
-score1: null, score2: null, penalties1: null, penalties2: null,
-winnerByPenalties: null, status: 'pending'
-});
-if (currentWinner && match.nextMatchId) {
-const nextMatchDoc = await db.collection('knockout_matches').doc(match.nextMatchId).get();
-const nextMatch = nextMatchDoc.data();
-const updateData = { status: 'locked' };
-if (match.nextMatchSlot === 1 && nextMatch.team1 === currentWinner) updateData.team1 = null;
-else if (match.nextMatchSlot === 2 && nextMatch.team2 === currentWinner) updateData.team2 = null;
-await db.collection('knockout_matches').doc(match.nextMatchId).update(updateData);
-}
-showToast('✅ Partido reseteado', 'success');
-loadKnockoutMatches();
-} catch (error) { console.error('❌ Error:', error); showToast('❌ Error: ' + error.message, 'error'); }
-}
-
-function showBracketSuccessAnimation() {
-const anim = document.createElement('div');
-anim.className = 'bracket-success-animation';
-anim.innerHTML = '✅ ¡Resultado Guardado!';
-document.body.appendChild(anim);
-setTimeout(() => { anim.remove(); }, 1500);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-try {
-if (sessionStorage.getItem('isAdmin') === 'true') {
-isAdmin = true;
-console.log('✅ Estado de admin recuperado de la sesión');
-}
-console.log(' Página cargada, iniciando aplicación...');
-if (typeof startLeaderboardListener === 'function') {
-startLeaderboardListener();
-console.log('✅ Listener de ranking iniciado');
-}
-if (typeof cargarResultadosReel === 'function') {
-cargarResultadosReel();
-console.log('✅ Reel de resultados iniciado');
-}
-if (typeof loadKnockoutMatches === 'function') {
-loadKnockoutMatches();
-console.log('✅ Bracket eliminatorio iniciado');
-}
-if (typeof auth !== 'undefined' && auth.onAuthStateChanged) {
-auth.onAuthStateChanged(async (user) => {
-try {
-console.log('🔍 Estado de autenticación:', user ? 'Logueado' : 'No logueado');
-if (user) {
-try {
-const doc = await db.collection('participants').doc(user.uid).get();
-const data = doc.data();
-if (data) {
-console.log('✅ Usuario cargado:', data.displayName);
-currentUser = { uid: user.uid, displayName: data.displayName, userCode: data.userCode };
-const viewHome = document.getElementById('view-home');
-const userBadge = document.getElementById('user-badge');
-const displayUsername = document.getElementById('display-username');
-if (viewHome) viewHome.classList.add('hidden');
-if (userBadge) userBadge.classList.remove('hidden');
-if (displayUsername) displayUsername.innerText = data.displayName;
-const pantallaGuardada = sessionStorage.getItem('ultimaPantalla');
-if (pantallaGuardada) {
-console.log('📍 Restaurando vista:', pantallaGuardada);
-showView(pantallaGuardada);
-if (pantallaGuardada === 'view-predictions') renderMatches();
-}
-else {
-if (data.submitted) { showView('view-leaderboard'); }
-else { showView('view-predictions'); renderMatches(); }
-}
-}
-} catch (dbError) {
-console.error('❌ Error cargando datos del usuario:', dbError);
-showView('view-home');
-}
-} else {
-console.log('👤 Usuario no logueado, mostrando inicio');
-showView('view-home');
-}
-} catch (authError) {
-console.error('❌ Error en auth state change:', authError);
-showView('view-home');
-}
-});
-} else {
-console.error(' Firebase Auth no está disponible');
-showView('view-home');
-}
-} catch (error) {
-console.error('❌ Error crítico en inicialización:', error);
-const allViews = ['view-predictions', 'view-leaderboard', 'view-admin'];
-allViews.forEach(id => {
-const el = document.getElementById(id);
-if (el) el.classList.add('hidden');
-});
-const viewHome = document.getElementById('view-home');
-if (viewHome) viewHome.classList.remove('hidden');
-}
-});
-</script>
 </body>
 </html>
